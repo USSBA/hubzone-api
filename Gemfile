@@ -1,10 +1,9 @@
 source 'https://rubygems.org'
 
-
 gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
 gem 'puma', '~> 3.0' # Use Puma as the app server
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
- gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -20,6 +19,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   gem 'rspec-rails', '~> 3.5'
+  gem 'rubocop', require: false
 end
 
 group :development do
