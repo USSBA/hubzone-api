@@ -20,10 +20,13 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV['HUBZONE_API_DB_USER'] %>
+  password: <%= ENV['HUBZONE_API_DB_PASSWORD'] %>
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'localhost' } %>
 
 development:
   <<: *default
-  database: hubzone_api_development
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzapi_dev' } %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -58,6 +61,7 @@ development:
 test:
   <<: *default
   database: hubzone_api_test
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzapi_test' } %>
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -80,6 +84,4 @@ test:
 #
 production:
   <<: *default
-  database: hubzone_api_production
-  username: hubzone_api
-  password: <%= ENV['HUBZONE_API_DATABASE_PASSWORD'] %>
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzapi_prd' } %>
