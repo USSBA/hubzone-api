@@ -8,6 +8,7 @@ gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+gem 'excon', '~> 0.54.0' # excon for simple http requests for the google api
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

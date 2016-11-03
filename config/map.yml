@@ -1,0 +1,13 @@
+default: &defaults
+  google_api_key: <%= ENV["HUBZONE_GOOGLE_API_KEY"] ||
+                      "need to set HUBZONE_GOOGLE_API_KEY in your environment!"
+                      %>
+
+production:
+  <<: *defaults
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
