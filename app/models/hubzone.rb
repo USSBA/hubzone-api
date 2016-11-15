@@ -1,6 +1,6 @@
 class Hubzone
   def self.search(term)
-    return invalid_request("Search term is blank") if term.blank?
+    return invalid_request("api.error.blank_search") if term.blank?
 
     g = Geocoder.search(term)
     geocoder_results = JSON.parse g.body
@@ -8,7 +8,7 @@ class Hubzone
     when invalid_request[:status]
       return invalid_request()
     when zero_results[:status]
-      return zero_results('No results returned by geocoder')
+      return zero_results()
     when over_limit[:status]
       return over_limit()
     when request_denied[:status]
@@ -19,6 +19,8 @@ class Hubzone
 
     results = geocoder_results['results'][0]
     results[:http_status] = g.status
+    results[:message] = 'api.success'
+    results[:status] = 'OK'
 
     lat = results['geometry']['location']['lat']
     lgn = results['geometry']['location']['lng']
@@ -40,28 +42,28 @@ class Hubzone
 
   private
 
-  def self.zero_results(message = "Zero results")
+  def self.zero_results(message = "api.error.zero_results")
     { status: 'ZERO_RESULTS',
       message: message,
       http_status: 200 }
   end
-  def self.invalid_request(message = "Invalid request")
+  def self.invalid_request(message = "api.error.invalid_request")
     { status: 'INVALID_REQUEST',
       message: message,
       http_status: 400 }
   end
-  def self.over_limit(message = "Over query limit")
+  def self.over_limit(message = "api.error.over_query_limit")
     { status: 'OVER_QUERY_LIMIT',
       message: message,
       http_status: 400 }
   end
   # request denied can come from a bad API key, which google returns as 200, but we are sending it as 400 
-  def self.request_denied(message = "Request denied")
+  def self.request_denied(message = "api.error.request_denied")
     { status: 'REQUEST_DENIED',
       message: message,
       http_status: 400 }
   end
-  def self.unknown_error(message = "Unknown error")
+  def self.unknown_error(message = "api.error.unknown_error")
     { status: 'UNKNOWN_ERROR',
       message: message,
       http_status: 400 }
