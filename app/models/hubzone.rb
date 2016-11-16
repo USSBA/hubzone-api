@@ -1,3 +1,4 @@
+# A utility class to perform hubzone searches against the db
 class Hubzone
   def self.search(term)
     return invalid_request("Search term is blank") if term.blank?
@@ -14,25 +15,33 @@ class Hubzone
     results = geocoder_results['results'][0]
     results[:http_status] = g.status
 
-    lat = results['geometry']['location']['lat']
-    lgn = results['geometry']['location']['lng']
-    res = ActiveRecord::Base.connection.execute(<<-SQL)
-      SELECT il.*
-        FROM indian_lands il
-       WHERE ST_Intersects(il.geom,
-                           ST_GeomFromText('POINT(#{lgn} #{lat})',4326));
-    SQL
-    hubzones = []
-    res.each do |r|
-      r.delete('geom')
-      r[:hz_type] = 'indian_lands'
-      hubzones << r
+    location = results['geometry']['location']
+    results[:hubzone] = []
+    %w(qct brac indian_lands).each do |hz_type|
+      results[:hubzone] += assertion location, hz_type
     end
-    results[:hubzone] = hubzones
     results
   end
 
-  private
+  def self.assertion(location, type)
+    res = ActiveRecord::Base.connection.execute(assertion_query(location, type))
+    hubzones = []
+    res.each do |r|
+      r.delete('geom')
+      r[:hz_type] = type
+      hubzones << r
+    end
+    hubzones
+  end
+
+  def self.assertion_query(location, type)
+    <<-SQL
+      SELECT *
+        FROM #{type}
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
+    SQL
+  end
 
   def self.invalid_request(message = "Invalid request")
     { status: 'INVALID_REQUEST',
