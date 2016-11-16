@@ -20,6 +20,7 @@ group :development, :test do
   gem 'byebug', platform: :mri # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rspec-rails', '~> 3.5'
   gem 'rubocop', require: false
+  gem 'simplecov', require: false # determine code coverage of tests
 end
 
 group :development do
