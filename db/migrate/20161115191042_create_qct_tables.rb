@@ -1,7 +1,17 @@
+# A complete hack to get some tests to pass!
+#
+# Populates the test database with a bounding box region for a
+# qct that contains the test search used in the integration tests.
+#
+# The polygon was determined from the actual data via:
+#
+# SELECT ST_AsText(ST_SetSRID(ST_Extent(geom),4326)) AS geom FROM qct WHERE gid = 14426;
+#
 class CreateQctTables < ActiveRecord::Migration[5.0]
   def up
-    if Rails.env == "test"
-      self.connection.execute(<<-SQL)
+    return if Rails.env != "test"
+
+    connection.execute(<<-SQL)
         CREATE SCHEMA IF NOT EXISTS data;
 
         CREATE TABLE IF NOT EXISTS data.qct
@@ -40,16 +50,15 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
                  start,
                  stop
             FROM data.qct;
-      SQL
-    end
+    SQL
   end
 
   def down
-    if Rails.env == "test"
-      self.connection.execute(<<-SQL)
+    return if Rails.env != "test"
+
+    connection.execute(<<-SQL)
         DROP VIEW qct;
         DROP TABLE data.qct;
-      SQL
-    end
+    SQL
   end
 end

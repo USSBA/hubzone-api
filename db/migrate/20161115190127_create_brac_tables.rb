@@ -9,8 +9,9 @@
 #
 class CreateBracTables < ActiveRecord::Migration[5.0]
   def up
-    if Rails.env == "test"
-      self.connection.execute(<<-SQL)
+    return if Rails.env != "test"
+
+    connection.execute(<<-SQL)
         CREATE SCHEMA IF NOT EXISTS data;
 
         CREATE TABLE IF NOT EXISTS data.brac
@@ -45,16 +46,15 @@ class CreateBracTables < ActiveRecord::Migration[5.0]
                  start,
                  stop
             FROM data.brac;
-      SQL
-    end
+    SQL
   end
 
   def down
-    if Rails.env == "test"
-      self.connection.execute(<<-SQL)
+    return if Rails.env != "test"
+
+    connection.execute(<<-SQL)
         DROP VIEW brac;
         DROP TABLE data.brac;
-      SQL
-    end
+    SQL
   end
 end
