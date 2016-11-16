@@ -3,11 +3,10 @@ class Hubzone
   def self.search(term)
     return invalid_request("Search term is blank") if term.blank?
 
-    geocoder_results = geocode term
-    return geocoder_results if (geocoder_results.eql? invalid_request[:status]) ||
-                               (geocoder_results.eql? zero_results[:status])
-
     results = geocode term
+    return results if results['status'].eql? invalid_request[:status]
+    return results if results['status'].eql? zero_results[:status]
+
     append_assertions(results)
     results
   end
@@ -18,8 +17,9 @@ class Hubzone
     def geocode(term)
       g = Geocoder.search(term)
       geocoder_results = JSON.parse g.body
-      return geocoder_results if (geocoder_results.eql? invalid_request[:status]) ||
-                                 (geocoder_results.eql? zero_results[:status])
+      return geocoder_results if geocoder_results['status'].eql? invalid_request[:status]
+      return geocoder_results if geocoder_results['status'].eql? zero_results[:status]
+
       results = geocoder_results['results'][0]
       results[:http_status] = g.status
       results
