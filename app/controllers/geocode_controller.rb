@@ -2,7 +2,7 @@
 class GeocodeController < ApplicationController
   def search
     s = params[:q]
-    result = Hubzone.search(s)
+    result = HubzoneUtil.search(s)
     render json: result.to_json, status: result[:http_status]
   end
 end

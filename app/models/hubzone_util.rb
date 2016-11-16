@@ -1,5 +1,5 @@
 # A utility class to perform hubzone searches against the db
-class Hubzone
+class HubzoneUtil
   def self.search(term)
     return invalid_request("Search term is blank") if term.blank?
 
