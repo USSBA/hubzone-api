@@ -20,22 +20,22 @@ RSpec.describe GeocodeController, type: :request do
   describe 'GET #search' do
     context 'when given a empty request' do
       before do
-        get search_url, {params: {q: test_data[:empty_request]},
-                         headers: {'Content-Type' => 'application/json'}}
+        get search_url, params: {q: test_data[:empty_request]},
+                        headers: {'Content-Type' => 'application/json'}
       end
       it 'should result in an error' do
         expect(400...500).to cover(response.status)
       end
       it 'should return the status INVALID_REQUEST' do
-        bodyJson = JSON.parse(response.body)
-        expect(bodyJson['status']).to eq('INVALID_REQUEST')
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('INVALID_REQUEST')
       end
     end
 
     context 'given a qct request in baltimore' do
       before do
-        get search_url, {params: {q: test_data[:qct_request]},
-                         headers: {'Content-Type' => 'application/json'}}
+        get search_url, params: {q: test_data[:qct_request]},
+                        headers: {'Content-Type' => 'application/json'}
       end
       it 'should succeed' do
         expect(response).to have_http_status(:ok)
@@ -56,8 +56,8 @@ RSpec.describe GeocodeController, type: :request do
 
     context 'given an address in a BRAC in Puerto Rico' do
       before do
-        get search_url, {params: {q: test_data[:brac_request]},
-                         headers: {'Content-Type' => 'application/json'}}
+        get search_url, params: {q: test_data[:brac_request]},
+                        headers: {'Content-Type' => 'application/json'}
       end
       it 'should succeed' do
         expect(response).to have_http_status(:ok)
@@ -78,8 +78,8 @@ RSpec.describe GeocodeController, type: :request do
 
     context 'given a search for an address in an indian lands hubzone' do
       before do
-        get search_url, {params: {q: test_data[:indian_lands_request]},
-                         headers: {'Content-Type' => 'application/json'}}
+        get search_url, params: {q: test_data[:indian_lands_request]},
+                        headers: {'Content-Type' => 'application/json'}
       end
       it 'should succeed' do
         expect(response).to have_http_status(:ok)
@@ -100,8 +100,8 @@ RSpec.describe GeocodeController, type: :request do
 
     context 'given a search for navajo' do
       before do
-        get search_url, {params: {q: test_data[:navajo_request]},
-                         headers: {'Content-Type' => 'application/json'}}
+        get search_url, params: {q: test_data[:navajo_request]},
+                        headers: {'Content-Type' => 'application/json'}
       end
       it 'should succeed' do
         expect(response).to have_http_status(:ok)

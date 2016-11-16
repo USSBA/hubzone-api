@@ -7,49 +7,50 @@ test_data = {
   blank_request: ' '
 }
 
+# rubocop:disable Style/CommentIndentation
 describe Geocoder, type: :model do
   describe '.search' do
     context "when given a empty request" do
-      let(:response) {Geocoder.search(test_data[:empty_request])}
+      let(:response) { Geocoder.search(test_data[:empty_request]) }
       it "should result in an error" do
         expect(400...500).to cover(response.status)
       end
       it "should return a status of INVALID_REQUEST" do
-        bodyJson = JSON.parse(response.body)
-        expect(bodyJson['status']).to eq('INVALID_REQUEST')
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('INVALID_REQUEST')
       end
     end
 
     context "when given a good request" do
-      let(:response) {Geocoder.search(test_data[:good_request])}
+      let(:response) { Geocoder.search(test_data[:good_request]) }
       it "should succeed" do
         expect(response.status).to eql(Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok])
       end
       it "should return a status of OK" do
-        bodyJson = JSON.parse(response.body)
-        expect(bodyJson['status']).to eq('OK')
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('OK')
       end
     end
 
     context "when given a garbage request" do
-      let(:response) {Geocoder.search(test_data[:garbage_request])}
+      let(:response) { Geocoder.search(test_data[:garbage_request]) }
       it "should succeed" do
         expect(200...300).to cover(response.status)
       end
       it "should return a status of ZERO_RESULTS" do
-        bodyJson = JSON.parse(response.body)
-        expect(bodyJson['status']).to eq('ZERO_RESULTS')
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('ZERO_RESULTS')
       end
     end
 
     context "when given a blank request" do
-      let(:response) {Geocoder.search(test_data[:blank_request])}
+      let(:response) { Geocoder.search(test_data[:blank_request]) }
       it "should succeed" do
         expect(200...300).to cover(response.status)
       end
       it "should return a status of ZERO_RESULTS" do
-        bodyJson = JSON.parse(response.body)
-        expect(bodyJson['status']).to eq('ZERO_RESULTS')
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('ZERO_RESULTS')
       end
     end
 
@@ -61,28 +62,28 @@ describe Geocoder, type: :model do
 #      end
 #      it "returns OVER_QUOTA_LIMIT" do
 #        skip "skipped because we cant really test this response"
-#        bodyJson = JSON.parse(response.body)
-#        expect(bodyJson['status']).to eq('OVER_QUOTA_LIMIT')
+#        body_json = JSON.parse(response.body)
+#        expect(body_json['status']).to eq('OVER_QUOTA_LIMIT')
 #      end
 #    end
 
     context "when the API key is bad" do
       before do
-        @API_KEY = MAP_CONFIG[:google_api_key]
+        @api_key = MAP_CONFIG[:google_api_key]
         MAP_CONFIG[:google_api_key] = "SyBsR78bM2H5vM"
       end
-      let(:response) {Geocoder.search(test_data[:good_request])}
+      let(:response) { Geocoder.search(test_data[:good_request]) }
 
       it "should 'succeed' because Google is crazy" do
         expect(response.status).to eql(Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok])
       end
       it "should return a status of REQUEST_DENIED" do
         #skip "skipped because we cant really test this response"
-        bodyJson = JSON.parse(response.body)
-        expect(bodyJson['status']).to eq('REQUEST_DENIED')
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('REQUEST_DENIED')
       end
       after do
-        MAP_CONFIG[:google_api_key] = @API_KEY
+        MAP_CONFIG[:google_api_key] = @api_key
       end
     end
 
@@ -94,8 +95,8 @@ describe Geocoder, type: :model do
 #      end
 #      it "returns UNKNOWN_ERROR" do
 #        skip "skipped because we cant really test this response"
-#        bodyJson = JSON.parse(response.body)
-#        expect(bodyJson['status']).to eq('UNKNOWN_ERROR')
+#        body_json = JSON.parse(response.body)
+#        expect(body_json['status']).to eq('UNKNOWN_ERROR')
 #      end
 #    end
   end
