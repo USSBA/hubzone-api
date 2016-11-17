@@ -1,5 +1,3 @@
-inherit_from: ../.rubocop.yml
-
 Style/Encoding:
   Enabled: false
 
@@ -18,8 +16,14 @@ Style/LeadingCommentSpace:
 Style/SpaceInsideBrackets:
   Enabled: false
 
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
 Style/EmptyLinesAroundBlockBody:
   Enabled: false
 
 Metrics/LineLength:
   Max: 199
+
+Style/NumericLiterals:
+  Enabled: false

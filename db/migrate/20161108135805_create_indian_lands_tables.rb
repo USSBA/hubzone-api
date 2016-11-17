@@ -9,8 +9,9 @@
 #
 class CreateIndianLandsTables < ActiveRecord::Migration[5.0]
   def up
-    if Rails.env == "test"
-      self.connection.execute(<<-SQL)
+    return if Rails.env != "test"
+
+    connection.execute(<<-SQL)
         CREATE SCHEMA IF NOT EXISTS data;
 
         CREATE TABLE IF NOT EXISTS data.il_2014
@@ -73,16 +74,15 @@ class CreateIndianLandsTables < ActiveRecord::Migration[5.0]
                  il_shape_area  AS shape_area,
                  geom
             FROM data.il_2014;
-      SQL
-    end
+    SQL
   end
 
   def down
-    if Rails.env == "test"
-      self.connection.execute(<<-SQL)
+    return if Rails.env != "test"
+
+    connection.execute(<<-SQL)
         DROP VIEW indian_lands;
         DROP TABLE data.il_2014;
-      SQL
-    end
+    SQL
   end
 end

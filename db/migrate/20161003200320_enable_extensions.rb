@@ -1,3 +1,4 @@
+# Turns on PostGIS and other useful extensions
 class EnableExtensions < ActiveRecord::Migration[5.0]
   def change
     enable_extension "hstore"
