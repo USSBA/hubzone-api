@@ -2,7 +2,7 @@
 class HubzoneUtil
   class << self
     def search(term)
-      return parse_response("BLANK_SEARCH_TERM", 400) if term.blank? || term.empty?
+      return build_response("INVALID_REQUEST") if term.blank? || term.empty?
 
       results = geocode term
       error_status = error_check(results['status'])
@@ -15,11 +15,8 @@ class HubzoneUtil
     private
 
     def error_check(status)
-      return parse_response(status, 200) if status.eql? 'ZERO_RESULTS'
-      return parse_response(status, 400) if status.eql? 'INVALID_REQUEST'
-      return parse_response(status, 400) if status.eql? 'OVER_QUERY_LIMIT'
-      return parse_response(status, 400) if status.eql? 'REQUEST_DENIED'
-      return parse_response(status, 400) if status.eql? 'UNKNOWN_ERROR'
+      statuses = %w(ZERO_RESULTS INVALID_REQUEST OVER_QUERY_LIMIT REQUEST_DENIED UNKNOWN_ERROR)
+      return build_response(status) if statuses.include?(status)
     end
 
     def geocode(term)
@@ -60,10 +57,11 @@ class HubzoneUtil
       SQL
     end
 
-    def parse_response(error_status, http_status)
-      { status: error_status,
-        message: 'api.error.' + error_status.downcase,
-        http_status: http_status }
+    def build_response(status)
+      code = status.eql?('ZERO_RESULTS') ? 200 : 400
+      { status: status,
+        message: 'api.error.' + status.downcase,
+        http_status: code }
     end
   end
 end

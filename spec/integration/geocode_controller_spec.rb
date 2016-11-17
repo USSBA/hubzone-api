@@ -26,9 +26,9 @@ RSpec.describe GeocodeController, type: :request do
       it 'should result in an error' do
         expect(400...500).to cover(response.status)
       end
-      it 'should return the status BLANK_SEARCH_TERM' do
+      it 'should return the status INVALID_REQUEST' do
         body_json = JSON.parse(response.body)
-        expect(body_json['status']).to eq('BLANK_SEARCH_TERM')
+        expect(body_json['status']).to eq('INVALID_REQUEST')
       end
     end
 
