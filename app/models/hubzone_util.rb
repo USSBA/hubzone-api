@@ -1,24 +1,29 @@
 # A utility class to perform hubzone searches against the db
 class HubzoneUtil
-  def self.search(term)
-    return invalid_request("Search term is blank") if term.blank?
-
-    results = geocode term
-    return results if results['status'].eql? invalid_request[:status]
-    return results if results['status'].eql? zero_results[:status]
-
-    append_assertions(results)
-    results
-  end
-
   class << self
+    def search(term)
+      return build_response("INVALID_REQUEST") if term.blank? || term.empty?
+
+      results = geocode term
+      error_status = error_check(results['status'])
+      return error_status if error_status.present?
+
+      append_assertions(results)
+      results
+    end
+
     private
+
+    def error_check(status)
+      statuses = %w(ZERO_RESULTS INVALID_REQUEST OVER_QUERY_LIMIT REQUEST_DENIED UNKNOWN_ERROR)
+      return build_response(status) if statuses.include?(status)
+    end
 
     def geocode(term)
       g = Geocoder.search(term)
       geocoder_results = JSON.parse g.body
-      return geocoder_results if geocoder_results['status'].eql? invalid_request[:status]
-      return geocoder_results if geocoder_results['status'].eql? zero_results[:status]
+      return geocoder_results if geocoder_results['status'].eql? 'INVALID_REQUEST'
+      return geocoder_results if geocoder_results['status'].eql? 'ZERO_RESULTS'
 
       results = geocoder_results['results'][0]
       results[:http_status] = g.status
@@ -52,16 +57,11 @@ class HubzoneUtil
       SQL
     end
 
-    def invalid_request(message = "Invalid request")
-      { status: 'INVALID_REQUEST',
-        message: message,
-        http_status: 400 }
-    end
-
-    def zero_results(message = "Zero results")
-      { status: 'ZERO_RESULTS',
-        message: message,
-        http_status: 200 }
+    def build_response(status)
+      code = status.eql?('ZERO_RESULTS') ? 200 : 400
+      { status: status,
+        message: 'api.error.' + status.downcase,
+        http_status: code }
     end
   end
 end
