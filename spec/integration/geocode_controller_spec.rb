@@ -15,9 +15,9 @@ test_results = {
   indian_lands_request: '2424 S Country Club Rd, El Reno, OK 73036, USA'
 }
 
-RSpec.describe GeocodeController, type: :request do
+RSpec.describe GeocodeController, vcr: true, type: :request do
 
-  describe 'GET #search' do
+  describe 'GET #search with a query'  do
     context 'when given a empty request' do
       before do
         get search_url, params: {q: test_data[:empty_request]},
