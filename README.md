@@ -42,8 +42,17 @@ Note that we run on  port 3001 for local development.  Also, the database is sha
 
 If the `bundle install` fails due to the pg gem, make sure you have the ENV vars above set in your shell.
 
+## Running Tests ##
+
+### RSpec ###
+
 To run the test suite, simply run:
 * `rspec`
 * or with verbose output: `rspec -f d`
+
+If a lot of tests are failing, try dumping and updating the test db:
+`RAILS_ENV=test rake db:drop db:create db:migrate`
+
+Then run rspec again
 
 
