@@ -29,3 +29,8 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
+
+group :test do
+  gem 'vcr' # capture external API traffic for testing
+  gem 'webmock' # used by vcr gem
+end

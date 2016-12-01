@@ -1,7 +1,19 @@
 # A utility class to perform hubzone searches against the db
 class HubzoneUtil
   class << self
-    def search(term)
+    def search(params)
+      if !params[:q].nil?
+        search_by_query params[:q]
+      elsif !params[:latlng].nil?
+        search_by_latlng params[:latlng]
+      else
+        build_response("INVALID_REQUEST")
+      end
+    end
+
+    private
+
+    def search_by_query(term)
       return build_response("INVALID_REQUEST") if term.blank? || term.empty?
 
       results = geocode term
@@ -12,7 +24,25 @@ class HubzoneUtil
       results
     end
 
-    private
+    def search_by_latlng(loc)
+      return build_response("INVALID_REQUEST") if loc.blank? || loc.empty?
+
+      results = default_location_results loc
+      append_assertions(results)
+      results
+    end
+
+    def default_location_results(loc)
+      lat, lng = loc.split(',')
+      {
+        'geometry' => {
+          'location' => {
+            'lat' => lat,
+            'lng' => lng
+          }
+        }
+      }
+    end
 
     def error_check(status)
       statuses = %w(ZERO_RESULTS INVALID_REQUEST OVER_QUERY_LIMIT REQUEST_DENIED UNKNOWN_ERROR)
@@ -32,29 +62,19 @@ class HubzoneUtil
 
     def append_assertions(results)
       results[:hubzone] = []
-      %w(qct brac indian_lands).each do |hz_type|
-        results[:hubzone] += assertion results['geometry']['location'], hz_type
-      end
-    end
+      location = results['geometry']['location']
 
-    def assertion(location, type)
-      res = ActiveRecord::Base.connection.execute(assertion_query(location, type))
-      hubzones = []
-      res.each do |r|
-        r.delete('geom')
-        r[:hz_type] = type
-        hubzones << r
-      end
-      hubzones
-    end
+      # Check first for BRAC
+      brac = BracAssertion.assertion location
+      results[:hubzone] += brac
 
-    def assertion_query(location, type)
-      <<-SQL
-      SELECT *
-        FROM #{type}
-       WHERE ST_Intersects(geom,
-         ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
-      SQL
+      # Then QCTs
+      qct = QctAssertion.assertion location
+      results[:hubzone] += qct
+
+      # Then Indian Lands
+      il = IndianLandsAssertion.assertion location
+      results[:hubzone] += il
     end
 
     def build_response(status)

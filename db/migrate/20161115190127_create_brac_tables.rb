@@ -33,7 +33,11 @@ class CreateBracTables < ActiveRecord::Migration[5.0]
           (13, 'Naval Station Roosevelt Roads',
            'Ceiba', 'Puerto Rico', 'Navy Installation',
            '5/7/2015',
-           'SRID=4326;MULTIPOLYGON(((-65.687988 18.198784,-65.687988 18.284628,-65.589973 18.284628,-65.589973 18.198784,-65.687988 18.198784)))');
+           'SRID=4326;MULTIPOLYGON(((-65.687988 18.198784,-65.687988 18.284628,-65.589973 18.284628,-65.589973 18.198784,-65.687988 18.198784)))'),
+          (21, 'USARC Camden',
+           'Ouachita', 'Arkansas', 'Army Installation',
+           '9/12/2011',
+           'SRID=4326;MULTIPOLYGON(((-92.769916 33.619565,-92.769916 33.62095,-92.769049 33.62095,-92.769049 33.619565,-92.769916 33.619565)))');
 
         CREATE VIEW brac AS
           SELECT brac_gid      AS gid,

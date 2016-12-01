@@ -22,6 +22,7 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
           qct_city character varying(24),
           qct_county character varying(24),
           qct_qualified_ character varying(4),
+          qct_qualified1 character varying(4),
           qct_hubzone_st character varying(32),
           qct_brac_2016 character varying(36),
           geom geometry(MultiPolygon,4326),
@@ -34,9 +35,20 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
         INSERT INTO data.qct VALUES
           (14426, '24510040100',
            'MD', 'Baltimore', 'Baltimore City',
-           'Yes', 'Qualified', NULL,
-           'SRID=4326;MULTIPOLYGON(((-76.62264 39.286257,-76.62264 39.295215,-76.605107 39.295215,-76.605107 39.286257,-76.62264 39.286257)))');
-
+           'Yes', 'Yes', 'Qualified', NULL,
+           'SRID=4326;MULTIPOLYGON(((-76.62264 39.286257,-76.62264 39.295215,-76.605107 39.295215,-76.605107 39.286257,-76.62264 39.286257)))'),
+          (18606, '72037160100',
+           'PR', 'Roosevelt Roads', 'Ceiba',
+           'No', 'No', 'Not Qualified', 'Naval Station Roosevelt Roads',
+           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))'),
+          (8190, '05103950100',
+           'AR', 'Onalaska', 'Ouachita',
+           'No', 'No', 'Not Qualified', 'USARC Camden',
+           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))'),
+          (8177, '05103950200',
+           'AR', 'Bragg City', 'Ouachita',
+           'No', 'Yes', 'Qualified', '',
+           'SRID=4326;MULTIPOLYGON(((-93.11233 33.544939,-93.11233 33.822503,-92.828963 33.822503,-92.828963 33.544939,-93.11233 33.544939)))');
         CREATE VIEW qct AS
           SELECT qct_gid        AS gid,
                  qct_tract      AS tract,
@@ -44,6 +56,7 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
                  qct_city       AS city,
                  qct_county     AS county,
                  qct_qualified_ AS qualified_,
+                 qct_qualified1 AS qualified1,
                  qct_hubzone_st AS hubzone_st,
                  qct_brac_2016  AS brac_2016,
                  geom,
