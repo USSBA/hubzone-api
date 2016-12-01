@@ -25,8 +25,14 @@ class HubzoneUtil
     def search_by_latlng(loc)
       return build_response("INVALID_REQUEST") if loc.blank? || loc.empty?
 
+      results = base_location_results loc
+      append_assertions(results)
+      results
+    end
+
+    def base_location_results(loc)
       lat, lng = loc.split(',')
-      results = {
+      {
         'geometry' => {
           'location' => {
             'lat' => lat,
@@ -34,8 +40,6 @@ class HubzoneUtil
           }
         }
       }
-      append_assertions(results)
-      results
     end
 
     def error_check(status)
@@ -56,59 +60,19 @@ class HubzoneUtil
 
     def append_assertions(results)
       results[:hubzone] = []
+      location = results['geometry']['location']
 
       # Check first for BRAC
-      brac = assertion results['geometry']['location'], 'brac'
+      brac = BracAssertion.assertion location
       results[:hubzone] += brac
 
       # Then QCTs
-      qct = assertion results['geometry']['location'], 'qct'
-      qct.each do |q|
-        qct_qual = q['qualified_'] || q['qualified1']
-        qct_brac = q['brac_2016']
-        q['hz_type'] = 'brac' if qct_brac && !qct_qual # WRONG!
-        qct.delete(q) if brac && qct_brac
-        if !brac && qct_brac
-          # ugh, find the brac...
-          brac = find_brac 'sba_name', q['brac_2016']
-          qct.delete(q)
-          qct += brac
-        end
-      end
+      qct = QctAssertion.assertion location
       results[:hubzone] += qct
 
-      %w(indian_lands).each do |hz_type|
-        results[:hubzone] += assertion results['geometry']['location'], hz_type
-      end
-    end
-
-    def assertion(location, type)
-      res = ActiveRecord::Base.connection.execute(assertion_query(location, type))
-      hubzones = []
-      res.each do |r|
-        r.delete('geom')
-        r[:hz_type] = type
-        hubzones << r
-      end
-      hubzones
-    end
-
-    def assertion_query(location, type)
-      <<-SQL
-      SELECT *
-        FROM #{type}
-       WHERE ST_Intersects(geom,
-         ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
-      SQL
-    end
-
-    def find_brac(field, value)
-      <<-SQL
-      SELECT *
-        FROM brac
-       WHERE #{field} = '#{value}'
-         ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
-      SQL
+      # Then Indian Lands
+      il = IndianLandsAssertion.assertion location
+      results[:hubzone] += il
     end
 
     def build_response(status)
