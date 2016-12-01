@@ -27,12 +27,12 @@ class HubzoneUtil
     def search_by_latlng(loc)
       return build_response("INVALID_REQUEST") if loc.blank? || loc.empty?
 
-      results = base_location_results loc
+      results = default_location_results loc
       append_assertions(results)
       results
     end
 
-    def base_location_results(loc)
+    def default_location_results(loc)
       lat, lng = loc.split(',')
       {
         'geometry' => {
