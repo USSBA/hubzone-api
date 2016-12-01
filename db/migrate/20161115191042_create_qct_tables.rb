@@ -22,6 +22,7 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
           qct_city character varying(24),
           qct_county character varying(24),
           qct_qualified_ character varying(4),
+          qct_qualified1 character varying(4),
           qct_hubzone_st character varying(32),
           qct_brac_2016 character varying(36),
           geom geometry(MultiPolygon,4326),
@@ -34,8 +35,12 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
         INSERT INTO data.qct VALUES
           (14426, '24510040100',
            'MD', 'Baltimore', 'Baltimore City',
-           'Yes', 'Qualified', NULL,
-           'SRID=4326;MULTIPOLYGON(((-76.62264 39.286257,-76.62264 39.295215,-76.605107 39.295215,-76.605107 39.286257,-76.62264 39.286257)))');
+           'Yes', 'Yes', 'Qualified', NULL,
+           'SRID=4326;MULTIPOLYGON(((-76.62264 39.286257,-76.62264 39.295215,-76.605107 39.295215,-76.605107 39.286257,-76.62264 39.286257)))'),
+          (18606, '72037160100',
+           'PR', 'Roosevelt Roads', 'Ceiba',
+           'No', 'No', 'Not Qualified', 'Naval Station Roosevelt Roads',
+           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))');
 
         CREATE VIEW qct AS
           SELECT qct_gid        AS gid,

@@ -1,7 +1,17 @@
 # A utility class to perform hubzone searches against the db
 class HubzoneUtil
   class << self
-    def search(term)
+    def search(params)
+      if !params[:q].nil?
+        search_by_query params[:q]
+      elsif !params[:latlng].nil?
+        search_by_latlng params[:latlng]
+      end
+    end
+
+    private
+
+    def search_by_query(term)
       return build_response("INVALID_REQUEST") if term.blank? || term.empty?
 
       results = geocode term
@@ -12,7 +22,21 @@ class HubzoneUtil
       results
     end
 
-    private
+    def search_by_latlng(loc)
+      return build_response("INVALID_REQUEST") if loc.blank? || loc.empty?
+
+      lat, lng = loc.split(',')
+      results = {
+        'geometry' => {
+          'location' => {
+            'lat' => lat,
+            'lng' => lng
+          }
+        }
+      }
+      append_assertions(results)
+      results
+    end
 
     def error_check(status)
       statuses = %w(ZERO_RESULTS INVALID_REQUEST OVER_QUERY_LIMIT REQUEST_DENIED UNKNOWN_ERROR)
@@ -32,7 +56,28 @@ class HubzoneUtil
 
     def append_assertions(results)
       results[:hubzone] = []
-      %w(qct brac indian_lands).each do |hz_type|
+
+      # Check first for BRAC
+      brac = assertion results['geometry']['location'], 'brac'
+      results[:hubzone] += brac
+
+      # Then QCTs
+      qct = assertion results['geometry']['location'], 'qct'
+      qct.each do |q|
+        qct_qual = q['qualified_'] || q['qualified1']
+        qct_brac = q['brac_2016']
+        q['hz_type'] = 'brac' if qct_brac && !qct_qual # WRONG!
+        qct.delete(q) if brac && qct_brac
+        if !brac && qct_brac
+          # ugh, find the brac...
+          brac = find_brac 'sba_name', q['brac_2016']
+          qct.delete(q)
+          qct += brac
+        end
+      end
+      results[:hubzone] += qct
+
+      %w(indian_lands).each do |hz_type|
         results[:hubzone] += assertion results['geometry']['location'], hz_type
       end
     end
@@ -53,6 +98,15 @@ class HubzoneUtil
       SELECT *
         FROM #{type}
        WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
+      SQL
+    end
+
+    def find_brac(field, value)
+      <<-SQL
+      SELECT *
+        FROM brac
+       WHERE #{field} = '#{value}'
          ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
       SQL
     end
