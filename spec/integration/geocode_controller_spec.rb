@@ -3,7 +3,9 @@ require 'rails_helper'
 test_query = {
   empty: '',
   qct: '8 Market Place Baltimore MD 21202',
-  brac: 'forrestal dr, ceiba',
+  brac_base: 'forrestal dr, ceiba',
+  brac_qct: 'amy, ar',
+  qct_not_brac: 'chidester, ar',
   navajo: 'navajo',
   indian_lands: '2424 S. Country Club Road, El Reno, OK 73036',
   roosevelt: 'roosevelt roads, pr'
@@ -11,7 +13,9 @@ test_query = {
 test_query_results = {
   empty: '',
   qct: '8 Market Pl, Baltimore, MD 21202, USA',
-  brac: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
+  brac_base: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
+  brac_qct: 'Amy, AR 71701, USA',
+  qct_not_brac: 'Chidester, AR 71726, USA',
   navajo: 'Navajo, NM 87328, USA',
   indian_lands: '2424 S Country Club Rd, El Reno, OK 73036, USA',
   roosevelt: 'Roosevelt Roads, Ceiba, Puerto Rico'
@@ -19,7 +23,9 @@ test_query_results = {
 test_latlng = {
   empty: '',
   qct: '39.2888915,-76.6069962',
-  brac: '18.240392,-65.62385970000001',
+  brac_base: '18.240392,-65.62385970000001',
+  brac_qct: '33.7320525,-92.8154404',
+  qct_not_brac: '33.7023315,-93.02044370000002',
   navajo: '35.9000121,-109.0339832',
   indian_lands: '35.5112912,-97.9732157',
   roosevelt: '18.237248,-65.6480292'
@@ -78,9 +84,9 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       end
     end
 
-    context 'given an address in a BRAC in Puerto Rico' do
+    context 'given an address in a BRAC base in Puerto Rico' do
       before do
-        get search_url, params: {q: test_query[:brac]},
+        get search_url, params: {q: test_query[:brac_base]},
                         headers: {'Content-Type' => 'application/json'}
       end
       it 'should succeed' do
@@ -88,7 +94,7 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       end
       it 'should contain the correct formatted address' do
         body = JSON.parse response.body
-        expect(body['formatted_address']).to eql(test_query_results[:brac])
+        expect(body['formatted_address']).to eql(test_query_results[:brac_base])
       end
       it 'should have one designation' do
         body = JSON.parse response.body
@@ -97,6 +103,50 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       it 'should have one BRAC designation' do
         body = JSON.parse response.body
         expect(body['hubzone'][0]['hz_type']).to eql('brac')
+      end
+    end
+
+    context 'given an address in a QCT that is BRAC designated' do
+      before do
+        get search_url, params: {q: test_query[:brac_qct]},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should succeed' do
+        expect(response).to have_http_status(:ok)
+      end
+      it 'should contain the correct formatted address' do
+        body = JSON.parse response.body
+        expect(body['formatted_address']).to eql(test_query_results[:brac_qct])
+      end
+      it 'should have one designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'].size).to eql(1)
+      end
+      it 'should have one BRAC designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'][0]['hz_type']).to eql('brac')
+      end
+    end
+
+    context 'given an address in a QCT that is near a BRAC, but is QCT designated' do
+      before do
+        get search_url, params: {q: test_query[:qct_not_brac]},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should succeed' do
+        expect(response).to have_http_status(:ok)
+      end
+      it 'should contain the correct formatted address' do
+        body = JSON.parse response.body
+        expect(body['formatted_address']).to eql(test_query_results[:qct_not_brac])
+      end
+      it 'should have one designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'].size).to eql(1)
+      end
+      it 'should have one QCT designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'][0]['hz_type']).to eql('qct')
       end
     end
 
@@ -162,8 +212,7 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       end
       it 'should have one BRAC designation' do
         body = JSON.parse response.body
-        hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
-        expect(hz_types).to include('brac')
+        expect(body['hubzone'][0]['hz_type']).to eql('brac')
       end
     end
   end
@@ -201,9 +250,9 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       end
     end
 
-    context 'given an address in a BRAC in Puerto Rico' do
+    context 'given an location in a BRAC base in Puerto Rico' do
       before do
-        get search_url, params: {latlng: test_latlng[:brac]},
+        get search_url, params: {latlng: test_latlng[:brac_base]},
                         headers: {'Content-Type' => 'application/json'}
       end
       it 'should succeed' do
@@ -219,7 +268,43 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       end
     end
 
-    context 'given an address in an Indian Lands hubzone' do
+    context 'given an location in a QCT that is BRAC designated' do
+      before do
+        get search_url, params: {latlng: test_latlng[:brac_qct]},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should succeed' do
+        expect(response).to have_http_status(:ok)
+      end
+      it 'should have one designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'].size).to eql(1)
+      end
+      it 'should have one BRAC designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'][0]['hz_type']).to eql('brac')
+      end
+    end
+
+    context 'given an location in a QCT that is near a BRAC, but is QCT designated' do
+      before do
+        get search_url, params: {latlng: test_latlng[:brac_qct]},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should succeed' do
+        expect(response).to have_http_status(:ok)
+      end
+      it 'should have one designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'].size).to eql(1)
+      end
+      it 'should have one QCT designation' do
+        body = JSON.parse response.body
+        expect(body['hubzone'][0]['hz_type']).to eql('qct')
+      end
+    end
+
+    context 'given an location in an Indian Lands hubzone' do
       before do
         get search_url, params: {latlng: test_latlng[:indian_lands]},
                         headers: {'Content-Type' => 'application/json'}

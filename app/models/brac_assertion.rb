@@ -12,7 +12,6 @@ class BracAssertion
       SELECT *
         FROM brac
        WHERE #{field} = '#{value}'
-         ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
       SQL
     end
   end

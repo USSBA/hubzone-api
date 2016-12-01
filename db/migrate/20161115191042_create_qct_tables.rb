@@ -40,7 +40,11 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
           (18606, '72037160100',
            'PR', 'Roosevelt Roads', 'Ceiba',
            'No', 'No', 'Not Qualified', 'Naval Station Roosevelt Roads',
-           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))');
+           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))'),
+          (8190, '05103950100',
+           'AR', 'Onalaska', 'Ouachita',
+           'No', 'No', 'Not Qualified', 'USARC Camden',
+           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))');
 
         CREATE VIEW qct AS
           SELECT qct_gid        AS gid,
@@ -49,6 +53,7 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
                  qct_city       AS city,
                  qct_county     AS county,
                  qct_qualified_ AS qualified_,
+                 qct_qualified1 AS qualified1,
                  qct_hubzone_st AS hubzone_st,
                  qct_brac_2016  AS brac_2016,
                  geom,
