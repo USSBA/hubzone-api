@@ -6,6 +6,8 @@ class HubzoneUtil
         search_by_query params[:q]
       elsif !params[:latlng].nil?
         search_by_latlng params[:latlng]
+      else
+        build_response("INVALID_REQUEST")
       end
     end
 

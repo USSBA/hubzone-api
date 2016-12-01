@@ -27,6 +27,20 @@ test_latlng = {
 
 RSpec.describe GeocodeController, vcr: true, type: :request do
 
+  describe 'GET #search without any query or location' do
+    before do
+      get search_url, params: {message: 'Search for what?'},
+                      headers: {'Content-Type' => 'application/json'}
+    end
+    it 'should result in an error' do
+      expect(400...500).to cover(response.status)
+    end
+    it 'should return the status INVALID_REQUEST' do
+      body_json = JSON.parse(response.body)
+      expect(body_json['status']).to eq('INVALID_REQUEST')
+    end
+  end
+
   describe 'GET #search with a query' do
     context 'when given a empty query' do
       before do
