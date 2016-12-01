@@ -44,8 +44,11 @@ class CreateQctTables < ActiveRecord::Migration[5.0]
           (8190, '05103950100',
            'AR', 'Onalaska', 'Ouachita',
            'No', 'No', 'Not Qualified', 'USARC Camden',
-           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))');
-
+           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))'),
+          (8177, '05103950200',
+           'AR', 'Bragg City', 'Ouachita',
+           'No', 'Yes', 'Qualified', '',
+           'SRID=4326;MULTIPOLYGON(((-93.11233 33.544939,-93.11233 33.822503,-92.828963 33.822503,-92.828963 33.544939,-93.11233 33.544939)))');
         CREATE VIEW qct AS
           SELECT qct_gid        AS gid,
                  qct_tract      AS tract,

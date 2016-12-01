@@ -288,7 +288,7 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
 
     context 'given an location in a QCT that is near a BRAC, but is QCT designated' do
       before do
-        get search_url, params: {latlng: test_latlng[:brac_qct]},
+        get search_url, params: {latlng: test_latlng[:qct_not_brac]},
                         headers: {'Content-Type' => 'application/json'}
       end
       it 'should succeed' do

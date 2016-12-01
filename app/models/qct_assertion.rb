@@ -8,8 +8,8 @@ class QctAssertion
       qct_res.each do |qct|
         qct_qual = qct['qualified_'] == 'Yes' || qct['qualified1'] == 'Yes'
         qct_brac = qct['brac_2016']
-        qct['hz_type'] = 'brac' if qct_brac && !qct_qual # WRONG?
-        check_brac qct_res, qct, location if qct_brac
+        qct['hz_type'] = 'brac' if qct_brac.present? && !qct_qual # WRONG?
+        check_brac qct_res, qct, location if qct_brac.present?
         qct_res
       end
     end
