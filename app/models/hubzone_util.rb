@@ -35,10 +35,11 @@ class HubzoneUtil
     def default_location_results(loc)
       lat, lng = loc.split(',')
       {
+        'message' => loc,
         'geometry' => {
           'location' => {
-            'lat' => lat,
-            'lng' => lng
+            'lat' => lat.to_f,
+            'lng' => lng.to_f
           }
         }
       }
