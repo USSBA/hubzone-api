@@ -157,6 +157,36 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         expect(body_json['status']).to eq('INVALID_REQUEST')
       end
     end
+
+    context 'when given an incomplete location' do
+      before do
+        get search_url, params: {latlng: '123'},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should result in an error' do
+        expect(response.status).to eql(400)
+      end
+      it 'should return the status INVALID_REQUEST' do
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('INVALID_REQUEST')
+      end
+    end
+
+    context 'when given a mal-formed location' do
+      before do
+        get search_url, params: {latlng: 'abc.def,-ghi.jkl'},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should result in an error' do
+        expect(response.status).to eql(400)
+      end
+      it 'should return the status INVALID_REQUEST' do
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('INVALID_REQUEST')
+      end
+    end
+
+    # map over each hash in test_queries and run this templated test
     test_queries.map do |_hztype, tquery|
       context 'Given an lat,lng ' + tquery[:context] do
         before do

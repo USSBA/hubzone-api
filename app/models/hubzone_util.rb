@@ -26,6 +26,9 @@ class HubzoneUtil
 
     def search_by_latlng(loc)
       return build_response("INVALID_REQUEST") if loc.blank? || loc.empty?
+      regex = /\A[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\Z/
+      return build_response("INVALID_REQUEST") if regex.match(loc).nil?
+
 
       results = default_location_results loc
       append_assertions(results)
