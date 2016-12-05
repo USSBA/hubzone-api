@@ -65,16 +65,16 @@ class HubzoneUtil
       location = results['geometry']['location']
 
       # Check first for BRAC
-      brac = BracAssertion.assertion location
-      results[:hubzone] += brac
+      results[:hubzone] += BracAssertion.assertion location
 
-      # Then QCTs
-      qct = QctAssertion.assertion location
-      results[:hubzone] += qct
+      # Then QCT's
+      results[:hubzone] += QctAssertion.assertion location
+
+      # Then QNMC's
+      results[:hubzone] += QnmcAssertion.assertion location
 
       # Then Indian Lands
-      il = IndianLandsAssertion.assertion location
-      results[:hubzone] += il
+      results[:hubzone] += IndianLandsAssertion.assertion location
     end
 
     def build_response(status)
