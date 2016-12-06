@@ -33,6 +33,22 @@ test_queries = {
     results_address: 'Chidester, AR 71726, USA',
     designations: %w(qct_e)
   },
+  brac_qnmc: {
+    context: 'in a QNMC that is BRAC designated',
+    query: 'mabie, wv',
+    latlng: '38.8764985,-79.9853181',
+    http_status: 200,
+    results_address: 'Mabie, WV 26257, USA',
+    designations: %w(qnmc_b)
+  },
+  qnmc_not_brac: {
+    context: 'in a QNMC that is near a BRAC, but is QNMC designated',
+    query: 'buckeye, wv',
+    latlng: '38.1902273,-80.1360778',
+    http_status: 200,
+    results_address: 'Buckeye, WV, USA',
+    designations: %w(qnmc_e)
+  },
   indian_lands: {
     context: 'in an Indian Lands hubzone',
     query: '2424 S. Country Club Road, El Reno, OK 73036',
@@ -56,6 +72,14 @@ test_queries = {
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
     designations: %w(brac qct_b)
+  },
+  stilwell: {
+    context: 'of stilwell, ok',
+    query: 'stilwell, ok',
+    latlng: '35.8185419,-94.6675625',
+    http_status: 200,
+    results_address: 'Stilwell, OK 74960, USA',
+    designations: %w(qct_e qnmc_e indian_lands)
   }
 }
 
@@ -133,6 +157,36 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         expect(body_json['status']).to eq('INVALID_REQUEST')
       end
     end
+
+    context 'when given an incomplete location' do
+      before do
+        get search_url, params: {latlng: '123'},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should result in an error' do
+        expect(response.status).to eql(400)
+      end
+      it 'should return the status INVALID_REQUEST' do
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('INVALID_REQUEST')
+      end
+    end
+
+    context 'when given a mal-formed location' do
+      before do
+        get search_url, params: {latlng: 'abc.def,-ghi.jkl'},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should result in an error' do
+        expect(response.status).to eql(400)
+      end
+      it 'should return the status INVALID_REQUEST' do
+        body_json = JSON.parse(response.body)
+        expect(body_json['status']).to eq('INVALID_REQUEST')
+      end
+    end
+
+    # map over each hash in test_queries and run this templated test
     test_queries.map do |_hztype, tquery|
       context 'Given an lat,lng ' + tquery[:context] do
         before do

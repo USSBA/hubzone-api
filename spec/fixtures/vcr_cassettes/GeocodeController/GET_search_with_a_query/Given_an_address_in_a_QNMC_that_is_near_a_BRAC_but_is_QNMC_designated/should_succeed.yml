@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://maps.googleapis.com/maps/api/geocode/json?address=amy,%20ar&country=UM&key=AIzaSyCpZgPsZxJzCFXoLpduWMeDRssxFKr6kR0
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=buckeye,%20wv&country=UM&key=AIzaSyBsR78bM2H5vMlO60MAtaL9FVtPGWGyQ7c
     body:
       encoding: US-ASCII
       string: ''
@@ -21,9 +21,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Fri, 02 Dec 2016 18:48:17 GMT
+      - Mon, 05 Dec 2016 16:05:17 GMT
       Expires:
-      - Sat, 03 Dec 2016 18:48:17 GMT
+      - Tue, 06 Dec 2016 16:05:17 GMT
       Cache-Control:
       - public, max-age=86400
       Vary:
@@ -33,7 +33,7 @@ http_interactions:
       Server:
       - mafe
       Content-Length:
-      - '489'
+      - '469'
       X-Xss-Protection:
       - 1; mode=block
       X-Frame-Options:
@@ -48,65 +48,70 @@ http_interactions:
               {
                  "address_components" : [
                     {
-                       "long_name" : "Amy",
-                       "short_name" : "Amy",
+                       "long_name" : "Buckeye",
+                       "short_name" : "Buckeye",
                        "types" : [ "locality", "political" ]
                     },
                     {
-                       "long_name" : "Carroll Township",
-                       "short_name" : "Carroll Township",
+                       "long_name" : "Edray",
+                       "short_name" : "Edray",
                        "types" : [ "administrative_area_level_3", "political" ]
                     },
                     {
-                       "long_name" : "Ouachita County",
-                       "short_name" : "Ouachita County",
+                       "long_name" : "Pocahontas County",
+                       "short_name" : "Pocahontas County",
                        "types" : [ "administrative_area_level_2", "political" ]
                     },
                     {
-                       "long_name" : "Arkansas",
-                       "short_name" : "AR",
+                       "long_name" : "West Virginia",
+                       "short_name" : "WV",
                        "types" : [ "administrative_area_level_1", "political" ]
                     },
                     {
                        "long_name" : "United States",
                        "short_name" : "US",
                        "types" : [ "country", "political" ]
-                    },
-                    {
-                       "long_name" : "71701",
-                       "short_name" : "71701",
-                       "types" : [ "postal_code" ]
                     }
                  ],
-                 "formatted_address" : "Amy, AR 71701, USA",
+                 "formatted_address" : "Buckeye, WV, USA",
                  "geometry" : {
+                    "bounds" : {
+                       "northeast" : {
+                          "lat" : 38.1948556,
+                          "lng" : -80.1312324
+                       },
+                       "southwest" : {
+                          "lat" : 38.1855906,
+                          "lng" : -80.1365459
+                       }
+                    },
                     "location" : {
-                       "lat" : 33.7320525,
-                       "lng" : -92.8154404
+                       "lat" : 38.1869214,
+                       "lng" : -80.13491979999999
                     },
                     "location_type" : "APPROXIMATE",
                     "viewport" : {
                        "northeast" : {
-                          "lat" : 33.7334014802915,
-                          "lng" : -92.8140914197085
+                          "lat" : 38.1948556,
+                          "lng" : -80.1312324
                        },
                        "southwest" : {
-                          "lat" : 33.7307035197085,
-                          "lng" : -92.81678938029151
+                          "lat" : 38.1855906,
+                          "lng" : -80.1365459
                        }
                     }
                  },
-                 "place_id" : "ChIJh3Jky6dfMoYR-PAS2KFqv1c",
+                 "place_id" : "ChIJOfY2405-TIgRJL8zXaGAjeI",
                  "types" : [ "locality", "political" ]
               }
            ],
            "status" : "OK"
         }
     http_version: 
-  recorded_at: Fri, 02 Dec 2016 18:48:19 GMT
+  recorded_at: Mon, 05 Dec 2016 16:05:23 GMT
 - request:
     method: get
-    uri: https://maps.googleapis.com/maps/api/geocode/json?address=amy,%20ar&country=UM&key=AIzaSyBsR78bM2H5vMlO60MAtaL9FVtPGWGyQ7c
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=buckeye,%20wv&country=UM&key=AIzaSyCpZgPsZxJzCFXoLpduWMeDRssxFKr6kR0
     body:
       encoding: US-ASCII
       string: ''
@@ -125,9 +130,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Mon, 05 Dec 2016 14:45:35 GMT
+      - Tue, 06 Dec 2016 13:41:39 GMT
       Expires:
-      - Tue, 06 Dec 2016 14:45:35 GMT
+      - Wed, 07 Dec 2016 13:41:39 GMT
       Cache-Control:
       - public, max-age=86400
       Vary:
@@ -137,13 +142,13 @@ http_interactions:
       Server:
       - mafe
       Content-Length:
-      - '489'
+      - '469'
       X-Xss-Protection:
       - 1; mode=block
       X-Frame-Options:
       - SAMEORIGIN
       Alt-Svc:
-      - quic=":443"; ma=2592000; v="36,35,34"
+      - quic=":443"; ma=2592000; v="35,34"
     body:
       encoding: ASCII-8BIT
       string: |
@@ -152,60 +157,65 @@ http_interactions:
               {
                  "address_components" : [
                     {
-                       "long_name" : "Amy",
-                       "short_name" : "Amy",
+                       "long_name" : "Buckeye",
+                       "short_name" : "Buckeye",
                        "types" : [ "locality", "political" ]
                     },
                     {
-                       "long_name" : "Carroll Township",
-                       "short_name" : "Carroll Township",
+                       "long_name" : "Edray",
+                       "short_name" : "Edray",
                        "types" : [ "administrative_area_level_3", "political" ]
                     },
                     {
-                       "long_name" : "Ouachita County",
-                       "short_name" : "Ouachita County",
+                       "long_name" : "Pocahontas County",
+                       "short_name" : "Pocahontas County",
                        "types" : [ "administrative_area_level_2", "political" ]
                     },
                     {
-                       "long_name" : "Arkansas",
-                       "short_name" : "AR",
+                       "long_name" : "West Virginia",
+                       "short_name" : "WV",
                        "types" : [ "administrative_area_level_1", "political" ]
                     },
                     {
                        "long_name" : "United States",
                        "short_name" : "US",
                        "types" : [ "country", "political" ]
-                    },
-                    {
-                       "long_name" : "71701",
-                       "short_name" : "71701",
-                       "types" : [ "postal_code" ]
                     }
                  ],
-                 "formatted_address" : "Amy, AR 71701, USA",
+                 "formatted_address" : "Buckeye, WV, USA",
                  "geometry" : {
+                    "bounds" : {
+                       "northeast" : {
+                          "lat" : 38.1948556,
+                          "lng" : -80.1312324
+                       },
+                       "southwest" : {
+                          "lat" : 38.1855906,
+                          "lng" : -80.1365459
+                       }
+                    },
                     "location" : {
-                       "lat" : 33.7320525,
-                       "lng" : -92.8154404
+                       "lat" : 38.1869214,
+                       "lng" : -80.13491979999999
                     },
                     "location_type" : "APPROXIMATE",
                     "viewport" : {
                        "northeast" : {
-                          "lat" : 33.7334014802915,
-                          "lng" : -92.8140914197085
+                          "lat" : 38.1948556,
+                          "lng" : -80.1312324
                        },
                        "southwest" : {
-                          "lat" : 33.7307035197085,
-                          "lng" : -92.81678938029151
+                          "lat" : 38.1855906,
+                          "lng" : -80.1365459
                        }
                     }
                  },
-                 "place_id" : "ChIJh3Jky6dfMoYR-PAS2KFqv1c",
+                 "place_id" : "ChIJOfY2405-TIgRJL8zXaGAjeI",
                  "types" : [ "locality", "political" ]
               }
            ],
            "status" : "OK"
         }
     http_version: 
-  recorded_at: Mon, 05 Dec 2016 14:45:41 GMT
+  recorded_at: Tue, 06 Dec 2016 13:41:41 GMT
 recorded_with: VCR 3.0.3
