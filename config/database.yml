@@ -85,3 +85,7 @@ test:
 production:
   <<: *default
   database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_prd' } %>
+
+demo:
+  <<: *default
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_demo' } %>
