@@ -63,9 +63,13 @@ class HubzoneUtil
       results
     end
 
+    def get_query_date_time()
+      Time.now.to_s
+    end
+
     def append_assertions(results)
       results[:hubzone] = []
-      results[:query_date_time] = Time.now
+      results[:query_date_time] = get_query_date_time
       location = results['geometry']['location']
 
       # Check first for BRAC
@@ -86,7 +90,7 @@ class HubzoneUtil
       { status: status,
         message: 'api.error.' + status.downcase,
         http_status: code,
-        query_date_time: Time.now }
+        query_date_time: get_query_date_time }
     end
   end
 end

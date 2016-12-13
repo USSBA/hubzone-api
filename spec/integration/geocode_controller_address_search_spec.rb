@@ -97,6 +97,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       body_json = JSON.parse(response.body)
       expect(body_json['status']).to eq('INVALID_REQUEST')
     end
+    it 'should return a valid query date time stamp' do 
+      body_json = JSON.parse(response.body)
+      expect(body_json['query_date_time']).to eq(Time.now.to_s)
+    end
   end
 
   # tests for address query
@@ -138,6 +142,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
+        it 'should return a valid query date time stamp' do 
+          body_json = JSON.parse(response.body)
+          expect(body_json['query_date_time']).to eq(Time.now.to_s)
+        end
       end
     end
   end
@@ -155,6 +163,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       it 'should return the status INVALID_REQUEST' do
         body_json = JSON.parse(response.body)
         expect(body_json['status']).to eq('INVALID_REQUEST')
+      end
+      it 'should return a valid query date time stamp' do 
+        body_json = JSON.parse(response.body)
+        expect(body_json['query_date_time']).to eq(Time.now.to_s)
       end
     end
 
@@ -204,6 +216,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           body = JSON.parse response.body
           hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
+        end
+        it 'should return a valid query date time stamp' do 
+          body_json = JSON.parse(response.body)
+          expect(body_json['query_date_time']).to eq(Time.now.to_s)
         end
       end
     end
