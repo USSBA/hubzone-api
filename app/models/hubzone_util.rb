@@ -65,6 +65,7 @@ class HubzoneUtil
 
     def append_assertions(results)
       results[:hubzone] = []
+      results[:query_date_time] = Time.now
       location = results['geometry']['location']
 
       # Check first for BRAC
@@ -84,7 +85,8 @@ class HubzoneUtil
       code = status.eql?('ZERO_RESULTS') ? 200 : 400
       { status: status,
         message: 'api.error.' + status.downcase,
-        http_status: code }
+        http_status: code,
+        query_date_time: Time.now }
     end
   end
 end
