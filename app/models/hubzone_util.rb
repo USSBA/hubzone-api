@@ -2,13 +2,15 @@
 class HubzoneUtil
   class << self
     def search(params)
-      if !params[:q].nil?
-        search_by_query params[:q]
-      elsif !params[:latlng].nil?
-        search_by_latlng params[:latlng]
-      else
-        build_response("INVALID_REQUEST")
-      end
+      results = if !params[:q].nil?
+                  search_by_query params[:q]
+                elsif !params[:latlng].nil?
+                  search_by_latlng params[:latlng]
+                else
+                  build_response("INVALID_REQUEST")
+                end
+      results[:query_date] = params[:query_date]
+      results
     end
 
     private
@@ -63,13 +65,8 @@ class HubzoneUtil
       results
     end
 
-    def get_query_date_time()
-      Time.now.to_s
-    end
-
     def append_assertions(results)
       results[:hubzone] = []
-      results[:query_date_time] = get_query_date_time
       location = results['geometry']['location']
 
       # Check first for BRAC
@@ -89,8 +86,7 @@ class HubzoneUtil
       code = status.eql?('ZERO_RESULTS') ? 200 : 400
       { status: status,
         message: 'api.error.' + status.downcase,
-        http_status: code,
-        query_date_time: get_query_date_time }
+        http_status: code }
     end
   end
 end
