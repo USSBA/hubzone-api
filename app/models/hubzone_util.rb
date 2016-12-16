@@ -2,13 +2,15 @@
 class HubzoneUtil
   class << self
     def search(params)
-      if !params[:q].nil?
-        search_by_query params[:q]
-      elsif !params[:latlng].nil?
-        search_by_latlng params[:latlng]
-      else
-        build_response("INVALID_REQUEST")
-      end
+      results = if !params[:q].nil?
+                  search_by_query params[:q]
+                elsif !params[:latlng].nil?
+                  search_by_latlng params[:latlng]
+                else
+                  build_response("INVALID_REQUEST")
+                end
+      results[:query_date] = params[:query_date]
+      results
     end
 
     private

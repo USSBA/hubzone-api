@@ -94,12 +94,12 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE brac_2014 (
-    brac_gid integer,
-    brac_sba_name character varying(36),
-    brac_county character varying(36),
-    brac_st_name character varying(25),
-    brac_fac_type character varying(25),
-    brac_closure character varying(15),
+    gid integer,
+    sba_name character varying(36),
+    county character varying(36),
+    st_name character varying(25),
+    fac_type character varying(25),
+    closure character varying(15),
     geom public.geometry(MultiPolygon,4326),
     geom_lowres public.geometry(MultiPolygon,4326),
     geom_lowerres public.geometry(MultiPolygon,4326),
@@ -139,96 +139,19 @@ CREATE TABLE il_2014 (
 
 
 --
--- Name: il_data_seq; Type: SEQUENCE; Schema: data; Owner: -
---
-
-CREATE SEQUENCE il_data_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: il_geom_lowres_seq; Type: SEQUENCE; Schema: data; Owner: -
---
-
-CREATE SEQUENCE il_geom_lowres_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: il_geom_seq; Type: SEQUENCE; Schema: data; Owner: -
---
-
-CREATE SEQUENCE il_geom_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: il_geom_tinyres_seq; Type: SEQUENCE; Schema: data; Owner: -
---
-
-CREATE SEQUENCE il_geom_tinyres_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: il_test; Type: TABLE; Schema: data; Owner: -
---
-
-CREATE TABLE il_test (
-    il_gid integer,
-    il_objectid integer,
-    il_id numeric,
-    il_indian character varying(7),
-    il_state character varying(2),
-    il_census character varying(7),
-    il_gnis integer,
-    il_name character varying(62),
-    il_type character varying(37),
-    il_class character varying(54),
-    il_recognitio character varying(7),
-    il_land_area numeric,
-    il_water_area numeric,
-    il_shape_leng numeric,
-    il_shape_area numeric,
-    geom public.geometry(MultiPolygon,4326),
-    geom_lowres public.geometry(MultiPolygon,4326),
-    geom_lowerres public.geometry(MultiPolygon,4326),
-    geom_lowestres public.geometry(MultiPolygon,4326),
-    start date,
-    stop date
-);
-
-
---
 -- Name: qct; Type: TABLE; Schema: data; Owner: -
 --
 
 CREATE TABLE qct (
-    qct_gid integer,
-    qct_tract character varying(11),
-    qct_state character varying(2),
-    qct_city character varying(24),
-    qct_county character varying(24),
-    qct_qualified_ character varying(4),
-    qct_qualified1 character varying(4),
-    qct_hubzone_st character varying(32),
-    qct_brac_2016 character varying(36),
+    gid integer,
+    tract character varying(11),
+    state character varying(2),
+    city character varying(24),
+    county character varying(24),
+    qualified_ character varying(4),
+    qualified1 character varying(4),
+    hubzone_st character varying(32),
+    brac_2016 character varying(36),
     geom public.geometry(MultiPolygon,4326),
     start date DEFAULT ('now'::text)::date NOT NULL,
     stop date
@@ -269,11 +192,11 @@ ALTER SEQUENCE qct_union_gid_seq OWNED BY qct_union.gid;
 --
 
 CREATE TABLE qnmc (
-    qnmc_gid integer,
-    qnmc_county character varying(5),
-    qnmc_f2016_sba_ character varying(32),
-    qnmc_f2016_sba1 character varying(32),
-    qnmc_brac_2016 character varying(36),
+    gid integer,
+    county character varying(5),
+    f2016_sba_ character varying(32),
+    f2016_sba1 character varying(32),
+    brac_2016 character varying(36),
     geom public.geometry(MultiPolygon,4326),
     start date DEFAULT ('now'::text)::date NOT NULL,
     stop date
@@ -459,131 +382,6 @@ CREATE SEQUENCE qualified_nonmetro_counties_gid_seq
 ALTER SEQUENCE qualified_nonmetro_counties_gid_seq OWNED BY qualified_nonmetro_counties.gid;
 
 
---
--- Name: tl_2008_us_aiannh; Type: TABLE; Schema: import; Owner: -
---
-
-CREATE TABLE tl_2008_us_aiannh (
-    gid integer NOT NULL,
-    aiannhce character varying(4),
-    aiannhns character varying(8),
-    aiannhid character varying(5),
-    name character varying(100),
-    namelsad character varying(100),
-    lsad character varying(2),
-    comptyp character varying(1),
-    classfp character varying(2),
-    aiannhr character varying(1),
-    mtfcc character varying(5),
-    funcstat character varying(1)
-);
-
-
---
--- Name: tl_2008_us_aiannh_gid_seq; Type: SEQUENCE; Schema: import; Owner: -
---
-
-CREATE SEQUENCE tl_2008_us_aiannh_gid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tl_2008_us_aiannh_gid_seq; Type: SEQUENCE OWNED BY; Schema: import; Owner: -
---
-
-ALTER SEQUENCE tl_2008_us_aiannh_gid_seq OWNED BY tl_2008_us_aiannh.gid;
-
-
---
--- Name: tl_2010_us_aiannh10; Type: TABLE; Schema: import; Owner: -
---
-
-CREATE TABLE tl_2010_us_aiannh10 (
-    gid integer NOT NULL,
-    aiannhce10 character varying(4),
-    aiannhns10 character varying(8),
-    geoid10 character varying(5),
-    name10 character varying(100),
-    namelsad10 character varying(100),
-    lsad10 character varying(2),
-    classfp10 character varying(2),
-    comptyp10 character varying(1),
-    aiannhr10 character varying(1),
-    mtfcc10 character varying(5),
-    funcstat10 character varying(1),
-    aland10 double precision,
-    awater10 double precision,
-    intptlat10 character varying(11),
-    intptlon10 character varying(12)
-);
-
-
---
--- Name: tl_2010_us_aiannh10_gid_seq; Type: SEQUENCE; Schema: import; Owner: -
---
-
-CREATE SEQUENCE tl_2010_us_aiannh10_gid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tl_2010_us_aiannh10_gid_seq; Type: SEQUENCE OWNED BY; Schema: import; Owner: -
---
-
-ALTER SEQUENCE tl_2010_us_aiannh10_gid_seq OWNED BY tl_2010_us_aiannh10.gid;
-
-
---
--- Name: tl_2016_us_aiannh; Type: TABLE; Schema: import; Owner: -
---
-
-CREATE TABLE tl_2016_us_aiannh (
-    gid integer NOT NULL,
-    aiannhce character varying(4),
-    aiannhns character varying(8),
-    geoid character varying(5),
-    name character varying(100),
-    namelsad character varying(100),
-    lsad character varying(2),
-    classfp character varying(2),
-    comptyp character varying(1),
-    aiannhr character varying(1),
-    mtfcc character varying(5),
-    funcstat character varying(1),
-    aland double precision,
-    awater double precision,
-    intptlat character varying(11),
-    intptlon character varying(12)
-);
-
-
---
--- Name: tl_2016_us_aiannh_gid_seq; Type: SEQUENCE; Schema: import; Owner: -
---
-
-CREATE SEQUENCE tl_2016_us_aiannh_gid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tl_2016_us_aiannh_gid_seq; Type: SEQUENCE OWNED BY; Schema: import; Owner: -
---
-
-ALTER SEQUENCE tl_2016_us_aiannh_gid_seq OWNED BY tl_2016_us_aiannh.gid;
-
-
 SET search_path = public, pg_catalog;
 
 --
@@ -603,12 +401,12 @@ CREATE TABLE ar_internal_metadata (
 --
 
 CREATE VIEW brac AS
- SELECT d.brac_gid AS gid,
-    d.brac_sba_name AS sba_name,
-    d.brac_county AS county,
-    d.brac_st_name AS st_name,
-    d.brac_fac_type AS fac_type,
-    d.brac_closure AS closure,
+ SELECT d.gid,
+    d.sba_name,
+    d.county,
+    d.st_name,
+    d.fac_type,
+    d.closure,
     d.geom,
     d.start,
     d.stop
@@ -620,13 +418,13 @@ CREATE VIEW brac AS
 --
 
 CREATE VIEW brac_lowerres AS
- SELECT d.brac_gid AS gid,
-    d.brac_sba_name AS sba_name,
-    d.brac_county AS county,
-    d.brac_st_name AS st_name,
-    d.brac_fac_type AS fac_type,
-    d.brac_closure AS closure,
-    d.geom_lowerres AS geom,
+ SELECT d.gid,
+    d.sba_name,
+    d.county,
+    d.st_name,
+    d.fac_type,
+    d.closure,
+    d.geom,
     d.start,
     d.stop
    FROM data.brac_2014 d;
@@ -637,13 +435,13 @@ CREATE VIEW brac_lowerres AS
 --
 
 CREATE VIEW brac_lowestres AS
- SELECT d.brac_gid AS gid,
-    d.brac_sba_name AS sba_name,
-    d.brac_county AS county,
-    d.brac_st_name AS st_name,
-    d.brac_fac_type AS fac_type,
-    d.brac_closure AS closure,
-    d.geom_lowestres AS geom,
+ SELECT d.gid,
+    d.sba_name,
+    d.county,
+    d.st_name,
+    d.fac_type,
+    d.closure,
+    d.geom,
     d.start,
     d.stop
    FROM data.brac_2014 d;
@@ -654,13 +452,13 @@ CREATE VIEW brac_lowestres AS
 --
 
 CREATE VIEW brac_lowres AS
- SELECT d.brac_gid AS gid,
-    d.brac_sba_name AS sba_name,
-    d.brac_county AS county,
-    d.brac_st_name AS st_name,
-    d.brac_fac_type AS fac_type,
-    d.brac_closure AS closure,
-    d.geom_lowres AS geom,
+ SELECT d.gid,
+    d.sba_name,
+    d.county,
+    d.st_name,
+    d.fac_type,
+    d.closure,
+    d.geom,
     d.start,
     d.stop
    FROM data.brac_2014 d;
@@ -674,6 +472,8 @@ CREATE TABLE hz_current (
     gid integer NOT NULL,
     sourceid integer,
     hztype character varying(20),
+    start date,
+    stop date,
     res character varying(10) DEFAULT 'high'::character varying,
     geom geometry(MultiPolygon,4326)
 );
@@ -903,19 +703,50 @@ CREATE VIEW indian_lands_lowres AS
 --
 
 CREATE VIEW qct AS
- SELECT d.qct_gid AS gid,
-    d.qct_tract AS tract,
-    d.qct_state AS state,
-    d.qct_city AS city,
-    d.qct_county AS county,
-    d.qct_qualified_ AS qualified_,
-    d.qct_qualified1 AS qualified1,
-    d.qct_hubzone_st AS hubzone_st,
-    d.qct_brac_2016 AS brac_2016,
+ SELECT d.gid,
+    d.tract,
+    d.state,
+    d.city,
+    d.county,
+    d.qualified_,
+    d.qualified1,
+    d.hubzone_st,
+    d.brac_2016,
     d.geom,
     d.start,
     d.stop
    FROM data.qct d;
+
+
+--
+-- Name: qct_highres_union; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE qct_highres_union (
+    gid integer NOT NULL,
+    hztype character varying(20) DEFAULT 'qct'::character varying,
+    res character varying(10) DEFAULT 'high'::character varying,
+    geom geometry(MultiPolygon,4326)
+);
+
+
+--
+-- Name: qct_highres_union_gid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE qct_highres_union_gid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: qct_highres_union_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE qct_highres_union_gid_seq OWNED BY qct_highres_union.gid;
 
 
 --
@@ -939,6 +770,37 @@ CREATE VIEW qct_lowestres AS
 
 
 --
+-- Name: qct_lowestres_union; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE qct_lowestres_union (
+    gid integer NOT NULL,
+    hztype character varying(20) DEFAULT 'qct'::character varying,
+    res character varying(10) DEFAULT 'high'::character varying,
+    geom geometry(MultiPolygon,4326)
+);
+
+
+--
+-- Name: qct_lowestres_union_gid_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE qct_lowestres_union_gid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: qct_lowestres_union_gid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE qct_lowestres_union_gid_seq OWNED BY qct_lowestres_union.gid;
+
+
+--
 -- Name: qct_lowres; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -949,43 +811,15 @@ CREATE VIEW qct_lowres AS
 
 
 --
--- Name: qct_tables; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE qct_tables (
-    id integer NOT NULL
-);
-
-
---
--- Name: qct_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE qct_tables_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: qct_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE qct_tables_id_seq OWNED BY qct_tables.id;
-
-
---
 -- Name: qnmc; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW qnmc AS
- SELECT d.qnmc_gid AS gid,
-    d.qnmc_county AS county,
-    d.qnmc_f2016_sba_ AS f2016_sba_,
-    d.qnmc_f2016_sba1 AS f2016_sba1,
-    d.qnmc_brac_2016 AS brac_2016,
+ SELECT d.gid,
+    d.county,
+    d.f2016_sba_,
+    d.f2016_sba1,
+    d.brac_2016,
     d.geom,
     d.start,
     d.stop
@@ -1023,11 +857,62 @@ CREATE VIEW qnmc_lowres AS
 
 
 --
+-- Name: qnmc_tables; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE qnmc_tables (
+    id integer NOT NULL
+);
+
+
+--
+-- Name: qnmc_tables_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE qnmc_tables_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: qnmc_tables_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE qnmc_tables_id_seq OWNED BY qnmc_tables.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE schema_migrations (
     version character varying NOT NULL
+);
+
+
+--
+-- Name: test; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE test (
+    qct_gid integer,
+    qct_tract character varying(11),
+    qct_state character varying(2),
+    qct_city character varying(24),
+    qct_county character varying(24),
+    qct_qualified_ character varying(4),
+    qct_qualified1 character varying(4),
+    qct_hubzone_st character varying(32),
+    qct_brac_2016 character varying(36),
+    geom geometry(MultiPolygon,4326),
+    geom_lowres geometry(MultiPolygon,4326),
+    geom_lowerres geometry(MultiPolygon,4326),
+    geom_lowestres geometry(MultiPolygon,4326),
+    start date DEFAULT ('now'::text)::date NOT NULL,
+    stop date
 );
 
 
@@ -1077,27 +962,6 @@ ALTER TABLE ONLY indianlands_2014 ALTER COLUMN gid SET DEFAULT nextval('indianla
 ALTER TABLE ONLY qualified_nonmetro_counties ALTER COLUMN gid SET DEFAULT nextval('qualified_nonmetro_counties_gid_seq'::regclass);
 
 
---
--- Name: gid; Type: DEFAULT; Schema: import; Owner: -
---
-
-ALTER TABLE ONLY tl_2008_us_aiannh ALTER COLUMN gid SET DEFAULT nextval('tl_2008_us_aiannh_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: import; Owner: -
---
-
-ALTER TABLE ONLY tl_2010_us_aiannh10 ALTER COLUMN gid SET DEFAULT nextval('tl_2010_us_aiannh10_gid_seq'::regclass);
-
-
---
--- Name: gid; Type: DEFAULT; Schema: import; Owner: -
---
-
-ALTER TABLE ONLY tl_2016_us_aiannh ALTER COLUMN gid SET DEFAULT nextval('tl_2016_us_aiannh_gid_seq'::regclass);
-
-
 SET search_path = public, pg_catalog;
 
 --
@@ -1129,10 +993,24 @@ ALTER TABLE ONLY hz_current_lowres ALTER COLUMN gid SET DEFAULT nextval('hz_curr
 
 
 --
+-- Name: gid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY qct_highres_union ALTER COLUMN gid SET DEFAULT nextval('qct_highres_union_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY qct_lowestres_union ALTER COLUMN gid SET DEFAULT nextval('qct_lowestres_union_gid_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY qct_tables ALTER COLUMN id SET DEFAULT nextval('qct_tables_id_seq'::regclass);
+ALTER TABLE ONLY qnmc_tables ALTER COLUMN id SET DEFAULT nextval('qnmc_tables_id_seq'::regclass);
 
 
 SET search_path = data, pg_catalog;
@@ -1187,30 +1065,6 @@ ALTER TABLE ONLY qualified_nonmetro_counties
     ADD CONSTRAINT qualified_nonmetro_counties_pkey PRIMARY KEY (gid);
 
 
---
--- Name: tl_2008_us_aiannh_pkey; Type: CONSTRAINT; Schema: import; Owner: -
---
-
-ALTER TABLE ONLY tl_2008_us_aiannh
-    ADD CONSTRAINT tl_2008_us_aiannh_pkey PRIMARY KEY (gid);
-
-
---
--- Name: tl_2010_us_aiannh10_pkey; Type: CONSTRAINT; Schema: import; Owner: -
---
-
-ALTER TABLE ONLY tl_2010_us_aiannh10
-    ADD CONSTRAINT tl_2010_us_aiannh10_pkey PRIMARY KEY (gid);
-
-
---
--- Name: tl_2016_us_aiannh_pkey; Type: CONSTRAINT; Schema: import; Owner: -
---
-
-ALTER TABLE ONLY tl_2016_us_aiannh
-    ADD CONSTRAINT tl_2016_us_aiannh_pkey PRIMARY KEY (gid);
-
-
 SET search_path = public, pg_catalog;
 
 --
@@ -1254,11 +1108,27 @@ ALTER TABLE ONLY hz_current
 
 
 --
--- Name: qct_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: qct_highres_union_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY qct_tables
-    ADD CONSTRAINT qct_tables_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY qct_highres_union
+    ADD CONSTRAINT qct_highres_union_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: qct_lowestres_union_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY qct_lowestres_union
+    ADD CONSTRAINT qct_lowestres_union_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: qnmc_tables_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY qnmc_tables
+    ADD CONSTRAINT qnmc_tables_pkey PRIMARY KEY (id);
 
 
 --
@@ -1305,6 +1175,6 @@ CREATE INDEX qualified_nonmetro_counties_geom_idx ON qualified_nonmetro_counties
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20161003200320'), ('20161108135805'), ('20161115190127'), ('20161115191042'), ('20161205141123');
+INSERT INTO schema_migrations (version) VALUES ('20161003200320'), ('20161108135805'), ('20161115190127'), ('20161115191042'), ('20161201165108'), ('20161205141123');
 
 
