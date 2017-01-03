@@ -1,4 +1,9 @@
 require 'rails_helper'
+require 'helpers/test_data_helper'
+
+RSpec.configure do |c|
+  c.include TestDataHelper
+end
 
 test_queries = {
   qct: {
@@ -23,7 +28,7 @@ test_queries = {
     latlng: '33.7320525,-92.8154404',
     http_status: 200,
     results_address: 'Amy, AR 71701, USA',
-    designations: %w(qct_b qnmc_b)
+    designations: %w(qct_b) # not added to test data: qnmc_b)
   },
   qct_not_brac: {
     context: 'in a QCT that is near a BRAC, but is QCT designated',
@@ -31,7 +36,7 @@ test_queries = {
     latlng: '33.7023315,-93.02044370000002',
     http_status: 200,
     results_address: 'Chidester, AR 71726, USA',
-    designations: %w(qct_e qnmc_b)
+    designations: %w(qct_e) # not added to test data: qnmc_b)
   },
   brac_qnmc: {
     context: 'in a QNMC that is BRAC designated',
@@ -39,7 +44,7 @@ test_queries = {
     latlng: '38.8764985,-79.9853181',
     http_status: 200,
     results_address: 'Mabie, WV 26257, USA',
-    designations: %w(qnmc_b qct_b)
+    designations: %w(qnmc_b) # not added to test data: qct_b)
   },
   qnmc_not_brac: {
     context: 'in a QNMC that is near a BRAC, but is QNMC designated',
@@ -60,7 +65,8 @@ test_queries = {
   navajo: {
     context: 'of navajo',
     query: 'navajo',
-    latlng: '35.9000121,-109.0339832',
+    #latlng: '35.9000121,-109.0339832',
+    latlng: '36.0672173,-109.1880047',
     http_status: 200,
     results_address: 'Navajo, NM 87328, USA',
     designations: %w(indian_lands qct_e qnmc_e)
@@ -84,6 +90,9 @@ test_queries = {
 }
 
 RSpec.describe GeocodeController, vcr: true, type: :request do
+  before do
+    create_test_data
+  end
 
   describe 'GET #search without any query or location' do
     before do
