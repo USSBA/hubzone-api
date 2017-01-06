@@ -28,7 +28,7 @@ test_queries = {
     latlng: '33.7320525,-92.8154404',
     http_status: 200,
     results_address: 'Amy, AR 71701, USA',
-    designations: %w(qct_b) # not added to test data: qnmc_b)
+    designations: %w(qct_b) # not added to test data: qnmc_brac)
   },
   qct_not_brac: {
     context: 'in a QCT that is near a BRAC, but is QCT designated',
@@ -36,7 +36,7 @@ test_queries = {
     latlng: '33.7023315,-93.02044370000002',
     http_status: 200,
     results_address: 'Chidester, AR 71726, USA',
-    designations: %w(qct_e) # not added to test data: qnmc_b)
+    designations: %w(qct_e) # not added to test data: qnmc_brac)
   },
   brac_qnmc: {
     context: 'in a QNMC that is BRAC designated',
@@ -44,7 +44,7 @@ test_queries = {
     latlng: '38.8764985,-79.9853181',
     http_status: 200,
     results_address: 'Mabie, WV 26257, USA',
-    designations: %w(qnmc_b) # not added to test data: qct_b)
+    designations: %w(qnmc_brac) # not added to test data: qct_b)
   },
   qnmc_not_brac: {
     context: 'in a QNMC that is near a BRAC, but is QNMC designated',
@@ -52,7 +52,7 @@ test_queries = {
     latlng: '38.1902273,-80.1360778',
     http_status: 200,
     results_address: 'Buckeye, WV, USA',
-    designations: %w(qnmc_e)
+    designations: %w(qnmc_a)
   },
   indian_lands: {
     context: 'in an Indian Lands hubzone',
@@ -69,7 +69,7 @@ test_queries = {
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
     results_address: 'Navajo, NM 87328, USA',
-    designations: %w(indian_lands qct_e qnmc_e)
+    designations: %w(indian_lands qct_e qnmc_b)
   },
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
@@ -85,7 +85,7 @@ test_queries = {
     latlng: '35.8185419,-94.6675625',
     http_status: 200,
     results_address: 'Stilwell, OK 74960, USA',
-    designations: %w(qct_e qnmc_e indian_lands)
+    designations: %w(qct_e qnmc_a indian_lands)
   }
 }
 

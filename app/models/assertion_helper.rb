@@ -8,7 +8,7 @@ module AssertionHelper
     hubzones = []
     res.each do |r|
       r.delete('geom')
-      r[:hz_type] = type
+      r['hz_type'] = type
       hubzones << r
     end
     hubzones
