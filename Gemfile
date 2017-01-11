@@ -18,6 +18,7 @@ gem 'rails', '~> 5.0.0', '>= 5.0.0.1' # Bundle edge Rails instead: gem 'rails', 
 
 group :development, :test do
   gem 'byebug', platform: :mri # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'rb-readline'
   gem 'rspec-rails', '~> 3.5'
   gem 'rubocop', require: false
   gem 'simplecov', require: false # determine code coverage of tests

@@ -8,6 +8,7 @@
 # SELECT ST_AsText(ST_SetSRID(ST_Extent(geom),4326)) AS geom FROM indian_lands WHERE gid = 275;
 #
 
+# rubocop:disable Metrics/ModuleLength
 module TestDataHelper
   def create_test_data
     create_qct_data
@@ -26,15 +27,15 @@ module TestDataHelper
 
       CREATE TABLE IF NOT EXISTS data.qct
         (
-          qct_gid integer,
-          qct_tract character varying(11),
-          qct_state character varying(2),
-          qct_city character varying(24),
-          qct_county character varying(24),
-          qct_qualified_ character varying(4),
-          qct_qualified1 character varying(4),
-          qct_hubzone_st character varying(32),
-          qct_brac_2016 character varying(36),
+          gid integer,
+          tract character varying(11),
+          state character varying(2),
+          city character varying(24),
+          county character varying(24),
+          qualified_ character varying(4),
+          qualified1 character varying(4),
+          hubzone_st character varying(32),
+          brac_2016 character varying(36),
           geom geometry(MultiPolygon,4326),
           geom_lowres geometry(MultiPolygon,4326),
           geom_lowerres geometry(MultiPolygon,4326),
@@ -69,18 +70,7 @@ module TestDataHelper
            'SRID=4326;MULTIPOLYGON(((-93.11233 33.544939,-93.11233 33.822503,-92.828963 33.822503,-92.828963 33.544939,-93.11233 33.544939)))');
 
         CREATE VIEW qct AS
-          SELECT qct_gid        AS gid,
-                 qct_tract      AS tract,
-                 qct_state      AS state,
-                 qct_city       AS city,
-                 qct_county     AS county,
-                 qct_qualified_ AS qualified_,
-                 qct_qualified1 AS qualified1,
-                 qct_hubzone_st AS hubzone_st,
-                 qct_brac_2016  AS brac_2016,
-                 geom,
-                 start,
-                 stop
+          SELECT *
             FROM data.qct;
     SQL
   end
@@ -93,45 +83,47 @@ module TestDataHelper
     <<-SQL
       CREATE SCHEMA IF NOT EXISTS data;
 
-        CREATE TABLE IF NOT EXISTS data.qnmc
+        CREATE TABLE IF NOT EXISTS data.qnmc_2016_01_01
         (
-          qnmc_gid integer,
-          qnmc_county character varying(5),
-          qnmc_f2016_sba_ character varying(32),
-          qnmc_f2016_sba1 character varying(32),
-          qnmc_brac_2016 character varying(36),
+          gid integer,
+          county character varying(5),
+          f2016_sba_ character varying(32),
+          f2016_sba1 character varying(32),
+          brac_2016 character varying(36),
+          unemployment boolean,
+          income boolean,
+          redesignated boolean,
+          brac_id integer,
+          dda boolean,
           geom geometry(MultiPolygon,4326),
           start date NOT NULL DEFAULT ('now'::text)::date,
           stop date);
 
-        INSERT INTO data.qnmc VALUES
+        INSERT INTO data.qnmc_2016_01_01 VALUES
           (235, '40001',
            'Qualified by Unemployment', 'Qualified by Unemployment',
            NULL,
+           true, false, false, NULL, false,
            'SRID=4326;MULTIPOLYGON(((-94.80779 35.638215,-94.80779 36.161902,-94.472647 36.161902,-94.472647 35.638215,-94.80779 35.638215)))'),
           (722, '54075',
            'Redesignated until July 2017', 'Qualified by Unemployment',
            NULL,
+           true, false, false, NULL, false,
            'SRID=4326;MULTIPOLYGON(((-80.363295 38.03611,-80.363295 38.739811,-79.617906 38.739811,-79.617906 38.03611,-80.363295 38.03611)))'),
           (723, '54083',
            'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
            'Elkins USARC/OMS, Beverly',
+           false, false, false, 1, false,
            'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))'),
           (999, '99999',
            'Qualified by Income', 'Qualified by Income',
-           'Douglandia',
+           NULL,
+           false, true, false, NULL, false,
            'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))');
 
         CREATE VIEW qnmc AS
-          SELECT qnmc_gid        AS gid,
-                 qnmc_county     AS county,
-                 qnmc_f2016_sba_ AS f2016_sba_,
-                 qnmc_f2016_sba1 AS f2016_sba1,
-                 qnmc_brac_2016  AS brac_2016,
-                 geom,
-                 start,
-                 stop
-            FROM data.qnmc;
+          SELECT *
+            FROM data.qnmc_2016_01_01;
     SQL
   end
 
@@ -145,12 +137,12 @@ module TestDataHelper
 
       CREATE TABLE IF NOT EXISTS data.brac
         (
-          brac_gid integer,
-          brac_sba_name character varying(36),
-          brac_county character varying(36),
-          brac_st_name character varying(25),
-          brac_fac_type character varying(25),
-          brac_closure character varying(15),
+          gid integer,
+          sba_name character varying(36),
+          county character varying(36),
+          st_name character varying(25),
+          fac_type character varying(25),
+          closure character varying(15),
           geom geometry(MultiPolygon,4326),
           geom_lowres geometry(MultiPolygon,4326),
           geom_lowerres geometry(MultiPolygon,4326),
@@ -169,15 +161,7 @@ module TestDataHelper
            'SRID=4326;MULTIPOLYGON(((-92.769916 33.619565,-92.769916 33.62095,-92.769049 33.62095,-92.769049 33.619565,-92.769916 33.619565)))');
 
         CREATE VIEW brac AS
-          SELECT brac_gid      AS gid,
-                 brac_sba_name AS sba_name,
-                 brac_county   AS county,
-                 brac_st_name  AS st_name,
-                 brac_fac_type AS fac_type,
-                 brac_closure  AS closure,
-                 geom,
-                 start,
-                 stop
+          SELECT *
             FROM data.brac;
     SQL
   end
@@ -188,23 +172,23 @@ module TestDataHelper
 
   def indian_lands_sql
     <<-SQL
-      CREATE TABLE IF NOT EXISTS data.il_2014
+      CREATE TABLE IF NOT EXISTS data.indian_lands
         (
-          il_gid integer,
-          il_objectid integer,
-          il_id numeric,
-          il_indian character varying(7) COLLATE pg_catalog."default",
-          il_state character varying(2) COLLATE pg_catalog."default",
-          il_census character varying(7) COLLATE pg_catalog."default",
-          il_gnis integer,
-          il_name character varying(62) COLLATE pg_catalog."default",
-          il_type character varying(37) COLLATE pg_catalog."default",
-          il_class character varying(54) COLLATE pg_catalog."default",
-          il_recognitio character varying(7) COLLATE pg_catalog."default",
-          il_land_area numeric,
-          il_water_area numeric,
-          il_shape_leng numeric,
-          il_shape_area numeric,
+          gid integer,
+          objectid integer,
+          id numeric,
+          indian character varying(7) COLLATE pg_catalog."default",
+          state character varying(2) COLLATE pg_catalog."default",
+          census character varying(7) COLLATE pg_catalog."default",
+          gnis integer,
+          name character varying(62) COLLATE pg_catalog."default",
+          type character varying(37) COLLATE pg_catalog."default",
+          class character varying(54) COLLATE pg_catalog."default",
+          recognitio character varying(7) COLLATE pg_catalog."default",
+          land_area numeric,
+          water_area numeric,
+          shape_leng numeric,
+          shape_area numeric,
           geom geometry(MultiPolygon,4326),
           geom_lowres geometry(MultiPolygon,4326),
           geom_lowerres geometry(MultiPolygon,4326),
@@ -212,7 +196,7 @@ module TestDataHelper
           start date NOT NULL DEFAULT ('now'::text)::date,
           stop date);
 
-        INSERT INTO data.il_2014 VALUES
+        INSERT INTO data.indian_lands VALUES
           (275, 275, 1666069.0, '4013905',
             '40', '405560R', 2418814,
             'Cheyenne-Arapaho OK', 'OTSA', 'Oklahoma Tribal Statistical Area', 'Federal',
@@ -239,23 +223,8 @@ module TestDataHelper
             'SRID=4326;MULTIPOLYGON(((-110.046782999636 34.3032610000951,-109.046782999636 36.9992870002949,-106.943004999581 36.9992870002949,-106.943004999581 34.3032610000951,-110.046782999636 34.3032610000951)))');
 
         CREATE VIEW indian_lands AS
-          SELECT il_gid         AS gid,
-                 il_objectid    AS objectid,
-                 il_id          AS id,
-                 il_indian      AS indian,
-                 il_state       AS state,
-                 il_census      AS census,
-                 il_gnis        AS gnis,
-                 il_name        AS name,
-                 il_type        AS type,
-                 il_class       AS class,
-                 il_recognitio  AS recognitio,
-                 il_land_area   AS land_area,
-                 il_water_area  AS water_area,
-                 il_shape_leng  AS shape_leng,
-                 il_shape_area  AS shape_area,
-                 geom
-            FROM data.il_2014;
+          SELECT *
+            FROM data.indian_lands;
     SQL
   end
 end
