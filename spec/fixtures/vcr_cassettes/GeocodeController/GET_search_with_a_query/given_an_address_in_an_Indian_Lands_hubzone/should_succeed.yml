@@ -1,0 +1,127 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=2424%20S.%20Country%20Club%20Road,%20El%20Reno,%20OK%2073036&country=UM&key=<GOOGLE_API_KEY>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Thu, 19 Jan 2017 20:37:50 GMT
+      Expires:
+      - Fri, 20 Jan 2017 20:37:50 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Vary:
+      - Accept-Language
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      Content-Length:
+      - '581'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="35,34"
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "2424",
+                       "short_name" : "2424",
+                       "types" : [ "street_number" ]
+                    },
+                    {
+                       "long_name" : "South Country Club Road",
+                       "short_name" : "S Country Club Rd",
+                       "types" : [ "route" ]
+                    },
+                    {
+                       "long_name" : "El Reno",
+                       "short_name" : "El Reno",
+                       "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "Canadian County",
+                       "short_name" : "Canadian County",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "Oklahoma",
+                       "short_name" : "OK",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    },
+                    {
+                       "long_name" : "73036",
+                       "short_name" : "73036",
+                       "types" : [ "postal_code" ]
+                    },
+                    {
+                       "long_name" : "5813",
+                       "short_name" : "5813",
+                       "types" : [ "postal_code_suffix" ]
+                    }
+                 ],
+                 "formatted_address" : "2424 S Country Club Rd, El Reno, OK 73036, USA",
+                 "geometry" : {
+                    "bounds" : {
+                       "northeast" : {
+                          "lat" : 35.5113596,
+                          "lng" : -97.97299579999999
+                       },
+                       "southwest" : {
+                          "lat" : 35.5112228,
+                          "lng" : -97.97343549999999
+                       }
+                    },
+                    "location" : {
+                       "lat" : 35.5112912,
+                       "lng" : -97.9732157
+                    },
+                    "location_type" : "ROOFTOP",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 35.5126401802915,
+                          "lng" : -97.97186666970849
+                       },
+                       "southwest" : {
+                          "lat" : 35.5099422197085,
+                          "lng" : -97.9745646302915
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJxdyw4CTlrYcRMrjc74I1l0M",
+                 "types" : [ "premise" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version: 
+  recorded_at: Thu, 19 Jan 2017 20:37:50 GMT
+recorded_with: VCR 3.0.3

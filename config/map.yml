@@ -1,0 +1,15 @@
+default: &defaults
+  google_api_key: <%= ENV.fetch( "HUBZONE_GOOGLE_API_KEY",
+                                 "need to set HUBZONE_GOOGLE_API_KEY in your environment!" ) %>
+
+production:
+  <<: *defaults
+
+demo:
+  <<: *defaults
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
