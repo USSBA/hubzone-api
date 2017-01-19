@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'dotenv-rails' # Use dotenv to load environment variables
 gem 'faraday', '~> 0.9.2' # simple http requests
 gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
