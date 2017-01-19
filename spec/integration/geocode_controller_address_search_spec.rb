@@ -68,7 +68,7 @@ test_queries = {
     #latlng: '35.9000121,-109.0339832',
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
-    results_address: 'Navajo, NM 87328, USA',
+    results_address: 'Navajo Nation Reservation, AZ, USA',
     designations: %w(indian_lands qct_e qnmc_b)
   },
   roosevelt: {
