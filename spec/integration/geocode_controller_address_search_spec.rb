@@ -89,6 +89,7 @@ test_queries = {
   }
 }
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe GeocodeController, vcr: true, type: :request do
   before do
     create_test_data
