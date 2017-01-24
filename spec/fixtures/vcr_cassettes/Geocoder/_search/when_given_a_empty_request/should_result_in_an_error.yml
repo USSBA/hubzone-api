@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://maps.googleapis.com/maps/api/geocode/json?address=&country=UM&key=AIzaSyBsR78bM2H5vMlO60MAtaL9FVtPGWGyQ7c
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=&country=UM&key=<GOOGLE_API_KEY>
     body:
       encoding: US-ASCII
       string: ''
@@ -21,7 +21,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Wed, 30 Nov 2016 23:55:22 GMT
+      - Thu, 19 Jan 2017 20:37:56 GMT
       Pragma:
       - no-cache
       Expires:
@@ -37,7 +37,7 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Alt-Svc:
-      - quic=":443"; ma=2592000; v="36,35,34"
+      - quic=":443"; ma=2592000; v="35,34"
       Transfer-Encoding:
       - chunked
     body:
@@ -49,55 +49,5 @@ http_interactions:
            "status" : "INVALID_REQUEST"
         }
     http_version: 
-  recorded_at: Wed, 30 Nov 2016 23:55:22 GMT
-- request:
-    method: get
-    uri: https://maps.googleapis.com/maps/api/geocode/json?address=&country=UM&key=AIzaSyCpZgPsZxJzCFXoLpduWMeDRssxFKr6kR0
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      User-Agent:
-      - Faraday v0.9.2
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-  response:
-    status:
-      code: 400
-      message: Bad Request
-    headers:
-      Content-Type:
-      - application/json; charset=UTF-8
-      Date:
-      - Thu, 01 Dec 2016 18:24:00 GMT
-      Pragma:
-      - no-cache
-      Expires:
-      - Fri, 01 Jan 1990 00:00:00 GMT
-      Cache-Control:
-      - no-cache, must-revalidate
-      Access-Control-Allow-Origin:
-      - "*"
-      Server:
-      - mafe
-      X-Xss-Protection:
-      - 1; mode=block
-      X-Frame-Options:
-      - SAMEORIGIN
-      Alt-Svc:
-      - quic=":443"; ma=2592000; v="36,35,34"
-      Transfer-Encoding:
-      - chunked
-    body:
-      encoding: ASCII-8BIT
-      string: |
-        {
-           "error_message" : "Invalid request. Missing the 'address', 'bounds', 'components', 'latlng' or 'place_id' parameter.",
-           "results" : [],
-           "status" : "INVALID_REQUEST"
-        }
-    http_version: 
-  recorded_at: Thu, 01 Dec 2016 18:24:00 GMT
+  recorded_at: Thu, 19 Jan 2017 20:37:56 GMT
 recorded_with: VCR 3.0.3

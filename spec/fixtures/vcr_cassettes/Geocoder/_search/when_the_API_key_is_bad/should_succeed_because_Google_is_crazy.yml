@@ -21,7 +21,7 @@ http_interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Wed, 30 Nov 2016 23:55:23 GMT
+      - Thu, 19 Jan 2017 20:37:57 GMT
       Pragma:
       - no-cache
       Expires:
@@ -39,7 +39,7 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
       Alt-Svc:
-      - quic=":443"; ma=2592000; v="36,35,34"
+      - quic=":443"; ma=2592000; v="35,34"
       Transfer-Encoding:
       - chunked
     body:
@@ -51,5 +51,5 @@ http_interactions:
            "status" : "REQUEST_DENIED"
         }
     http_version: 
-  recorded_at: Wed, 30 Nov 2016 23:55:23 GMT
+  recorded_at: Thu, 19 Jan 2017 20:37:57 GMT
 recorded_with: VCR 3.0.3

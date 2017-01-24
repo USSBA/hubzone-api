@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://maps.googleapis.com/maps/api/geocode/json?address=navajo&country=UM&key=AIzaSyBsR78bM2H5vMlO60MAtaL9FVtPGWGyQ7c
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=navajo&country=UM&key=<GOOGLE_API_KEY>
     body:
       encoding: US-ASCII
       string: ''
@@ -21,9 +21,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Tue, 13 Dec 2016 20:16:57 GMT
+      - Thu, 19 Jan 2017 20:37:52 GMT
       Expires:
-      - Wed, 14 Dec 2016 20:16:57 GMT
+      - Fri, 20 Jan 2017 20:37:52 GMT
       Cache-Control:
       - public, max-age=86400
       Vary:
@@ -162,5 +162,5 @@ http_interactions:
            "status" : "OK"
         }
     http_version: 
-  recorded_at: Tue, 13 Dec 2016 20:16:57 GMT
+  recorded_at: Thu, 19 Jan 2017 20:37:52 GMT
 recorded_with: VCR 3.0.3

@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://maps.googleapis.com/maps/api/geocode/json?address=buckeye,%20wv&country=UM&key=AIzaSyBsR78bM2H5vMlO60MAtaL9FVtPGWGyQ7c
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=buckeye,%20wv&country=UM&key=<GOOGLE_API_KEY>
     body:
       encoding: US-ASCII
       string: ''
@@ -21,9 +21,9 @@ http_interactions:
       Content-Type:
       - application/json; charset=UTF-8
       Date:
-      - Fri, 06 Jan 2017 19:42:27 GMT
+      - Thu, 19 Jan 2017 20:37:49 GMT
       Expires:
-      - Sat, 07 Jan 2017 19:42:27 GMT
+      - Fri, 20 Jan 2017 20:37:49 GMT
       Cache-Control:
       - public, max-age=86400
       Vary:
@@ -33,7 +33,7 @@ http_interactions:
       Server:
       - mafe
       Content-Length:
-      - '452'
+      - '469'
       X-Xss-Protection:
       - 1; mode=block
       X-Frame-Options:
@@ -51,6 +51,11 @@ http_interactions:
                        "long_name" : "Buckeye",
                        "short_name" : "Buckeye",
                        "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "Edray",
+                       "short_name" : "Edray",
+                       "types" : [ "administrative_area_level_3", "political" ]
                     },
                     {
                        "long_name" : "Pocahontas County",
@@ -103,5 +108,5 @@ http_interactions:
            "status" : "OK"
         }
     http_version: 
-  recorded_at: Fri, 06 Jan 2017 19:42:27 GMT
+  recorded_at: Thu, 19 Jan 2017 20:37:49 GMT
 recorded_with: VCR 3.0.3
