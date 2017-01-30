@@ -90,10 +90,10 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: brac_2016_01_01; Type: TABLE; Schema: data; Owner: -
+-- Name: brac; Type: TABLE; Schema: data; Owner: -
 --
 
-CREATE TABLE brac_2016_01_01 (
+CREATE TABLE brac (
     gid integer,
     sba_name character varying(36),
     county character varying(36),
@@ -101,16 +101,16 @@ CREATE TABLE brac_2016_01_01 (
     fac_type character varying(25),
     closure character varying(15),
     geom public.geometry(MultiPolygon,4326),
-    start date DEFAULT ('now'::text)::date NOT NULL,
-    stop date
+    effective date DEFAULT ('now'::text)::date NOT NULL,
+    expires date
 );
 
 
 --
--- Name: indian_lands_2014_01_01; Type: TABLE; Schema: data; Owner: -
+-- Name: indian_lands; Type: TABLE; Schema: data; Owner: -
 --
 
-CREATE TABLE indian_lands_2014_01_01 (
+CREATE TABLE indian_lands (
     gid integer,
     objectid integer,
     id numeric,
@@ -127,8 +127,8 @@ CREATE TABLE indian_lands_2014_01_01 (
     shape_leng numeric,
     shape_area numeric,
     geom public.geometry(MultiPolygon,4326),
-    start date DEFAULT ('now'::text)::date NOT NULL,
-    stop date
+    effective date DEFAULT ('now'::text)::date NOT NULL,
+    expires date
 );
 
 
@@ -147,8 +147,10 @@ CREATE TABLE qct_2016_01_01 (
     hubzone_st character varying(32),
     brac_2016 character varying(36),
     geom public.geometry(MultiPolygon,4326),
-    start date DEFAULT ('now'::text)::date NOT NULL,
-    stop date
+    effective date DEFAULT ('now'::text)::date NOT NULL,
+    expires date,
+    redesignated boolean DEFAULT false NOT NULL,
+    brac_id integer
 );
 
 
@@ -164,8 +166,13 @@ CREATE TABLE qnmc_2016_01_01 (
     f2016_sba1 character varying(32),
     brac_2016 character varying(36),
     geom public.geometry(MultiPolygon,4326),
-    start date DEFAULT ('now'::text)::date NOT NULL,
-    stop date
+    effective date DEFAULT ('now'::text)::date NOT NULL,
+    expires date,
+    income boolean DEFAULT false NOT NULL,
+    unemployment boolean DEFAULT false NOT NULL,
+    redesignated boolean DEFAULT false NOT NULL,
+    dda boolean DEFAULT false NOT NULL,
+    brac_id integer
 );
 
 
@@ -206,6 +213,45 @@ ALTER SEQUENCE brac_base_boundaries_gid_seq OWNED BY brac_base_boundaries.gid;
 
 
 --
+-- Name: etl_hz; Type: TABLE; Schema: import; Owner: -
+--
+
+CREATE TABLE etl_hz (
+    gid integer NOT NULL,
+    statefp character varying(2),
+    countyfp character varying(3),
+    ansicode character varying(8),
+    hydroid character varying(22),
+    fullname character varying(100),
+    mtfcc character varying(5),
+    aland double precision,
+    awater double precision,
+    intptlat character varying(11),
+    intptlon character varying(12),
+    geom public.geometry(MultiPolygon,4326)
+);
+
+
+--
+-- Name: etl_hz_gid_seq; Type: SEQUENCE; Schema: import; Owner: -
+--
+
+CREATE SEQUENCE etl_hz_gid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: etl_hz_gid_seq; Type: SEQUENCE OWNED BY; Schema: import; Owner: -
+--
+
+ALTER SEQUENCE etl_hz_gid_seq OWNED BY etl_hz.gid;
+
+
+--
 -- Name: hubzone_qualified_tracts; Type: TABLE; Schema: import; Owner: -
 --
 
@@ -243,34 +289,38 @@ ALTER SEQUENCE hubzone_qualified_tracts_gid_seq OWNED BY hubzone_qualified_tract
 
 
 --
--- Name: indianlands_2014; Type: TABLE; Schema: import; Owner: -
+-- Name: master_counties; Type: TABLE; Schema: import; Owner: -
 --
 
-CREATE TABLE indianlands_2014 (
+CREATE TABLE master_counties (
     gid integer NOT NULL,
-    objectid integer,
-    id numeric,
-    indian character varying(7),
-    state character varying(2),
-    census character varying(7),
-    gnis integer,
-    name character varying(62),
-    type character varying(37),
-    class character varying(54),
-    recognitio character varying(7),
-    land_area numeric,
-    water_area numeric,
-    shape_leng numeric,
-    shape_area numeric,
+    feature_gid integer,
+    statefp10 character varying(2),
+    countyfp10 character varying(3),
+    countyns10 character varying(8),
+    geoid10 character varying(5),
+    name10 character varying(100),
+    namelsad10 character varying(100),
+    lsad10 character varying(2),
+    classfp10 character varying(2),
+    mtfcc10 character varying(5),
+    csafp10 character varying(3),
+    cbsafp10 character varying(5),
+    metdivfp10 character varying(5),
+    funcstat10 character varying(1),
+    aland10 double precision,
+    awater10 double precision,
+    intptlat10 character varying(12),
+    intptlon10 character varying(12),
     geom public.geometry(MultiPolygon,4326)
 );
 
 
 --
--- Name: indianlands_2014_gid_seq; Type: SEQUENCE; Schema: import; Owner: -
+-- Name: master_counties_gid_seq; Type: SEQUENCE; Schema: import; Owner: -
 --
 
-CREATE SEQUENCE indianlands_2014_gid_seq
+CREATE SEQUENCE master_counties_gid_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -279,10 +329,52 @@ CREATE SEQUENCE indianlands_2014_gid_seq
 
 
 --
--- Name: indianlands_2014_gid_seq; Type: SEQUENCE OWNED BY; Schema: import; Owner: -
+-- Name: master_counties_gid_seq; Type: SEQUENCE OWNED BY; Schema: import; Owner: -
 --
 
-ALTER SEQUENCE indianlands_2014_gid_seq OWNED BY indianlands_2014.gid;
+ALTER SEQUENCE master_counties_gid_seq OWNED BY master_counties.gid;
+
+
+--
+-- Name: master_tracts; Type: TABLE; Schema: import; Owner: -
+--
+
+CREATE TABLE master_tracts (
+    gid integer NOT NULL,
+    feature_gid integer,
+    statefp10 character varying(2),
+    countyfp10 character varying(3),
+    tractce10 character varying(6),
+    geoid10 character varying(11),
+    name10 character varying(7),
+    namelsad10 character varying(20),
+    mtfcc10 character varying(5),
+    funcstat10 character varying(1),
+    aland10 double precision,
+    awater10 double precision,
+    intptlat10 character varying(12),
+    intptlon10 character varying(12),
+    geom public.geometry(MultiPolygon,4326)
+);
+
+
+--
+-- Name: master_tracts_gid_seq; Type: SEQUENCE; Schema: import; Owner: -
+--
+
+CREATE SEQUENCE master_tracts_gid_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: master_tracts_gid_seq; Type: SEQUENCE OWNED BY; Schema: import; Owner: -
+--
+
+ALTER SEQUENCE master_tracts_gid_seq OWNED BY master_tracts.gid;
 
 
 --
@@ -345,9 +437,46 @@ CREATE VIEW brac AS
     d.fac_type,
     d.closure,
     d.geom,
-    d.start,
-    d.stop
-   FROM data.brac_2016_01_01 d;
+    d.effective,
+    d.expires
+   FROM data.brac d;
+
+
+--
+-- Name: data_sets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE data_sets (
+    id integer NOT NULL,
+    layer_type character varying NOT NULL,
+    shapefile character varying,
+    import_table_name character varying,
+    data_table_name character varying NOT NULL,
+    encoding character varying,
+    start date NOT NULL,
+    stop date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: data_sets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE data_sets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_sets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE data_sets_id_seq OWNED BY data_sets.id;
 
 
 --
@@ -371,9 +500,9 @@ CREATE VIEW indian_lands AS
     d.shape_leng,
     d.shape_area,
     d.geom,
-    d.start,
-    d.stop
-   FROM data.indian_lands_2014_01_01 d;
+    d.effective,
+    d.expires
+   FROM data.indian_lands d;
 
 
 --
@@ -391,9 +520,80 @@ CREATE VIEW qct AS
     d.hubzone_st,
     d.brac_2016,
     d.geom,
-    d.start,
-    d.stop
+    d.effective,
+    d.expires,
+    d.redesignated,
+    d.brac_id
    FROM data.qct_2016_01_01 d;
+
+
+--
+-- Name: qct_brac; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW qct_brac AS
+ SELECT d.gid,
+    d.tract,
+    d.state,
+    d.city,
+    d.county,
+    d.qualified_,
+    d.qualified1,
+    d.hubzone_st,
+    d.brac_2016,
+    d.geom,
+    d.effective,
+    d.expires,
+    d.redesignated,
+    d.brac_id
+   FROM data.qct_2016_01_01 d
+  WHERE (d.brac_id IS NOT NULL);
+
+
+--
+-- Name: qct_e; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW qct_e AS
+ SELECT d.gid,
+    d.tract,
+    d.state,
+    d.city,
+    d.county,
+    d.qualified_,
+    d.qualified1,
+    d.hubzone_st,
+    d.brac_2016,
+    d.geom,
+    d.effective,
+    d.expires,
+    d.redesignated,
+    d.brac_id
+   FROM data.qct_2016_01_01 d
+  WHERE ((d.redesignated = false) AND (d.brac_id IS NULL));
+
+
+--
+-- Name: qct_r; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW qct_r AS
+ SELECT d.gid,
+    d.tract,
+    d.state,
+    d.city,
+    d.county,
+    d.qualified_,
+    d.qualified1,
+    d.hubzone_st,
+    d.brac_2016,
+    d.geom,
+    d.effective,
+    d.expires,
+    d.redesignated,
+    d.brac_id
+   FROM data.qct_2016_01_01 d
+  WHERE (d.redesignated = true);
 
 
 --
@@ -408,9 +608,83 @@ CREATE VIEW qnmc AS
     d.f2016_sba1,
     d.brac_2016,
     d.geom,
-    d.start,
-    d.stop
+    d.effective,
+    d.expires,
+    d.income,
+    d.unemployment,
+    d.redesignated,
+    d.dda,
+    d.brac_id
    FROM data.qnmc_2016_01_01 d;
+
+
+--
+-- Name: qnmc_brac; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW qnmc_brac AS
+ SELECT d.gid,
+    d.county,
+    d.name,
+    d.f2016_sba_,
+    d.f2016_sba1,
+    d.brac_2016,
+    d.geom,
+    d.effective,
+    d.expires,
+    d.income,
+    d.unemployment,
+    d.redesignated,
+    d.dda,
+    d.brac_id
+   FROM data.qnmc_2016_01_01 d
+  WHERE (d.brac_id IS NOT NULL);
+
+
+--
+-- Name: qnmc_e; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW qnmc_e AS
+ SELECT d.gid,
+    d.county,
+    d.name,
+    d.f2016_sba_,
+    d.f2016_sba1,
+    d.brac_2016,
+    d.geom,
+    d.effective,
+    d.expires,
+    d.income,
+    d.unemployment,
+    d.redesignated,
+    d.dda,
+    d.brac_id
+   FROM data.qnmc_2016_01_01 d
+  WHERE ((d.redesignated = false) AND (d.brac_id IS NULL));
+
+
+--
+-- Name: qnmc_r; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW qnmc_r AS
+ SELECT d.gid,
+    d.county,
+    d.name,
+    d.f2016_sba_,
+    d.f2016_sba1,
+    d.brac_2016,
+    d.geom,
+    d.effective,
+    d.expires,
+    d.income,
+    d.unemployment,
+    d.redesignated,
+    d.dda,
+    d.brac_id
+   FROM data.qnmc_2016_01_01 d
+  WHERE (d.redesignated = true);
 
 
 --
@@ -435,6 +709,13 @@ ALTER TABLE ONLY brac_base_boundaries ALTER COLUMN gid SET DEFAULT nextval('brac
 -- Name: gid; Type: DEFAULT; Schema: import; Owner: -
 --
 
+ALTER TABLE ONLY etl_hz ALTER COLUMN gid SET DEFAULT nextval('etl_hz_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: import; Owner: -
+--
+
 ALTER TABLE ONLY hubzone_qualified_tracts ALTER COLUMN gid SET DEFAULT nextval('hubzone_qualified_tracts_gid_seq'::regclass);
 
 
@@ -442,7 +723,14 @@ ALTER TABLE ONLY hubzone_qualified_tracts ALTER COLUMN gid SET DEFAULT nextval('
 -- Name: gid; Type: DEFAULT; Schema: import; Owner: -
 --
 
-ALTER TABLE ONLY indianlands_2014 ALTER COLUMN gid SET DEFAULT nextval('indianlands_2014_gid_seq'::regclass);
+ALTER TABLE ONLY master_counties ALTER COLUMN gid SET DEFAULT nextval('master_counties_gid_seq'::regclass);
+
+
+--
+-- Name: gid; Type: DEFAULT; Schema: import; Owner: -
+--
+
+ALTER TABLE ONLY master_tracts ALTER COLUMN gid SET DEFAULT nextval('master_tracts_gid_seq'::regclass);
 
 
 --
@@ -452,12 +740,31 @@ ALTER TABLE ONLY indianlands_2014 ALTER COLUMN gid SET DEFAULT nextval('indianla
 ALTER TABLE ONLY qualified_nonmetro_counties ALTER COLUMN gid SET DEFAULT nextval('qualified_nonmetro_counties_gid_seq'::regclass);
 
 
+SET search_path = public, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY data_sets ALTER COLUMN id SET DEFAULT nextval('data_sets_id_seq'::regclass);
+
+
+SET search_path = import, pg_catalog;
+
 --
 -- Name: brac_base_boundaries_pkey; Type: CONSTRAINT; Schema: import; Owner: -
 --
 
 ALTER TABLE ONLY brac_base_boundaries
     ADD CONSTRAINT brac_base_boundaries_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: etl_hz_pkey; Type: CONSTRAINT; Schema: import; Owner: -
+--
+
+ALTER TABLE ONLY etl_hz
+    ADD CONSTRAINT etl_hz_pkey PRIMARY KEY (gid);
 
 
 --
@@ -469,11 +776,19 @@ ALTER TABLE ONLY hubzone_qualified_tracts
 
 
 --
--- Name: indianlands_2014_pkey; Type: CONSTRAINT; Schema: import; Owner: -
+-- Name: master_counties_pkey; Type: CONSTRAINT; Schema: import; Owner: -
 --
 
-ALTER TABLE ONLY indianlands_2014
-    ADD CONSTRAINT indianlands_2014_pkey PRIMARY KEY (gid);
+ALTER TABLE ONLY master_counties
+    ADD CONSTRAINT master_counties_pkey PRIMARY KEY (gid);
+
+
+--
+-- Name: master_tracts_pkey; Type: CONSTRAINT; Schema: import; Owner: -
+--
+
+ALTER TABLE ONLY master_tracts
+    ADD CONSTRAINT master_tracts_pkey PRIMARY KEY (gid);
 
 
 --
@@ -495,6 +810,14 @@ ALTER TABLE ONLY ar_internal_metadata
 
 
 --
+-- Name: data_sets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY data_sets
+    ADD CONSTRAINT data_sets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -512,17 +835,17 @@ CREATE INDEX brac_base_boundaries_geom_idx ON brac_base_boundaries USING gist (g
 
 
 --
+-- Name: etl_hz_geom_idx; Type: INDEX; Schema: import; Owner: -
+--
+
+CREATE INDEX etl_hz_geom_idx ON etl_hz USING gist (geom);
+
+
+--
 -- Name: hubzone_qualified_tracts_geom_idx; Type: INDEX; Schema: import; Owner: -
 --
 
 CREATE INDEX hubzone_qualified_tracts_geom_idx ON hubzone_qualified_tracts USING gist (geom);
-
-
---
--- Name: indianlands_2014_geom_idx; Type: INDEX; Schema: import; Owner: -
---
-
-CREATE INDEX indianlands_2014_geom_idx ON indianlands_2014 USING gist (geom);
 
 
 --
@@ -532,12 +855,23 @@ CREATE INDEX indianlands_2014_geom_idx ON indianlands_2014 USING gist (geom);
 CREATE INDEX qualified_nonmetro_counties_geom_idx ON qualified_nonmetro_counties USING gist (geom);
 
 
+SET search_path = public, pg_catalog;
+
+--
+-- Name: index_data_sets_on_layer_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_sets_on_layer_type ON data_sets USING btree (layer_type);
+
+
 --
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20161003200320');
+INSERT INTO schema_migrations (version) VALUES
+('20161003200320'),
+('20170103191227');
 
 

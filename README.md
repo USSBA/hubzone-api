@@ -56,6 +56,8 @@ rails server -p 3001
 
 ### RSpec Tests ###
 
+A note on tests, test API Assertions (HZ assertion by latlng or by address) are relative to a dummy test database hzgeo_test, that is populated by `spec/helpers/test_data_helper.rb`.  Updates to main data schema need to be mirrored in the SQL in that file.
+
 To run the test suite, simply run:
 ```
 rspec

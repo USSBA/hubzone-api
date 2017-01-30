@@ -14,6 +14,14 @@ test_queries = {
     results_address: '8 Market Pl, Baltimore, MD 21202, USA',
     designations: %w(qct_e)
   },
+  qct_r: {
+    context: 'in a redesignated QCT in baltimore',
+    query: 'Holgate Dr, Essex, MD 21221, USA',
+    latlng: '39.30428,-76.44791',
+    http_status: 200,
+    results_address: 'Holgate Dr, Essex, MD 21221, USA',
+    designations: %w(qct_r)
+  },
   brac_base: {
     context: 'in a BRAC base in Puerto Rico',
     query: 'forrestal dr, ceiba',

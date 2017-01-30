@@ -5,13 +5,9 @@ class QctAssertion
   class << self
     def assertion(location)
       assertion_by_type('qct', location).each do |qct|
-        qct_econ = qct['qualified_'] == 'Yes' || qct['qualified1'] == 'Yes'
-        qct_brac = qct['brac_2016'].present?
-        qct['hz_type'] = if qct_brac && !qct_econ
-                           'qct_b'
-                         else
-                           'qct_e'
-                         end
+        qct['hz_type'] = 'qct_e'    if qct['qualified_'] == 'Yes' || qct['qualified1'] == 'Yes'
+        qct['hz_type'] = 'qct_r'    if qct['redesignated']
+        qct['hz_type'] = 'qct_b'    if qct['brac_id'].present?
         qct
       end
     end
