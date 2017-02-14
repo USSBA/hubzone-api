@@ -75,6 +75,10 @@ class HubzoneUtil
       # Then QCT's
       results[:hubzone] += QctAssertion.assertion location
 
+      # Then QCT_brac's
+      results[:hubzone] += QctBracAssertion.assertion location
+
+
       # Then QNMC's
       results[:hubzone] += QnmcAssertion.assertion location
 
