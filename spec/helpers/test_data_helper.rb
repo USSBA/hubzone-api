@@ -12,6 +12,7 @@
 module TestDataHelper
   def create_test_data
     create_qct_data
+    create_qct_brac_data
     create_qnmc_data
     create_brac_data
     create_indian_lands_data
@@ -34,7 +35,7 @@ module TestDataHelper
           county character varying(24),
           qualified_ character varying(4),
           qualified1 character varying(4),
-          hubzone_st character varying(32),
+          current_status character varying(32),
           brac_2016 character varying(36),
           redesignated boolean,
           brac_id integer,
@@ -54,16 +55,6 @@ module TestDataHelper
            'No', 'No', 'edesignated until Jan. 2018', NULL,
            true, NULL,
            'SRID=4326;MULTIPOLYGON(((-76.451331 39.293449,-76.451331 39.31303,-76.43777 39.31303,-76.43777 39.293449,-76.451331 39.293449)))'),
-          (18606, '72037160100',
-           'PR', 'Roosevelt Roads', 'Ceiba',
-           'No', 'No', 'Not Qualified', 'Naval Station Roosevelt Roads',
-           false, 13,
-           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))'),
-          (8190, '05103950100',
-           'AR', 'Onalaska', 'Ouachita',
-           'No', 'No', 'Not Qualified', 'USARC Camden',
-           false, 21,
-           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))'),
           (8134, '40001376900',
            'OK', 'Stilwell', 'Adair',
            'Yes', 'Yes', 'Qualified', NULL,
@@ -83,6 +74,50 @@ module TestDataHelper
         CREATE VIEW qct AS
           SELECT *
             FROM data.qct;
+    SQL
+  end
+
+  def create_qct_brac_data
+    ActiveRecord::Base.connection.execute qct_brac_sql
+  end
+
+  def qct_brac_sql
+    <<-SQL
+      CREATE SCHEMA IF NOT EXISTS data;
+
+      CREATE TABLE IF NOT EXISTS data.qct_brac
+        (
+          gid integer,
+          tract character varying(11),
+          state character varying(2),
+          city character varying(24),
+          county character varying(24),
+          qualified_ character varying(4),
+          qualified1 character varying(4),
+          current_status character varying(32),
+          brac_2016 character varying(36),
+          redesignated boolean,
+          brac_id integer,
+          geom geometry(MultiPolygon,4326),
+          effective date NOT NULL DEFAULT ('now'::text)::date,
+          expires date
+        );
+
+        INSERT INTO data.qct_brac VALUES
+          (18606, '72037160100',
+           'PR', 'Roosevelt Roads', 'Ceiba',
+           'No', 'No', 'Not Qualified', 'Naval Station Roosevelt Roads',
+           false, 13,
+           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))'),
+          (8190, '05103950100',
+           'AR', 'Onalaska', 'Ouachita',
+           'No', 'No', 'Not Qualified', 'USARC Camden',
+           false, 21,
+           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))');
+
+        CREATE VIEW qct_brac AS
+          SELECT *
+            FROM data.qct_brac;
     SQL
   end
 
