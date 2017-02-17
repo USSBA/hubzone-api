@@ -8,6 +8,9 @@ production:
 demo:
   <<: *defaults
 
+dev:
+  <<: *defaults
+
 development:
   <<: *defaults
 
