@@ -18,6 +18,7 @@ gem 'rails', '~> 5.0.1' # Bundle edge Rails instead: gem 'rails', github: 'rails
 # gem 'rack-cors'
 
 group :development, :test do
+  gem 'brakeman', require: false # code analysis
   gem 'byebug', platform: :mri # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rb-readline'
   gem 'rspec-rails', '~> 3.5'
