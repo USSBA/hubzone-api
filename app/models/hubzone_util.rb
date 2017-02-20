@@ -57,8 +57,7 @@ class HubzoneUtil
     def geocode(term)
       g = Geocoder.search(term)
       geocoder_results = JSON.parse g.body
-      return geocoder_results if geocoder_results['status'].eql? 'INVALID_REQUEST'
-      return geocoder_results if geocoder_results['status'].eql? 'ZERO_RESULTS'
+      return geocoder_results unless geocoder_results['status'].eql? 'OK'
 
       results = geocoder_results['results'][0]
       results[:http_status] = g.status
