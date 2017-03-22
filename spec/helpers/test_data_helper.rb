@@ -14,6 +14,7 @@ module TestDataHelper
     create_qct_data
     create_qct_brac_data
     create_qnmc_data
+    create_qnmc_brac_data
     create_brac_data
     create_indian_lands_data
   end
@@ -156,11 +157,6 @@ module TestDataHelper
            NULL,
            true, false, false, NULL, false,
            'SRID=4326;MULTIPOLYGON(((-80.363295 38.03611,-80.363295 38.739811,-79.617906 38.739811,-79.617906 38.03611,-80.363295 38.03611)))'),
-          (723, '54083',
-           'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
-           'Elkins USARC/OMS, Beverly',
-           false, false, false, 1, false,
-           'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))'),
           (999, '99999',
            'Qualified by Income', 'Qualified by Income',
            NULL,
@@ -170,6 +166,43 @@ module TestDataHelper
         CREATE VIEW qnmc AS
           SELECT *
             FROM data.qnmc_2016_01_01;
+    SQL
+  end
+
+  def create_qnmc_brac_data
+    ActiveRecord::Base.connection.execute qnmc_brac_sql
+  end
+
+  def qnmc_brac_sql
+    <<-SQL
+      CREATE SCHEMA IF NOT EXISTS data;
+
+        CREATE TABLE IF NOT EXISTS data.qnmc_brac
+        (
+          gid integer,
+          county character varying(5),
+          f2016_sba_ character varying(32),
+          f2016_sba1 character varying(32),
+          brac_2016 character varying(36),
+          unemployment boolean,
+          income boolean,
+          redesignated boolean,
+          brac_id integer,
+          dda boolean,
+          geom geometry(MultiPolygon,4326),
+          start date NOT NULL DEFAULT ('now'::text)::date,
+          stop date);
+
+        INSERT INTO data.qnmc_brac VALUES
+          (723, '54083',
+           'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
+           'Elkins USARC/OMS, Beverly',
+           false, false, false, 1, false,
+           'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))');
+
+        CREATE VIEW qnmc_brac AS
+          SELECT *
+            FROM data.qnmc_brac;
     SQL
   end
 

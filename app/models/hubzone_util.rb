@@ -68,20 +68,11 @@ class HubzoneUtil
       results[:hubzone] = []
       location = results['geometry']['location']
 
-      # Check first for BRAC
-      results[:hubzone] += BracAssertion.assertion location
-
-      # Then QCT's
-      results[:hubzone] += QctAssertion.assertion location
-
-      # Then QCT_brac's
-      results[:hubzone] += QctBracAssertion.assertion location
-
-      # Then QNMC's
-      results[:hubzone] += QnmcAssertion.assertion location
-
-      # Then Indian Lands
-      results[:hubzone] += IndianLandsAssertion.assertion location
+      # maybe we need another word other than assertion
+      %w(Brac Qct QctBrac Qnmc QnmcBrac IndianLands).map do |assertion|
+        hz_assertion = "#{assertion}Assertion".constantize
+        results[:hubzone] +=  hz_assertion.assertion location
+      end
     end
 
     def build_response(status)
