@@ -82,6 +82,16 @@ class HubzoneUtil
 
       # Then Indian Lands
       results[:hubzone] += IndianLandsAssertion.assertion location
+
+      # call method with hubzone assertion tree, loop through
+      calculate_latest_expiration(results[:hubzone])
+
+    end
+
+    def calculate_latest_expiration
+      # loop through results[:latest_expiration] and determine latest date
+      # append the calculated expiration date to results[:hubzone]
+
     end
 
     def build_response(status)
