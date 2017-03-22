@@ -1,0 +1,18 @@
+development:
+  adapter: async
+
+test:
+  adapter: async
+
+dev:
+  adapter: async
+
+production: &prd
+  adapter: redis
+  url: redis://localhost:6379/1
+
+staging:
+  <<: *prd
+
+demo:
+  <<: *prd

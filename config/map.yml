@@ -1,0 +1,20 @@
+default: &defaults
+  google_api_key: <%= ENV.fetch('HUBZONE_GOOGLE_API_KEY') { 'AIzaSyBsR78bM2H5vMlO60MAtaL9FVtPGWGyQ7c' } %>
+
+production:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+demo:
+  <<: *defaults
+
+dev:
+  <<: *defaults
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults

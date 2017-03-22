@@ -1,0 +1,57 @@
+# PostgreSQL. Versions 9.1 and up are supported.
+#
+# Install the pg driver:
+#   gem install pg
+# On OS X with Homebrew:
+#   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
+# On OS X with MacPorts:
+#   gem install pg -- --with-pg-config=/opt/local/lib/postgresql84/bin/pg_config
+# On Windows:
+#   gem install pg
+#       Choose the win32 build.
+#       Install PostgreSQL and put its /bin directory on your path.
+#
+# Configure Using Gemfile
+# gem 'pg'
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV['HUBZONE_API_DB_USER'] %>
+  password: <%= ENV['HUBZONE_API_DB_PASSWORD'] %>
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'localhost' } %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_prd' } %>
+
+staging:
+  <<: *default
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'hz-hzstg.cyy8xym5djtg.us-east-1.rds.amazonaws.com' } %>
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_stg' } %>
+
+demo:
+  <<: *default
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db1.map.dev.sba-one.net' } %>
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_demo' } %>
+
+dev:
+  <<: *default
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db1.map.dev.sba-one.net' } %>
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
+
+development:
+  <<: *default
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
+
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: hubzone_api_test
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_test' } %>

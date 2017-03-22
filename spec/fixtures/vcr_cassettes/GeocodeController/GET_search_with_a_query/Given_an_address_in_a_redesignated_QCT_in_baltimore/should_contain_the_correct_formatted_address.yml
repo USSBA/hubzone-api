@@ -1,0 +1,231 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=Shot%20Tower%20Baltimore%20MD&country=UM&key=<GOOGLE_API_KEY>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Thu, 26 Jan 2017 19:35:17 GMT
+      Expires:
+      - Fri, 27 Jan 2017 19:35:17 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Vary:
+      - Accept-Language
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      Content-Length:
+      - '562'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="35,34"
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "801",
+                       "short_name" : "801",
+                       "types" : [ "street_number" ]
+                    },
+                    {
+                       "long_name" : "East Fayette Street",
+                       "short_name" : "E Fayette St",
+                       "types" : [ "route" ]
+                    },
+                    {
+                       "long_name" : "Jonestown",
+                       "short_name" : "Jonestown",
+                       "types" : [ "neighborhood", "political" ]
+                    },
+                    {
+                       "long_name" : "Baltimore",
+                       "short_name" : "Baltimore",
+                       "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "Maryland",
+                       "short_name" : "MD",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    },
+                    {
+                       "long_name" : "21201",
+                       "short_name" : "21201",
+                       "types" : [ "postal_code" ]
+                    }
+                 ],
+                 "formatted_address" : "801 E Fayette St, Baltimore, MD 21201, USA",
+                 "geometry" : {
+                    "location" : {
+                       "lat" : 39.2907249,
+                       "lng" : -76.6054692
+                    },
+                    "location_type" : "APPROXIMATE",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 39.2920738802915,
+                          "lng" : -76.60412021970849
+                       },
+                       "southwest" : {
+                          "lat" : 39.2893759197085,
+                          "lng" : -76.6068181802915
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJY-m4QIMEyIkRFA0paNCGXxM",
+                 "types" : [ "establishment", "museum", "point_of_interest" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version: 
+  recorded_at: Thu, 26 Jan 2017 19:35:17 GMT
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=Holgate%20Dr,%20Essex,%20MD%2021221,%20USA&country=UM&key=<GOOGLE_API_KEY>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Thu, 26 Jan 2017 21:12:50 GMT
+      Expires:
+      - Fri, 27 Jan 2017 21:12:50 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Vary:
+      - Accept-Language
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      Content-Length:
+      - '552'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="35,34"
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "Holgate Drive",
+                       "short_name" : "Holgate Dr",
+                       "types" : [ "route" ]
+                    },
+                    {
+                       "long_name" : "Essex",
+                       "short_name" : "Essex",
+                       "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "15",
+                       "short_name" : "15",
+                       "types" : [ "administrative_area_level_3", "political" ]
+                    },
+                    {
+                       "long_name" : "Baltimore County",
+                       "short_name" : "Baltimore County",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "Maryland",
+                       "short_name" : "MD",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    },
+                    {
+                       "long_name" : "21221",
+                       "short_name" : "21221",
+                       "types" : [ "postal_code" ]
+                    }
+                 ],
+                 "formatted_address" : "Holgate Dr, Essex, MD 21221, USA",
+                 "geometry" : {
+                    "bounds" : {
+                       "northeast" : {
+                          "lat" : 39.3047699,
+                          "lng" : -76.4467013
+                       },
+                       "southwest" : {
+                          "lat" : 39.3038862,
+                          "lng" : -76.4492838
+                       }
+                    },
+                    "location" : {
+                       "lat" : 39.3044422,
+                       "lng" : -76.44799209999999
+                    },
+                    "location_type" : "GEOMETRIC_CENTER",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 39.30567703029151,
+                          "lng" : -76.4466435697085
+                       },
+                       "southwest" : {
+                          "lat" : 39.30297906970851,
+                          "lng" : -76.44934153029151
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJ-Xwyh4P9x4kRQ4MG8hcEZDA",
+                 "types" : [ "route" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version: 
+  recorded_at: Thu, 26 Jan 2017 21:12:50 GMT
+recorded_with: VCR 3.0.3
