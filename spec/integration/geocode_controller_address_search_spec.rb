@@ -20,7 +20,8 @@ test_queries = {
     latlng: '39.30428,-76.44791',
     http_status: 200,
     results_address: 'Holgate Dr, Essex, MD 21221, USA',
-    designations: %w(qct_r)
+    designations: %w(qct_r),
+    until: ''
   },
   brac_base: {
     context: 'in a BRAC base in Puerto Rico',
@@ -94,6 +95,15 @@ test_queries = {
     http_status: 200,
     results_address: 'Stilwell, OK 74960, USA',
     designations: %w(qct_e qnmc_a indian_lands)
+  },
+  reform: {
+    context: 'of reform, al',
+    query: 'reform, al',
+    latlng: '33.37845,-88.01530',
+    http_status: 200,
+    results_address: 'Reform, AL, USA',
+    designations: %w(qct_r qnmc_r),
+    until: '2018-01-31'
   }
 }
 
@@ -156,12 +166,24 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
-        # it "should have a calculated expiration date" do
-        #   body = JSON.parse response.body
-        #   expect(body['until_date']).to eql(!nil)
-        # end
       end
     end
+
+    # for hubzones that have expiration dates, ensure a calculated expiration date is returned
+    context 'Given an address that has an expiration ' do
+      before do
+        get search_url, params: {q: test_queries['reform']},
+                        headers: {'Content-Type' => 'application/json'}
+      end
+      it 'should succeed' do
+        expect(response.status).to eql(tquery[:http_status])
+      end
+      it "should have a calculated expiration date" do
+        body = JSON.parse response.body
+        expect(body['until_date']).to eq(test_queries['reform']['until'])
+      end
+    end
+
   end
 
   # tests for latlng

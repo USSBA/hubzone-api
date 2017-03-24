@@ -83,14 +83,20 @@ class HubzoneUtil
       # Then Indian Lands
       results[:hubzone] += IndianLandsAssertion.assertion location
 
+      # Calculate latest expiration date
       results[:until_date] = latest_expiration(results[:hubzone])
-
     end
 
     def latest_expiration(designations)
       dates = []
-      designations.map { |designation| dates += [ designation['expires'] ] }
-      return dates.max
+      designations.each do |designation|
+        if designation['expires']
+          d = Date.parse(designation['expires'])
+          dates.push d
+        end
+      end
+      until_date = dates.max
+      until_date
     end
 
     def build_response(status)

@@ -41,35 +41,34 @@ module TestDataHelper
           brac_id integer,
           geom geometry(MultiPolygon,4326),
           effective date NOT NULL DEFAULT ('now'::text)::date,
-          expires date
-        );
+          expires date);
 
         INSERT INTO data.qct VALUES
           (14426, '24510040100',
            'MD', 'Baltimore', 'Baltimore City',
            'Yes', 'Yes', 'Qualified', NULL,
            false, null,
-           'SRID=4326;MULTIPOLYGON(((-76.62264 39.286257,-76.62264 39.295215,-76.605107 39.295215,-76.605107 39.286257,-76.62264 39.286257)))'),
+           'SRID=4326;MULTIPOLYGON(((-76.62264 39.286257,-76.62264 39.295215,-76.605107 39.295215,-76.605107 39.286257,-76.62264 39.286257)))',('now'::text)::date, '2019-04-15'),
           (14532, '24005450504',
            'MD', 'Hartland Village', 'Baltimore',
            'No', 'No', 'edesignated until Jan. 2018', NULL,
            true, NULL,
-           'SRID=4326;MULTIPOLYGON(((-76.451331 39.293449,-76.451331 39.31303,-76.43777 39.31303,-76.43777 39.293449,-76.451331 39.293449)))'),
+           'SRID=4326;MULTIPOLYGON(((-76.451331 39.293449,-76.451331 39.31303,-76.43777 39.31303,-76.43777 39.293449,-76.451331 39.293449)))',('now'::text)::date, '2019-10-15'),
           (8134, '40001376900',
            'OK', 'Stilwell', 'Adair',
            'Yes', 'Yes', 'Qualified', NULL,
            false, NULL,
-           'SRID=4326;MULTIPOLYGON(((-94.692669 35.782041,-94.692669 35.841171,-94.594772 35.841171,-94.594772 35.782041,-94.692669 35.782041)))'),
+           'SRID=4326;MULTIPOLYGON(((-94.692669 35.782041,-94.692669 35.841171,-94.594772 35.841171,-94.594772 35.782041,-94.692669 35.782041)))',('now'::text)::date, '2020-04-16'),
           (3568, '35031943800',
            'NM', 'Nakaibito', 'Mckinley',
            'Yes', 'Yes', 'Qualified', '',
            false, NULL,
-           'SRID=4326;MULTIPOLYGON(((-109.246348 35.659461,-109.246348 38.002881,-108.651412 38.002881,-108.651412 35.659461,-109.246348 35.659461)))'),
+           'SRID=4326;MULTIPOLYGON(((-109.246348 35.659461,-109.246348 38.002881,-108.651412 38.002881,-108.651412 35.659461,-109.246348 35.659461)))',('now'::text)::date, '2019-04-25'),
           (8177, '05103950200',
            'AR', 'Bragg City', 'Ouachita',
            'No', 'Yes', 'Qualified', '',
            false, NULL,
-           'SRID=4326;MULTIPOLYGON(((-93.11233 33.544939,-93.11233 33.822503,-92.828963 33.822503,-92.828963 33.544939,-93.11233 33.544939)))');
+           'SRID=4326;MULTIPOLYGON(((-93.11233 33.544939,-93.11233 33.822503,-92.828963 33.822503,-92.828963 33.544939,-93.11233 33.544939)))',('now'::text)::date, '2029-04-15');
 
         CREATE VIEW qct AS
           SELECT *
@@ -100,20 +99,19 @@ module TestDataHelper
           brac_id integer,
           geom geometry(MultiPolygon,4326),
           effective date NOT NULL DEFAULT ('now'::text)::date,
-          expires date
-        );
+          expires date);
 
         INSERT INTO data.qct_brac VALUES
           (18606, '72037160100',
            'PR', 'Roosevelt Roads', 'Ceiba',
            'No', 'No', 'Not Qualified', 'Naval Station Roosevelt Roads',
            false, 13,
-           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))'),
+           'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))', ('now'::text)::date, '2019-06-05'),
           (8190, '05103950100',
            'AR', 'Onalaska', 'Ouachita',
            'No', 'No', 'Not Qualified', 'USARC Camden',
            false, 21,
-           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))');
+           'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))', ('now'::text)::date, '2021-11-05');
 
         CREATE VIEW qct_brac AS
           SELECT *
@@ -143,29 +141,30 @@ module TestDataHelper
           dda boolean,
           geom geometry(MultiPolygon,4326),
           start date NOT NULL DEFAULT ('now'::text)::date,
-          stop date);
+          stop date,
+          expires date);
 
         INSERT INTO data.qnmc_2016_01_01 VALUES
           (235, '40001',
            'Qualified by Unemployment', 'Qualified by Unemployment',
            NULL,
            true, false, false, NULL, false,
-           'SRID=4326;MULTIPOLYGON(((-94.80779 35.638215,-94.80779 36.161902,-94.472647 36.161902,-94.472647 35.638215,-94.80779 35.638215)))'),
+           'SRID=4326;MULTIPOLYGON(((-94.80779 35.638215,-94.80779 36.161902,-94.472647 36.161902,-94.472647 35.638215,-94.80779 35.638215)))', ('now'::text)::date, '2019-06-05'),
           (722, '54075',
            'Redesignated until July 2017', 'Qualified by Unemployment',
            NULL,
            true, false, false, NULL, false,
-           'SRID=4326;MULTIPOLYGON(((-80.363295 38.03611,-80.363295 38.739811,-79.617906 38.739811,-79.617906 38.03611,-80.363295 38.03611)))'),
+           'SRID=4326;MULTIPOLYGON(((-80.363295 38.03611,-80.363295 38.739811,-79.617906 38.739811,-79.617906 38.03611,-80.363295 38.03611)))', ('now'::text)::date, '2019-11-05'),
           (723, '54083',
            'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
            'Elkins USARC/OMS, Beverly',
            false, false, false, 1, false,
-           'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))'),
+           'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))', ('now'::text)::date, '2022-06-05'),
           (999, '99999',
            'Qualified by Income', 'Qualified by Income',
            NULL,
            false, true, false, NULL, false,
-           'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))');
+           'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))', ('now'::text)::date, '2020-10-05');
 
         CREATE VIEW qnmc AS
           SELECT *
@@ -190,21 +189,17 @@ module TestDataHelper
           fac_type character varying(25),
           closure character varying(15),
           geom geometry(MultiPolygon,4326),
-          geom_lowres geometry(MultiPolygon,4326),
-          geom_lowerres geometry(MultiPolygon,4326),
-          geom_lowestres geometry(MultiPolygon,4326),
-          start date NOT NULL DEFAULT ('now'::text)::date,
-          stop date);
+          expires date);
 
         INSERT INTO data.brac VALUES
           (13, 'Naval Station Roosevelt Roads',
            'Ceiba', 'Puerto Rico', 'Navy Installation',
            '5/7/2015',
-           'SRID=4326;MULTIPOLYGON(((-65.687988 18.198784,-65.687988 18.284628,-65.589973 18.284628,-65.589973 18.198784,-65.687988 18.198784)))'),
+           'SRID=4326;MULTIPOLYGON(((-65.687988 18.198784,-65.687988 18.284628,-65.589973 18.284628,-65.589973 18.198784,-65.687988 18.198784)))','2020-09-15'),
           (21, 'USARC Camden',
            'Ouachita', 'Arkansas', 'Army Installation',
            '9/12/2011',
-           'SRID=4326;MULTIPOLYGON(((-92.769916 33.619565,-92.769916 33.62095,-92.769049 33.62095,-92.769049 33.619565,-92.769916 33.619565)))');
+           'SRID=4326;MULTIPOLYGON(((-92.769916 33.619565,-92.769916 33.62095,-92.769049 33.62095,-92.769049 33.619565,-92.769916 33.619565)))','2020-08-15');
 
         CREATE VIEW brac AS
           SELECT *
