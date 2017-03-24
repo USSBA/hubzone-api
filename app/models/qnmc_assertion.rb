@@ -10,7 +10,7 @@ class QnmcAssertion
         qnmc['hz_type'] = 'qnmc_b'    if qnmc['income']
         qnmc['hz_type'] = 'qnmc_ab'   if qnmc['income'] && qnmc['unemployment']
         qnmc['hz_type'] = 'qnmc_r'    if qnmc['redesignated']
-        qnmc['hz_type'] = 'qnmc_brac' if qnmc['brac_id'].present?
+        qnmc['hz_type'] = 'qnmc_b'    if qnmc['brac_id'].present?
         qnmc['hz_type'] = 'qnmc_c'    if qnmc['dda']
         qnmc
       end
