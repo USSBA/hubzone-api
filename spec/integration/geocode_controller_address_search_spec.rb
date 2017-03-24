@@ -156,10 +156,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
-        it "should have a calculated expiration date" do
-          body = JSON.parse response.body
-          expect(body['until_date']).to eql(!nil)
-        end
+        # it "should have a calculated expiration date" do
+        #   body = JSON.parse response.body
+        #   expect(body['until_date']).to eql(!nil)
+        # end
       end
     end
   end
