@@ -71,7 +71,7 @@ class HubzoneUtil
       # maybe we need another word other than assertion
       %w(Brac Qct QctBrac Qnmc QnmcBrac IndianLands).map do |assertion_type|
         hz_assertion = "#{assertion_type}Assertion".constantize
-        results[:hubzone] +=  hz_assertion.assertion location
+        results[:hubzone] += hz_assertion.assertion location
       end
     end
 
