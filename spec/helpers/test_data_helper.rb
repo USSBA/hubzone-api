@@ -91,6 +91,14 @@ module TestDataHelper
            'No', 'Yes', 'Qualified', '',
            true, NULL,
            'SRID=4326;MULTIPOLYGON(((-88.032842 35.645434,-88.032842 35.840593,-87.709976 35.840593,-87.709976 35.645434,-88.032842 35.645434)))',
+           ('now'::text)::date, '2018-01-31'),
+
+          -- qct_r in warden wa
+          (3915, '53025011300',
+           'WA', 'Warden', 'Grant',
+           'No', 'Yes', 'Redesignated until Jan 2018', '',
+           true, NULL,
+           'SRID=4326;MULTIPOLYGON(((-119.265898 46.91133,-119.265898 47.087106,-118.98108 47.087106,-118.98108 46.91133,-119.265898 46.91133)))',
            ('now'::text)::date, '2018-01-31');
 
         CREATE VIEW qct AS
@@ -169,30 +177,32 @@ module TestDataHelper
           dda boolean,
           geom geometry(MultiPolygon,4326),
           start date NOT NULL DEFAULT ('now'::text)::date,
-          stop date,
           expires date);
 
         INSERT INTO data.qnmc_2016_01_01 VALUES
+          -- qnmc-a in stilwell ok
           (235, '40001',
            'Qualified by Unemployment', 'Qualified by Unemployment',
            NULL,
            true, false, false, NULL, false,
            'SRID=4326;MULTIPOLYGON(((-94.80779 35.638215,-94.80779 36.161902,-94.472647 36.161902,-94.472647 35.638215,-94.80779 35.638215)))',
-           ('now'::text)::date, '2019-06-05'),
+           ('now'::text)::date, null),
 
+          -- qnmc_not_brac in buckeye wv
           (722, '54075',
            'Redesignated until July 2017', 'Qualified by Unemployment',
            NULL,
            true, false, false, NULL, false,
            'SRID=4326;MULTIPOLYGON(((-80.363295 38.03611,-80.363295 38.739811,-79.617906 38.739811,-79.617906 38.03611,-80.363295 38.03611)))',
-           ('now'::text)::date, '2019-11-05'),
+           ('now'::text)::date, null),
 
+          -- qnmc_b in navajo
           (999, '99999',
            'Qualified by Income', 'Qualified by Income',
            NULL,
            false, true, false, NULL, false,
            'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))',
-           ('now'::text)::date, '2020-10-05'),
+           ('now'::text)::date, null),
 
            -- qnmc_r in pine view tn
            (2496, '47135',
@@ -230,16 +240,25 @@ module TestDataHelper
           dda boolean,
           geom geometry(MultiPolygon,4326),
           start date NOT NULL DEFAULT ('now'::text)::date,
-          stop date,
           expires date);
 
         INSERT INTO data.qnmc_brac VALUES
+          -- qnmc_brac in mabie, WV
           (723, '54083',
            'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
            'Elkins USARC/OMS, Beverly',
            false, false, false, 1, false,
            'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))',
-           ('now'::text)::date,'2020-04-16');
+           ('now'::text)::date,'2020-04-16'),
+
+           -- qnmc_brac in Warden WA
+           (453, '53025',
+           'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
+           'Wagener USARC, Pasco',
+           false, false, false, 60, false,
+           'SRID=4326;MULTIPOLYGON(((-120.035858 46.62578,-120.035858 47.962152,-118.973572 47.962152,-118.973572 46.62578,-120.035858 46.62578)))',
+           ('now'::text)::date,'2020-12-31');
+
 
         CREATE VIEW qnmc_brac AS
           SELECT *

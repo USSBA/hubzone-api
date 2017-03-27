@@ -58,7 +58,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Mabie, WV 26257, USA',
     designations: %w(qnmc_brac), # not added to test data: qct_b),
-    until_date: nil
+    until_date: '2020-04-16'
   },
   qnmc_not_brac: {
     context: 'in a QNMC that is near a BRAC, but is QNMC designated',
@@ -114,10 +114,17 @@ test_queries = {
     results_address: 'Pine View, TN 37096, USA',
     designations: %w(qct_r qnmc_r),
     until_date: '2018-07-31'
+  },
+  redesignated_qct_and_qnmc_brac: {
+    context: 'of warden washington',
+    query: '121 ash st warden wa',
+    latlng: '46.96861,-119.03905',
+    http_status: 200,
+    results_address: '121 S Ash Ave, Warden, WA 98857, USA',
+    designations: %w(qct_r qnmc_brac),
+    until_date: '2020-12-31'
   }
 }
-
-# "47135930100"
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe GeocodeController, vcr: true, type: :request do
@@ -249,6 +256,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           body = JSON.parse response.body
           hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
+        end
+        it "should have a calculated expiration date" do
+          body = JSON.parse response.body
+          expect(body['until_date']).to eq(tquery[:until_date])
         end
       end
     end
