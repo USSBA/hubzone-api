@@ -13,7 +13,7 @@ test_queries = {
     http_status: 200,
     results_address: '8 Market Pl, Baltimore, MD 21202, USA',
     designations: %w(qct_e),
-    until: ''
+    until_date: nil
   },
   qct_r: {
     context: 'in a redesignated QCT in baltimore',
@@ -22,7 +22,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Holgate Dr, Essex, MD 21221, USA',
     designations: %w(qct_r),
-    until: ''
+    until_date: '2019-10-15'
   },
   brac_base: {
     context: 'in a BRAC base in Puerto Rico',
@@ -31,7 +31,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
     designations: %w(brac qct_b),
-    until: ''
+    until_date: '2020-09-15'
   },
   brac_qct: {
     context: 'in a QCT that is BRAC designated',
@@ -40,7 +40,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Amy, AR 71701, USA',
     designations: %w(qct_b), # not added to test data: qnmc_brac)
-    until: ''
+    until_date: '2021-11-05'
   },
   qct_not_brac: {
     context: 'in a QCT that is near a BRAC, but is QCT designated',
@@ -49,7 +49,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Chidester, AR 71726, USA',
     designations: %w(qct_e), # not added to test data: qnmc_brac)
-    until: ''
+    until_date: nil
   },
   brac_qnmc: {
     context: 'in a QNMC that is BRAC designated',
@@ -58,7 +58,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Mabie, WV 26257, USA',
     designations: %w(qnmc_brac), # not added to test data: qct_b),
-    until: ''
+    until_date: nil
   },
   qnmc_not_brac: {
     context: 'in a QNMC that is near a BRAC, but is QNMC designated',
@@ -67,7 +67,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Buckeye, WV, USA',
     designations: %w(qnmc_a),
-    until: ''
+    until_date: nil
   },
   indian_lands: {
     context: 'in an Indian Lands hubzone',
@@ -76,7 +76,7 @@ test_queries = {
     http_status: 200,
     results_address: '2424 S Country Club Rd, El Reno, OK 73036, USA',
     designations: %w(indian_lands),
-    until: ''
+    until_date: nil
   },
   navajo: {
     context: 'of navajo',
@@ -86,7 +86,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Navajo Nation Reservation, AZ, USA',
     designations: %w(indian_lands qct_e qnmc_b),
-    until: ''
+    until_date: nil
   },
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
@@ -95,7 +95,7 @@ test_queries = {
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
     designations: %w(brac qct_b),
-    until: ''
+    until_date: '2020-09-15'
   },
   stilwell: {
     context: 'of stilwell, ok',
@@ -104,18 +104,20 @@ test_queries = {
     http_status: 200,
     results_address: 'Stilwell, OK 74960, USA',
     designations: %w(qct_e qnmc_a indian_lands),
-    until: ''
+    until_date: nil
   },
-  # reform: {
-  #   context: 'of reform, al',
-  #   query: 'reform, al',
-  #   latlng: '33.37845,-88.01530',
-  #   http_status: 200,
-  #   results_address: 'Reform, AL, USA',
-  #   designations: %w(qct_r qnmc_r),
-  #   until: '2018-01-31'
-  # }
+  redesignated_qnmc_and_qct: {
+    context: 'of pine view, TN',
+    query: 'pine view tn',
+    latlng: '35.73027,-87.93413',
+    http_status: 200,
+    results_address: 'Pine View, TN 37096, USA',
+    designations: %w(qct_r qnmc_r),
+    until_date: '2018-07-31'
+  }
 }
+
+# "47135930100"
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe GeocodeController, vcr: true, type: :request do
@@ -178,8 +180,7 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         end
         it "should have a calculated expiration date" do
           body = JSON.parse response.body
-          # puts tquery[:until]
-          # expect(body['until_date']).to eq(tquery[:until_date])
+          expect(body['until_date']).to eq(tquery[:until_date])
         end
       end
     end
