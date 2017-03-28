@@ -12,7 +12,8 @@ test_queries = {
     latlng: '39.2888915,-76.6069962',
     http_status: 200,
     results_address: '8 Market Pl, Baltimore, MD 21202, USA',
-    designations: %w(qct_e)
+    designations: %w(qct_e),
+    until_date: nil
   },
   qct_r: {
     context: 'in a redesignated QCT in baltimore',
@@ -20,7 +21,8 @@ test_queries = {
     latlng: '39.30428,-76.44791',
     http_status: 200,
     results_address: 'Holgate Dr, Essex, MD 21221, USA',
-    designations: %w(qct_r)
+    designations: %w(qct_r),
+    until_date: '2019-10-15'
   },
   brac_base: {
     context: 'in a BRAC base in Puerto Rico',
@@ -28,7 +30,8 @@ test_queries = {
     latlng: '18.240392,-65.62385970000001',
     http_status: 200,
     results_address: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
-    designations: %w(brac qct_b)
+    designations: %w(brac qct_b),
+    until_date: '2020-09-15'
   },
   brac_qct: {
     context: 'in a QCT that is BRAC designated',
@@ -36,7 +39,8 @@ test_queries = {
     latlng: '33.7320525,-92.8154404',
     http_status: 200,
     results_address: 'Amy, AR 71701, USA',
-    designations: %w(qct_b) # not added to test data: qnmc_brac)
+    designations: %w(qct_b), # not added to test data: qnmc_brac)
+    until_date: '2021-11-05'
   },
   qct_not_brac: {
     context: 'in a QCT that is near a BRAC, but is QCT designated',
@@ -44,7 +48,8 @@ test_queries = {
     latlng: '33.7023315,-93.02044370000002',
     http_status: 200,
     results_address: 'Chidester, AR 71726, USA',
-    designations: %w(qct_e) # not added to test data: qnmc_brac)
+    designations: %w(qct_e), # not added to test data: qnmc_brac)
+    until_date: nil
   },
   brac_qnmc: {
     context: 'in a QNMC that is BRAC designated',
@@ -52,7 +57,8 @@ test_queries = {
     latlng: '38.8764985,-79.9853181',
     http_status: 200,
     results_address: 'Mabie, WV 26257, USA',
-    designations: %w(qnmc_brac) # not added to test data: qct_b)
+    designations: %w(qnmc_brac), # not added to test data: qct_b),
+    until_date: '2020-04-16'
   },
   qnmc_not_brac: {
     context: 'in a QNMC that is near a BRAC, but is QNMC designated',
@@ -60,7 +66,8 @@ test_queries = {
     latlng: '38.1902273,-80.1360778',
     http_status: 200,
     results_address: 'Buckeye, WV, USA',
-    designations: %w(qnmc_a)
+    designations: %w(qnmc_a),
+    until_date: nil
   },
   indian_lands: {
     context: 'in an Indian Lands hubzone',
@@ -68,7 +75,8 @@ test_queries = {
     latlng: '35.5112912,-97.9732157',
     http_status: 200,
     results_address: '2424 S Country Club Rd, El Reno, OK 73036, USA',
-    designations: %w(indian_lands)
+    designations: %w(indian_lands),
+    until_date: nil
   },
   navajo: {
     context: 'of navajo',
@@ -77,7 +85,8 @@ test_queries = {
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
     results_address: 'Navajo Nation Reservation, AZ, USA',
-    designations: %w(indian_lands qct_e qnmc_b)
+    designations: %w(indian_lands qct_e qnmc_b),
+    until_date: nil
   },
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
@@ -85,7 +94,8 @@ test_queries = {
     latlng: '18.237248,-65.6480292',
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
-    designations: %w(brac qct_b)
+    designations: %w(brac qct_b),
+    until_date: '2020-09-15'
   },
   stilwell: {
     context: 'of stilwell, ok',
@@ -93,7 +103,26 @@ test_queries = {
     latlng: '35.8185419,-94.6675625',
     http_status: 200,
     results_address: 'Stilwell, OK 74960, USA',
-    designations: %w(qct_e qnmc_a indian_lands)
+    designations: %w(qct_e qnmc_a indian_lands),
+    until_date: nil
+  },
+  redesignated_qnmc_and_qct: {
+    context: 'of pine view, TN',
+    query: 'pine view tn',
+    latlng: '35.73027,-87.93413',
+    http_status: 200,
+    results_address: 'Pine View, TN 37096, USA',
+    designations: %w(qct_r qnmc_r),
+    until_date: '2018-07-31'
+  },
+  redesignated_qct_and_qnmc_brac: {
+    context: 'of warden washington',
+    query: '121 ash st warden wa',
+    latlng: '46.96861,-119.03905',
+    http_status: 200,
+    results_address: '121 S Ash Ave, Warden, WA 98857, USA',
+    designations: %w(qct_r qnmc_brac),
+    until_date: '2020-12-31'
   }
 }
 
@@ -156,8 +185,13 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
+        it "should have a calculated expiration date" do
+          body = JSON.parse response.body
+          expect(body['until_date']).to eq(tquery[:until_date])
+        end
       end
     end
+
   end
 
   # tests for latlng
@@ -222,6 +256,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           body = JSON.parse response.body
           hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
+        end
+        it "should have a calculated expiration date" do
+          body = JSON.parse response.body
+          expect(body['until_date']).to eq(tquery[:until_date])
         end
       end
     end

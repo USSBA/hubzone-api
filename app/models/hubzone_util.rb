@@ -23,6 +23,7 @@ class HubzoneUtil
       return error_status if error_status.present?
 
       append_assertions(results)
+      latest_expiration(results)
       results
     end
 
@@ -33,6 +34,7 @@ class HubzoneUtil
 
       results = default_location_results loc
       append_assertions(results)
+      latest_expiration(results)
       results
     end
 
@@ -73,6 +75,17 @@ class HubzoneUtil
         hz_assertion = "#{assertion_type}Assertion".constantize
         results[:hubzone] += hz_assertion.assertion location
       end
+    end
+
+    def latest_expiration(results)
+      dates = []
+      results[:hubzone].each do |result|
+        if result['expires']
+          d = Date.parse(result['expires'])
+          dates.push d
+        end
+      end
+      results[:until_date] = dates.max
     end
 
     def build_response(status)
