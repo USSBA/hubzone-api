@@ -79,13 +79,16 @@ class HubzoneUtil
 
     def latest_expiration(results)
       dates = []
+      has_indefinite_expiration = false
       results[:hubzone].each do |result|
-        if result['expires']
+        if result['expires'] == nil
+          has_indefinite_expiration = true
+        elsif result['expires'] != nil
           d = Date.parse(result['expires'])
           dates.push d
         end
       end
-      results[:until_date] = dates.max
+      !has_indefinite_expiration ? results[:until_date] = dates.max : results[:until_date] = nil
     end
 
     def build_response(status)
