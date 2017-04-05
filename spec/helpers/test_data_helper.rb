@@ -15,6 +15,7 @@ module TestDataHelper
     create_qct_brac_data
     create_qnmc_data
     create_qnmc_brac_data
+    create_qnmc_qda_data
     create_brac_data
     create_indian_lands_data
   end
@@ -75,6 +76,14 @@ module TestDataHelper
            'Yes', 'Yes', 'Qualified', '',
            false, NULL,
            'SRID=4326;MULTIPOLYGON(((-109.246348 35.659461,-109.246348 38.002881,-108.651412 38.002881,-108.651412 35.659461,-109.246348 35.659461)))',
+           ('now'::text)::date, null),
+
+          -- qct_e in adel, ga
+          (21795, '13075960200',
+           'GA', '', 'Cook',
+           'Yes', 'Yes', 'Qualified', '',
+           false, NULL,
+           'SRID=4326;MULTIPOLYGON(((-83.576516 31.027288,-83.576516 31.350295,-83.280839 31.350295,-83.280839 31.027288,-83.576516 31.027288)))',
            ('now'::text)::date, null),
 
           -- qct not brac
@@ -263,6 +272,44 @@ module TestDataHelper
         CREATE VIEW qnmc_brac AS
           SELECT *
             FROM data.qnmc_brac;
+    SQL
+  end
+
+  def create_qnmc_qda_data
+    ActiveRecord::Base.connection.execute qnmc_qda_sql
+  end
+
+  def qnmc_qda_sql
+    <<-SQL
+      CREATE SCHEMA IF NOT EXISTS data;
+
+        CREATE TABLE IF NOT EXISTS data.qnmc_qda (
+          gid SERIAL primary key,
+          county_fips varchar,
+          qda_id int,
+          qda_publish date,
+          qda_declaration date,
+          qnmc_max_expires date,
+          qnmc_current_status varchar,
+          qnmc_current_omb varchar,
+          qda_designation date,
+          expires date,
+          geom geometry('MULTIPOLYGON', 4326));
+
+        INSERT INTO data.qnmc_qda VALUES
+          -- qnmc_qda in adel ga
+          (17,'13075',84,'2017-03-01','2017-01-26','2016-07-31','not-qualified','Non-metropolitan','2017-01-26','2022-01-26',
+           'SRID=4326;MULTIPOLYGON(((-83.576516 31.027288,-83.576516 31.350295,-83.280839 31.350295,-83.280839 31.027288,-83.576516 31.027288)))'),
+          -- qnmc_qda in rockyhock NC
+          (36,'37091',191,'2017-03-01','2016-10-10','2016-01-31','not-qualified','Non-metropolitan','2016-10-10','2021-10-10',
+           'SRID=4326;MULTIPOLYGON(((-76.72229 36.006148,-76.72229 36.351892,-76.408389 36.351892,-76.408389 36.006148,-76.72229 36.006148)))'),
+          -- qnmc_qda in harrelsville NC
+          (15,'37041',76,'2016-11-01','2016-10-10','2013-10-31','not-qualified','Non-metropolitan','2016-10-10','2021-10-10',
+           'SRID=4326;MULTIPOLYGON(((-77.20879 36.238234,-77.20879 36.54633,-76.698309 36.54633,-76.698309 36.238234,-77.20879 36.238234)))');
+
+        CREATE VIEW qnmc_qda AS
+          SELECT *
+            FROM data.qnmc_qda;
     SQL
   end
 
