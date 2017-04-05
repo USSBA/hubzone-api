@@ -1,0 +1,112 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=Adel,%20GA%2031620,%20USA&country=UM&key=<GOOGLE_API_KEY>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Wed, 05 Apr 2017 18:38:23 GMT
+      Expires:
+      - Thu, 06 Apr 2017 18:38:23 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Vary:
+      - Accept-Language
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      Content-Length:
+      - '461'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="37,36,35"
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "Adel",
+                       "short_name" : "Adel",
+                       "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "Cook County",
+                       "short_name" : "Cook County",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "Georgia",
+                       "short_name" : "GA",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    },
+                    {
+                       "long_name" : "31620",
+                       "short_name" : "31620",
+                       "types" : [ "postal_code" ]
+                    }
+                 ],
+                 "formatted_address" : "Adel, GA 31620, USA",
+                 "geometry" : {
+                    "bounds" : {
+                       "northeast" : {
+                          "lat" : 31.171168,
+                          "lng" : -83.397351
+                       },
+                       "southwest" : {
+                          "lat" : 31.0944409,
+                          "lng" : -83.4613621
+                       }
+                    },
+                    "location" : {
+                       "lat" : 31.1371358,
+                       "lng" : -83.4234936
+                    },
+                    "location_type" : "APPROXIMATE",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 31.171168,
+                          "lng" : -83.397351
+                       },
+                       "southwest" : {
+                          "lat" : 31.0944409,
+                          "lng" : -83.4613621
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJaXmGqXgN7ogRwLNcdYXX1-4",
+                 "types" : [ "locality", "political" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version: 
+  recorded_at: Wed, 05 Apr 2017 18:38:23 GMT
+recorded_with: VCR 3.0.3

@@ -123,6 +123,15 @@ test_queries = {
     results_address: '121 S Ash Ave, Warden, WA 98857, USA',
     designations: %w(qct_r qnmc_brac),
     until_date: '2020-12-31'
+  },
+  qnmc_qda: {
+    context: 'of adel ga',
+    query: 'Adel, GA 31620, USA',
+    latlng: '31.1461982715565,-83.44674110412598',
+    http_status: 200,
+    results_address: 'Adel, GA 31620, USA',
+    designations: %w(qct_e qnmc_qda),
+    until_date: '2022-01-26'
   }
 }
 
