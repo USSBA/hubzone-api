@@ -125,13 +125,13 @@ test_queries = {
     until_date: '2020-12-31'
   },
   qnmc_qda: {
-    context: 'of adel ga',
-    query: 'Adel, GA 31620, USA',
-    latlng: '31.1461982715565,-83.44674110412598',
+    context: 'of rockyhock nc',
+    query: 'Rockyhock, NC, USA',
+    latlng: '36.18011,-76.69318',
     http_status: 200,
-    results_address: 'Adel, GA 31620, USA',
-    designations: %w(qct_e qnmc_qda),
-    until_date: '2022-01-26'
+    results_address: 'Rockyhock, NC 27932, USA',
+    designations: %w(qnmc_qda),
+    until_date: '2021-10-10'
   }
 }
 
