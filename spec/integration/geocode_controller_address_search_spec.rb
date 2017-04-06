@@ -133,15 +133,6 @@ test_queries = {
     designations: %w(qnmc_qda),
     until_date: '2021-10-10'
   },
-  qnmc_qda: {
-    context: 'of adel ga',
-    query: 'Adel, GA 31620, USA',
-    latlng: '31.1461982715565,-83.44674110412598',
-    http_status: 200,
-    results_address: 'Adel, GA 31620, USA',
-    designations: %w(qct_e qnmc_qda),
-    until_date: '2022-01-26'
-  },
   qct_qda: {
     context: 'of mcbee SC',
     query: 'mcbee SC',
