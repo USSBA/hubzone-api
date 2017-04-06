@@ -77,18 +77,20 @@ class HubzoneUtil
       end
     end
 
+    #rubocop:disable MethodLength
     def latest_expiration(results)
       dates = []
       has_indefinite_expiration = false
       results[:hubzone].each do |result|
-        if result['expires'] == nil
+        if result['expires'].nil?
           has_indefinite_expiration = true
-        elsif result['expires'] != nil
+        elsif !result['expires'].nil?
           d = Date.parse(result['expires'])
           dates.push d
         end
       end
-      !has_indefinite_expiration ? results[:until_date] = dates.max : results[:until_date] = nil
+      #!has_indefinite_expiration ? results[:until_date] = dates.max : results[:until_date] = nil
+      results[:until_date] = !has_indefinite_expiration ? dates.max : nil
     end
 
     def build_response(status)
