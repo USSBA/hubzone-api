@@ -13,6 +13,7 @@ module TestDataHelper
   def create_test_data
     create_qct_data
     create_qct_brac_data
+    create_qct_qda_data
     create_qnmc_data
     create_qnmc_brac_data
     create_qnmc_qda_data
@@ -310,6 +311,38 @@ module TestDataHelper
         CREATE VIEW qnmc_qda AS
           SELECT *
             FROM data.qnmc_qda;
+    SQL
+  end
+
+  def create_qct_qda_data
+    ActiveRecord::Base.connection.execute qct_qda_sql
+  end
+
+  def qct_qda_sql
+    <<-SQL
+      CREATE SCHEMA IF NOT EXISTS data;
+
+        CREATE TABLE IF NOT EXISTS data.qct_qda (
+          gid SERIAL primary key,
+          county_fips varchar,
+          tract_fips varchar,
+          qda_id int,
+          qda_publish date,
+          qda_declaration date,
+          qct_max_expires date,
+          qct_current_status varchar,
+          qda_designation date,
+          expires date,
+          geom geometry('MULTIPOLYGON', 4326));
+
+        INSERT INTO data.qct_qda VALUES
+          -- qct_qda in mcbee sc
+          (76,'45025','45025950800',43,'2016-11-01','2016-10-14','2015-10-31','not-qualified','2016-10-14','2021-10-14',
+           'SRID=4326;MULTIPOLYGON(((-80.359638 34.366207,-80.359638 34.630704,-80.153734 34.630704,-80.153734 34.366207,-80.359638 34.366207)))');
+
+        CREATE VIEW qct_qda AS
+          SELECT *
+            FROM data.qct_qda;
     SQL
   end
 
