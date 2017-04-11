@@ -36,12 +36,12 @@ staging:
 
 demo:
   <<: *default
-  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db1.map.dev.sba-one.net' } %>
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db.hz-demo.sba-one.net' } %>
   database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_demo' } %>
 
 dev:
   <<: *default
-  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db1.map.dev.sba-one.net' } %>
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db.map.dev.sba-one.net' } %>
   database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
 
 development:
