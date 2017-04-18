@@ -5,7 +5,7 @@ class QctBracAssertion
   class << self
     # rubocop:disable Metrics/AbcSize
     def assertion(location)
-      qct_combined = {'brac_id' => [], 'brac_sba_name' => [], 'expires' => '', 'hz_type' => 'qct_b'}
+      qct_combined = {'brac_id' => [], 'brac_sba_name' => [], 'expires' => '', 'hz_type' => 'qct_brac'}
       assertion_by_type('qct_brac', location).each do |qct|
         next unless qct['brac_id'].present?
         qct_combined['brac_id'].push(qct['brac_id'])

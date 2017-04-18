@@ -30,7 +30,7 @@ test_queries = {
     latlng: '18.240392,-65.62385970000001',
     http_status: 200,
     results_address: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
-    designations: %w(brac qct_b),
+    designations: %w(brac qct_brac),
     until_date: '2020-09-15'
   },
   brac_qct: {
@@ -39,7 +39,7 @@ test_queries = {
     latlng: '33.7320525,-92.8154404',
     http_status: 200,
     results_address: 'Amy, AR 71701, USA',
-    designations: %w(qct_b), # not added to test data: qnmc_brac)
+    designations: %w(qct_brac), # not added to test data: qnmc_brac)
     until_date: '2021-11-05'
   },
   qct_not_brac: {
@@ -94,7 +94,7 @@ test_queries = {
     latlng: '18.237248,-65.6480292',
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
-    designations: %w(brac qct_b),
+    designations: %w(brac qct_brac),
     until_date: '2020-09-15'
   },
   stilwell: {
