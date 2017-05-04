@@ -26,7 +26,7 @@ default: &default
 
 production:
   <<: *default
-  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'hz-prod-rds.cyy8xym5djtg.us-east-1.rds.amazonaws.com' } %>
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db.maps.certify.sba.gov' } %>
   database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_prd' } %>
 
 staging:
