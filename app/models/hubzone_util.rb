@@ -71,7 +71,7 @@ class HubzoneUtil
       location = results['geometry']['location']
 
       # maybe we need another word other than assertion
-      %w(Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands).map do |assertion_type|
+      %w(Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands).each do |assertion_type|
         hz_assertion = "#{assertion_type}Assertion".constantize
         results[:hubzone] += hz_assertion.assertion location
       end
@@ -89,8 +89,7 @@ class HubzoneUtil
           dates.push d
         end
       end
-      #!has_indefinite_expiration ? results[:until_date] = dates.max : results[:until_date] = nil
-      results[:until_date] = !has_indefinite_expiration ? dates.max : nil
+      results[:until_date] = has_indefinite_expiration ? nil : dates.max
     end
 
     def build_response(status)
