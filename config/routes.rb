@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     scope module: :v2, constraints: ApiConstraints.new(version: 2) do
       get 'search', to: 'geocode#search', as: 'v2_search'
     end
-    scope module: :v1, constraints: ApiConstraints.new(version: 1) do
+    scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       get 'search', to: 'geocode#search', as: 'search'
     end
   end
