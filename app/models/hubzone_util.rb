@@ -23,6 +23,7 @@ class HubzoneUtil
       return error_status if error_status.present?
 
       append_assertions(results)
+      latest_expiration(results)
       results
     end
 
@@ -33,6 +34,7 @@ class HubzoneUtil
 
       results = default_location_results loc
       append_assertions(results)
+      latest_expiration(results)
       results
     end
 
@@ -68,20 +70,26 @@ class HubzoneUtil
       results[:hubzone] = []
       location = results['geometry']['location']
 
-      # Check first for BRAC
-      results[:hubzone] += BracAssertion.assertion location
+      # maybe we need another word other than assertion
+      %w(Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands).each do |assertion_type|
+        hz_assertion = "#{assertion_type}Assertion".constantize
+        results[:hubzone] += hz_assertion.assertion location
+      end
+    end
 
-      # Then QCT's
-      results[:hubzone] += QctAssertion.assertion location
-
-      # Then QCT_brac's
-      results[:hubzone] += QctBracAssertion.assertion location
-
-      # Then QNMC's
-      results[:hubzone] += QnmcAssertion.assertion location
-
-      # Then Indian Lands
-      results[:hubzone] += IndianLandsAssertion.assertion location
+    #rubocop:disable MethodLength
+    def latest_expiration(results)
+      dates = []
+      has_indefinite_expiration = false
+      results[:hubzone].each do |result|
+        if result['expires'].nil?
+          has_indefinite_expiration = true
+        elsif !result['expires'].nil?
+          d = Date.parse(result['expires'])
+          dates.push d
+        end
+      end
+      results[:until_date] = has_indefinite_expiration ? nil : dates.max
     end
 
     def build_response(status)

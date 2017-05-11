@@ -5,6 +5,18 @@ RSpec.configure do |c|
   c.include TestDataHelper
 end
 
+def search_url
+  api_search_url
+end
+
+def json
+  JSON.parse(response.body).symbolize_keys
+end
+
+def parameters(p, version = 1)
+  { params: p, headers: {'Accept' => "application/sba.hubzone-api.v#{version}"} }
+end
+
 test_queries = {
   qct: {
     context: 'in a QCT in baltimore',
@@ -12,7 +24,8 @@ test_queries = {
     latlng: '39.2888915,-76.6069962',
     http_status: 200,
     results_address: '8 Market Pl, Baltimore, MD 21202, USA',
-    designations: %w(qct_e)
+    designations: %w(qct_e),
+    until_date: nil
   },
   qct_r: {
     context: 'in a redesignated QCT in baltimore',
@@ -20,7 +33,8 @@ test_queries = {
     latlng: '39.30428,-76.44791',
     http_status: 200,
     results_address: 'Holgate Dr, Essex, MD 21221, USA',
-    designations: %w(qct_r)
+    designations: %w(qct_r),
+    until_date: '2019-10-15'
   },
   brac_base: {
     context: 'in a BRAC base in Puerto Rico',
@@ -28,7 +42,8 @@ test_queries = {
     latlng: '18.240392,-65.62385970000001',
     http_status: 200,
     results_address: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
-    designations: %w(brac qct_b)
+    designations: %w(brac qct_brac),
+    until_date: '2020-09-15'
   },
   brac_qct: {
     context: 'in a QCT that is BRAC designated',
@@ -36,7 +51,8 @@ test_queries = {
     latlng: '33.7320525,-92.8154404',
     http_status: 200,
     results_address: 'Amy, AR 71701, USA',
-    designations: %w(qct_b) # not added to test data: qnmc_brac)
+    designations: %w(qct_brac), # not added to test data: qnmc_brac)
+    until_date: '2021-11-05'
   },
   qct_not_brac: {
     context: 'in a QCT that is near a BRAC, but is QCT designated',
@@ -44,7 +60,8 @@ test_queries = {
     latlng: '33.7023315,-93.02044370000002',
     http_status: 200,
     results_address: 'Chidester, AR 71726, USA',
-    designations: %w(qct_e) # not added to test data: qnmc_brac)
+    designations: %w(qct_e), # not added to test data: qnmc_brac)
+    until_date: nil
   },
   brac_qnmc: {
     context: 'in a QNMC that is BRAC designated',
@@ -52,7 +69,8 @@ test_queries = {
     latlng: '38.8764985,-79.9853181',
     http_status: 200,
     results_address: 'Mabie, WV 26257, USA',
-    designations: %w(qnmc_brac) # not added to test data: qct_b)
+    designations: %w(qnmc_brac), # not added to test data: qct_b),
+    until_date: '2020-04-16'
   },
   qnmc_not_brac: {
     context: 'in a QNMC that is near a BRAC, but is QNMC designated',
@@ -60,7 +78,8 @@ test_queries = {
     latlng: '38.1902273,-80.1360778',
     http_status: 200,
     results_address: 'Buckeye, WV, USA',
-    designations: %w(qnmc_a)
+    designations: %w(qnmc_a),
+    until_date: nil
   },
   indian_lands: {
     context: 'in an Indian Lands hubzone',
@@ -68,7 +87,8 @@ test_queries = {
     latlng: '35.5112912,-97.9732157',
     http_status: 200,
     results_address: '2424 S Country Club Rd, El Reno, OK 73036, USA',
-    designations: %w(indian_lands)
+    designations: %w(indian_lands),
+    until_date: nil
   },
   navajo: {
     context: 'of navajo',
@@ -77,7 +97,8 @@ test_queries = {
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
     results_address: 'Navajo Nation Reservation, AZ, USA',
-    designations: %w(indian_lands qct_e qnmc_b)
+    designations: %w(indian_lands qct_e qnmc_b),
+    until_date: nil
   },
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
@@ -85,7 +106,8 @@ test_queries = {
     latlng: '18.237248,-65.6480292',
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
-    designations: %w(brac qct_b)
+    designations: %w(brac qct_brac),
+    until_date: '2020-09-15'
   },
   stilwell: {
     context: 'of stilwell, ok',
@@ -93,7 +115,44 @@ test_queries = {
     latlng: '35.8185419,-94.6675625',
     http_status: 200,
     results_address: 'Stilwell, OK 74960, USA',
-    designations: %w(qct_e qnmc_a indian_lands)
+    designations: %w(qct_e qnmc_a indian_lands),
+    until_date: nil
+  },
+  redesignated_qnmc_and_qct: {
+    context: 'of pine view, TN',
+    query: 'pine view tn',
+    latlng: '35.73027,-87.93413',
+    http_status: 200,
+    results_address: 'Pine View, TN 37096, USA',
+    designations: %w(qct_r qnmc_r),
+    until_date: '2018-07-31'
+  },
+  redesignated_qct_and_qnmc_brac: {
+    context: 'of warden washington',
+    query: '121 ash st warden wa',
+    latlng: '46.96861,-119.03905',
+    http_status: 200,
+    results_address: '121 S Ash Ave, Warden, WA 98857, USA',
+    designations: %w(qct_r qnmc_brac),
+    until_date: '2020-12-31'
+  },
+  qnmc_qda: {
+    context: 'of rockyhock nc',
+    query: 'Rockyhock, NC, USA',
+    latlng: '36.18011,-76.69318',
+    http_status: 200,
+    results_address: 'Rockyhock, NC 27932, USA',
+    designations: %w(qnmc_qda),
+    until_date: '2021-10-10'
+  },
+  qct_qda: {
+    context: 'of mcbee SC',
+    query: 'mcbee SC',
+    latlng: '34.4690418,-80.2559033',
+    http_status: 200,
+    results_address: 'McBee, SC 29101, USA',
+    designations: %w(qct_qda),
+    until_date: '2021-10-14'
   }
 }
 
@@ -103,17 +162,26 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     create_test_data
   end
 
+  (1..2).each do |version|
+    describe "Get data from v#{version} of the API" do
+      before do
+        get search_url, parameters({q: test_queries[:qct][:query]}, version)
+      end
+      it 'should include the API version in the response' do
+        expect(version).to eq(json[:api_version])
+      end
+    end
+  end
+
   describe 'GET #search without any query or location' do
     before do
-      get search_url, params: {message: 'Search for what?'},
-                      headers: {'Content-Type' => 'application/json'}
+      get search_url, parameters(message: 'Search for what?')
     end
     it 'should result in an error' do
       expect(400...500).to cover(response.status)
     end
     it 'should return the status INVALID_REQUEST' do
-      body_json = JSON.parse(response.body)
-      expect(body_json['status']).to eq('INVALID_REQUEST')
+      expect(json[:status]).to eq('INVALID_REQUEST')
     end
   end
 
@@ -121,15 +189,13 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
   describe 'GET #search with a query' do
     context 'when given a empty query' do
       before do
-        get search_url, params: {q: ""},
-                        headers: {'Content-Type' => 'application/json'}
+        get search_url, parameters(q: "")
       end
       it 'should result in an error' do
         expect(400...500).to cover(response.status)
       end
       it 'should return the status INVALID_REQUEST' do
-        body_json = JSON.parse(response.body)
-        expect(body_json['status']).to eq('INVALID_REQUEST')
+        expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
 
@@ -137,70 +203,64 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     test_queries.map do |_hztype, tquery|
       context 'Given an address ' + tquery[:context] do
         before do
-          get search_url, params: {q: tquery[:query]},
-                          headers: {'Content-Type' => 'application/json'}
+          get search_url, parameters(q: tquery[:query])
         end
         it 'should succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
         it 'should contain the correct formatted address' do
-          body = JSON.parse response.body
-          expect(body['formatted_address']).to eql(tquery[:results_address])
+          expect(json[:formatted_address]).to eql(tquery[:results_address])
         end
         it "should have #{tquery[:designations].size} designation(s)" do
-          body = JSON.parse response.body
-          expect(body['hubzone'].size).to eql(tquery[:designations].size)
+          expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
         it "should have #{tquery[:designations].join(', ')} designation(s)" do
-          body = JSON.parse response.body
-          hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
+          hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
+        end
+        it "should have a calculated expiration date" do
+          expect(json[:until_date]).to eq(tquery[:until_date])
         end
       end
     end
+
   end
 
   # tests for latlng
   describe 'GET #search with a lat, lng location' do
     context 'when given an empty latlng' do
       before do
-        get search_url, params: {latlng: ""},
-                        headers: {'Content-Type' => 'application/json'}
+        get search_url, parameters(latlng: "")
       end
       it 'should result in an error' do
         expect(response.status).to eql(400)
       end
       it 'should return the status INVALID_REQUEST' do
-        body_json = JSON.parse(response.body)
-        expect(body_json['status']).to eq('INVALID_REQUEST')
+        expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
 
     context 'when given an incomplete location' do
       before do
-        get search_url, params: {latlng: '123'},
-                        headers: {'Content-Type' => 'application/json'}
+        get search_url, parameters(latlng: '123')
       end
       it 'should result in an error' do
         expect(response.status).to eql(400)
       end
       it 'should return the status INVALID_REQUEST' do
-        body_json = JSON.parse(response.body)
-        expect(body_json['status']).to eq('INVALID_REQUEST')
+        expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
 
     context 'when given a mal-formed location' do
       before do
-        get search_url, params: {latlng: 'abc.def,-ghi.jkl'},
-                        headers: {'Content-Type' => 'application/json'}
+        get search_url, parameters(latlng: 'abc.def,-ghi.jkl')
       end
       it 'should result in an error' do
         expect(response.status).to eql(400)
       end
       it 'should return the status INVALID_REQUEST' do
-        body_json = JSON.parse(response.body)
-        expect(body_json['status']).to eq('INVALID_REQUEST')
+        expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
 
@@ -208,20 +268,20 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     test_queries.map do |_hztype, tquery|
       context 'Given an lat,lng ' + tquery[:context] do
         before do
-          get search_url, params: {latlng: tquery[:latlng]},
-                          headers: {'Content-Type' => 'application/json'}
+          get search_url, parameters(latlng: tquery[:latlng])
         end
         it 'should succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
         it "should have #{tquery[:designations].size} designation(s)" do
-          body = JSON.parse response.body
-          expect(body['hubzone'].size).to eql(tquery[:designations].size)
+          expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
         it "should have #{tquery[:designations].join(', ')} designation(s)" do
-          body = JSON.parse response.body
-          hz_types = body['hubzone'].map { |hz| hz['hz_type'] }
+          hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
+        end
+        it "should have a calculated expiration date" do
+          expect(json[:until_date]).to eq(tquery[:until_date])
         end
       end
     end
