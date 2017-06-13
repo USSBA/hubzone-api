@@ -52,7 +52,7 @@ class HubzoneUtil
     end
 
     def error_check(status)
-      statuses = %w(ZERO_RESULTS INVALID_REQUEST OVER_QUERY_LIMIT REQUEST_DENIED UNKNOWN_ERROR)
+      statuses = %w[ZERO_RESULTS INVALID_REQUEST OVER_QUERY_LIMIT REQUEST_DENIED UNKNOWN_ERROR]
       return build_response(status) if statuses.include?(status)
     end
 
@@ -71,7 +71,7 @@ class HubzoneUtil
       location = results['geometry']['location']
 
       # maybe we need another word other than assertion
-      %w(Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands).each do |assertion_type|
+      %w[Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands].each do |assertion_type|
         hz_assertion = "#{assertion_type}Assertion".constantize
         results[:hubzone] += hz_assertion.assertion location
       end
