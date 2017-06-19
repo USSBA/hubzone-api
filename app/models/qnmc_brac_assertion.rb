@@ -20,7 +20,7 @@ class QnmcBracAssertion
         'fac_type' => [],
         'effective' => [],
         'county_fips' => '',
-        'county' => '',
+        'county_name' => '',
         'state' => '',
         'expires' => '',
         'hz_type' => 'qnmc_brac' }
@@ -33,7 +33,7 @@ class QnmcBracAssertion
       end
 
       # just keep one record for these keys
-      %w[county_fips county state].each do |k|
+      %w[county_fips county_name state].each do |k|
         qnmc_combined[k] = qnmc[k]
       end
       qnmc_combined

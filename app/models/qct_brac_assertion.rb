@@ -21,7 +21,7 @@ class QctBracAssertion
         'fac_type' => [],
         'effective' => [],
         'tract_fips' => '',
-        'county' => '',
+        'county_name' => '',
         'state' => '',
         'expires' => '',
         'hz_type' => 'qct_brac' }
@@ -34,7 +34,7 @@ class QctBracAssertion
       end
 
       # just keep one record for these keys
-      %w[tract_fips county state].each do |k|
+      %w[tract_fips county_name state].each do |k|
         qct_combined[k] = qct[k]
       end
       qct_combined

@@ -27,8 +27,8 @@ required_fields = {
   qnmc_r: %w[county_fips county state],
   indian_lands: %w[name census type class gnis],
   brac: %w[brac_sba_name fac_type effective],
-  qct_brac: %w[brac_sba_name fac_type effective tract_fips county state],
-  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state],
+  qct_brac: %w[brac_sba_name fac_type effective tract_fips county_name state],
+  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county_name state],
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county_name state],
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county_name state]
 }
@@ -225,8 +225,12 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         it "#{hztype} contains the correct fields" do
           json[:hubzone].each do |hz|
             req_fields = required_fields[hz["hz_type"].to_sym]
-            field_diff = (req_fields - hz.keys)
-            expect(field_diff.empty?).to be(true)
+            req_fields.each do |req|
+              expect(hz.keys.include?(req))
+              expect(hz[req].blank?).to be(false)
+            end
+            # field_diff = (req_fields - hz.keys)
+            # expect(field_diff.empty?).to be(true)
           end
         end
 
