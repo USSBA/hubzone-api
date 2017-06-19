@@ -32,7 +32,7 @@ module TestDataHelper
       CREATE TABLE IF NOT EXISTS data.qct
         (
           gid integer,
-          tract character varying(11),
+          tract_fips character varying(11),
           state character varying(2),
           city character varying(24),
           county character varying(24),
@@ -128,7 +128,7 @@ module TestDataHelper
       CREATE TABLE IF NOT EXISTS data.qct_brac
         (
           gid integer,
-          tract character varying(11),
+          tract_fips character varying(11),
           state character varying(2),
           city character varying(24),
           county character varying(24),
@@ -176,7 +176,9 @@ module TestDataHelper
         CREATE TABLE IF NOT EXISTS data.qnmc_2016_01_01
         (
           gid integer,
-          county character varying(5),
+          county_fips character varying(5),
+          county character varying(32),
+          state character varying(2),
           f2016_sba_ character varying(32),
           f2016_sba1 character varying(32),
           brac_2016 character varying(36),
@@ -191,7 +193,7 @@ module TestDataHelper
 
         INSERT INTO data.qnmc_2016_01_01 VALUES
           -- qnmc-a in stilwell ok
-          (235, '40001',
+          (235, '40001', 'Stilwell', 'OK',
            'Qualified by Unemployment', 'Qualified by Unemployment',
            NULL,
            true, false, false, NULL, false,
@@ -199,7 +201,7 @@ module TestDataHelper
            ('now'::text)::date, null),
 
           -- qnmc_not_brac in buckeye wv
-          (722, '54075',
+          (722, '54075', 'Buckeye', 'WV',
            'Redesignated until July 2017', 'Qualified by Unemployment',
            NULL,
            true, false, false, NULL, false,
@@ -207,7 +209,7 @@ module TestDataHelper
            ('now'::text)::date, null),
 
           -- qnmc_b in navajo
-          (999, '99999',
+          (999, '99999', 'Navajo', 'AZ',
            'Qualified by Income', 'Qualified by Income',
            NULL,
            false, true, false, NULL, false,
@@ -215,7 +217,7 @@ module TestDataHelper
            ('now'::text)::date, null),
 
            -- qnmc_r in pine view tn
-           (2496, '47135',
+           (2496, '47135', 'Pine View', 'TN',
            'Redesignated until July 2018', 'Redesignated until July 2018',
            NULL,
            false, false, true, NULL, false,
@@ -287,6 +289,8 @@ module TestDataHelper
         CREATE TABLE IF NOT EXISTS data.qnmc_qda (
           gid SERIAL primary key,
           county_fips varchar,
+          county_name varchar,
+          state varchar,
           qda_id int,
           qda_publish date,
           qda_declaration date,
@@ -299,13 +303,13 @@ module TestDataHelper
 
         INSERT INTO data.qnmc_qda VALUES
           -- qnmc_qda in adel ga
-          (17,'13075',84,'2017-03-01','2017-01-26','2016-07-31','not-qualified','Non-metropolitan','2017-01-26','2022-01-26',
+          (17,'13075', 'Adel', 'GA', 84,'2017-03-01','2017-01-26','2016-07-31','not-qualified','Non-metropolitan','2017-01-26','2022-01-26',
            'SRID=4326;MULTIPOLYGON(((-83.576516 31.027288,-83.576516 31.350295,-83.280839 31.350295,-83.280839 31.027288,-83.576516 31.027288)))'),
           -- qnmc_qda in rockyhock NC
-          (36,'37091',191,'2017-03-01','2016-10-10','2016-01-31','not-qualified','Non-metropolitan','2016-10-10','2021-10-10',
+          (36,'37091', 'Rockyhock', 'NC', 191,'2017-03-01','2016-10-10','2016-01-31','not-qualified','Non-metropolitan','2016-10-10','2021-10-10',
            'SRID=4326;MULTIPOLYGON(((-76.72229 36.006148,-76.72229 36.351892,-76.408389 36.351892,-76.408389 36.006148,-76.72229 36.006148)))'),
           -- qnmc_qda in harrelsville NC
-          (15,'37041',76,'2016-11-01','2016-10-10','2013-10-31','not-qualified','Non-metropolitan','2016-10-10','2021-10-10',
+          (15,'37041', 'Harrelsville', 'NC', 76,'2016-11-01','2016-10-10','2013-10-31','not-qualified','Non-metropolitan','2016-10-10','2021-10-10',
            'SRID=4326;MULTIPOLYGON(((-77.20879 36.238234,-77.20879 36.54633,-76.698309 36.54633,-76.698309 36.238234,-77.20879 36.238234)))');
 
         CREATE VIEW qnmc_qda AS
@@ -326,6 +330,8 @@ module TestDataHelper
           gid SERIAL primary key,
           county_fips varchar,
           tract_fips varchar,
+          county_name varchar,
+          state varchar,
           qda_id int,
           qda_publish date,
           qda_declaration date,
@@ -337,7 +343,11 @@ module TestDataHelper
 
         INSERT INTO data.qct_qda VALUES
           -- qct_qda in mcbee sc
-          (76,'45025','45025950800',43,'2016-11-01','2016-10-14','2015-10-31','not-qualified','2016-10-14','2021-10-14',
+          (76,'45025','45025950800', 'McBee', 'SC', 43,'2016-11-01','2016-10-14','2015-10-31','not-qualified','2016-10-14','2021-10-14',
+           'SRID=4326;MULTIPOLYGON(((-80.359638 34.366207,-80.359638 34.630704,-80.153734 34.630704,-80.153734 34.366207,-80.359638 34.366207)))'),
+
+          -- qct_qda in mcbee sc on a later date
+          (77,'45025','45025950800', 'McBee', 'SC', 43,'2017-01-01','2016-12-25','2015-10-31','not-qualified','2016-12-25','2021-12-25',
            'SRID=4326;MULTIPOLYGON(((-80.359638 34.366207,-80.359638 34.630704,-80.153734 34.630704,-80.153734 34.366207,-80.359638 34.366207)))');
 
         CREATE VIEW qct_qda AS
