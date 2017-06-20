@@ -17,6 +17,22 @@ def parameters(p, version = 1)
   { params: p, headers: {'Accept' => "application/sba.hubzone-api.v#{version}"} }
 end
 
+required_fields = {
+  qct_e: %w[tract_fips county state],
+  qct_r: %w[tract_fips county state],
+  qnmc_a: %w[county_fips county state],
+  qnmc_b: %w[county_fips county state],
+  qnmc_c: %w[county_fips county state],
+  qnmc_ab: %w[county_fips county state],
+  qnmc_r: %w[county_fips county state],
+  indian_lands: %w[name census type class gnis],
+  brac: %w[brac_sba_name fac_type effective],
+  qct_brac: %w[brac_sba_name fac_type effective tract_fips county_name state],
+  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county_name state],
+  qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county_name state],
+  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county_name state]
+}
+
 test_queries = {
   qct: {
     context: 'in a QCT in baltimore',
@@ -152,7 +168,7 @@ test_queries = {
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
     designations: %w[qct_qda],
-    until_date: '2021-10-14'
+    until_date: '2021-12-25'
   }
 }
 
@@ -200,11 +216,24 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     end
 
     # map over each hash in test_queries and run this templated test
-    test_queries.map do |_hztype, tquery|
+    test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
         before do
           get search_url, parameters(q: tquery[:query])
         end
+
+        it "#{hztype} contains the correct fields" do
+          json[:hubzone].each do |hz|
+            req_fields = required_fields[hz["hz_type"].to_sym]
+            req_fields.each do |req|
+              expect(hz.keys.include?(req))
+              expect(hz[req].blank?).to be(false)
+            end
+            # field_diff = (req_fields - hz.keys)
+            # expect(field_diff.empty?).to be(true)
+          end
+        end
+
         it 'should succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
