@@ -17,6 +17,22 @@ def parameters(p, version = 1)
   { params: p, headers: {'Accept' => "application/sba.hubzone-api.v#{version}"} }
 end
 
+required_fields = {
+  qct_e: %w[tract_fips county state],
+  qct_r: %w[tract_fips county state],
+  qnmc_a: %w[county_fips county state],
+  qnmc_b: %w[county_fips county state],
+  qnmc_c: %w[county_fips county state],
+  qnmc_ab: %w[county_fips county state],
+  qnmc_r: %w[county_fips county state],
+  indian_lands: %w[name census type class gnis],
+  brac: %w[brac_sba_name fac_type effective],
+  qct_brac: %w[brac_sba_name fac_type effective tract_fips county_name state],
+  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county_name state],
+  qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county_name state],
+  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county_name state]
+}
+
 test_queries = {
   qct: {
     context: 'in a QCT in baltimore',
@@ -24,7 +40,7 @@ test_queries = {
     latlng: '39.2888915,-76.6069962',
     http_status: 200,
     results_address: '8 Market Pl, Baltimore, MD 21202, USA',
-    designations: %w(qct_e),
+    designations: %w[qct_e],
     until_date: nil
   },
   qct_r: {
@@ -33,7 +49,7 @@ test_queries = {
     latlng: '39.30428,-76.44791',
     http_status: 200,
     results_address: 'Holgate Dr, Essex, MD 21221, USA',
-    designations: %w(qct_r),
+    designations: %w[qct_r],
     until_date: '2019-10-15'
   },
   brac_base: {
@@ -42,7 +58,7 @@ test_queries = {
     latlng: '18.240392,-65.62385970000001',
     http_status: 200,
     results_address: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
-    designations: %w(brac qct_brac),
+    designations: %w[brac qct_brac],
     until_date: '2020-09-15'
   },
   brac_qct: {
@@ -51,7 +67,7 @@ test_queries = {
     latlng: '33.7320525,-92.8154404',
     http_status: 200,
     results_address: 'Amy, AR 71701, USA',
-    designations: %w(qct_brac), # not added to test data: qnmc_brac)
+    designations: %w[qct_brac], # not added to test data: qnmc_brac)
     until_date: '2021-11-05'
   },
   qct_not_brac: {
@@ -60,7 +76,7 @@ test_queries = {
     latlng: '33.7023315,-93.02044370000002',
     http_status: 200,
     results_address: 'Chidester, AR 71726, USA',
-    designations: %w(qct_e), # not added to test data: qnmc_brac)
+    designations: %w[qct_e], # not added to test data: qnmc_brac)
     until_date: nil
   },
   brac_qnmc: {
@@ -69,7 +85,7 @@ test_queries = {
     latlng: '38.8764985,-79.9853181',
     http_status: 200,
     results_address: 'Mabie, WV 26257, USA',
-    designations: %w(qnmc_brac), # not added to test data: qct_b),
+    designations: %w[qnmc_brac], # not added to test data: qct_b),
     until_date: '2020-04-16'
   },
   qnmc_not_brac: {
@@ -78,7 +94,7 @@ test_queries = {
     latlng: '38.1902273,-80.1360778',
     http_status: 200,
     results_address: 'Buckeye, WV, USA',
-    designations: %w(qnmc_a),
+    designations: %w[qnmc_a],
     until_date: nil
   },
   indian_lands: {
@@ -87,7 +103,7 @@ test_queries = {
     latlng: '35.5112912,-97.9732157',
     http_status: 200,
     results_address: '2424 S Country Club Rd, El Reno, OK 73036, USA',
-    designations: %w(indian_lands),
+    designations: %w[indian_lands],
     until_date: nil
   },
   navajo: {
@@ -97,7 +113,7 @@ test_queries = {
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
     results_address: 'Navajo Nation Reservation, AZ, USA',
-    designations: %w(indian_lands qct_e qnmc_b),
+    designations: %w[indian_lands qct_e qnmc_b],
     until_date: nil
   },
   roosevelt: {
@@ -106,7 +122,7 @@ test_queries = {
     latlng: '18.237248,-65.6480292',
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
-    designations: %w(brac qct_brac),
+    designations: %w[brac qct_brac],
     until_date: '2020-09-15'
   },
   stilwell: {
@@ -115,7 +131,7 @@ test_queries = {
     latlng: '35.8185419,-94.6675625',
     http_status: 200,
     results_address: 'Stilwell, OK 74960, USA',
-    designations: %w(qct_e qnmc_a indian_lands),
+    designations: %w[qct_e qnmc_a indian_lands],
     until_date: nil
   },
   redesignated_qnmc_and_qct: {
@@ -124,7 +140,7 @@ test_queries = {
     latlng: '35.73027,-87.93413',
     http_status: 200,
     results_address: 'Pine View, TN 37096, USA',
-    designations: %w(qct_r qnmc_r),
+    designations: %w[qct_r qnmc_r],
     until_date: '2018-07-31'
   },
   redesignated_qct_and_qnmc_brac: {
@@ -133,7 +149,7 @@ test_queries = {
     latlng: '46.96861,-119.03905',
     http_status: 200,
     results_address: '121 S Ash Ave, Warden, WA 98857, USA',
-    designations: %w(qct_r qnmc_brac),
+    designations: %w[qct_r qnmc_brac],
     until_date: '2020-12-31'
   },
   qnmc_qda: {
@@ -142,7 +158,7 @@ test_queries = {
     latlng: '36.18011,-76.69318',
     http_status: 200,
     results_address: 'Rockyhock, NC 27932, USA',
-    designations: %w(qnmc_qda),
+    designations: %w[qnmc_qda],
     until_date: '2021-10-10'
   },
   qct_qda: {
@@ -151,8 +167,8 @@ test_queries = {
     latlng: '34.4690418,-80.2559033',
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
-    designations: %w(qct_qda),
-    until_date: '2021-10-14'
+    designations: %w[qct_qda],
+    until_date: '2021-12-25'
   }
 }
 
@@ -200,11 +216,24 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     end
 
     # map over each hash in test_queries and run this templated test
-    test_queries.map do |_hztype, tquery|
+    test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
         before do
           get search_url, parameters(q: tquery[:query])
         end
+
+        it "#{hztype} contains the correct fields" do
+          json[:hubzone].each do |hz|
+            req_fields = required_fields[hz["hz_type"].to_sym]
+            req_fields.each do |req|
+              expect(hz.keys.include?(req))
+              expect(hz[req].blank?).to be(false)
+            end
+            # field_diff = (req_fields - hz.keys)
+            # expect(field_diff.empty?).to be(true)
+          end
+        end
+
         it 'should succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
