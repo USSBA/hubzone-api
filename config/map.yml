@@ -3,6 +3,7 @@ default: &defaults
 
 production:
   <<: *defaults
+  google_api_key: <%= ENV.fetch('HUBZONE_GOOGLE_API_KEY') { 'AIzaSyDZ4Pva7Z3dR-lPVLbgGqX8SXWgu3wvTEg' } %>
 
 staging:
   <<: *defaults
