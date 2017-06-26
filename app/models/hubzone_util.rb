@@ -9,11 +9,18 @@ class HubzoneUtil
                 else
                   build_response("INVALID_REQUEST")
                 end
-      results[:query_date] = params[:query_date]
-      results
+
+      append_search_values results, params
     end
 
     private
+
+    def append_search_values(results, params)
+      results[:query_date] = params[:query_date]
+      results[:search_q] = params[:q]
+      results[:search_latlng] = params[:latlng]
+      results
+    end
 
     def search_by_query(term)
       return build_response("INVALID_REQUEST") if term.blank? || term.empty?
