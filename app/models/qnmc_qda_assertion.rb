@@ -21,7 +21,7 @@ class QnmcQdaAssertion
         'qda_publish' => [],
         'qda_id' => [],
         'county_fips' => '',
-        'county_name' => '',
+        'county' => '',
         'state' => '',
         'expires' => '',
         'hz_type' => 'qnmc_qda' }
@@ -34,7 +34,7 @@ class QnmcQdaAssertion
       end
 
       # just keep one record for these keys
-      %w[county_fips county_name state].each do |k|
+      %w[county_fips county state].each do |k|
         qnmc_combined[k] = qnmc[k]
       end
       qnmc_combined
