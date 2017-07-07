@@ -48,8 +48,9 @@ Note that we run on  port 3001 for local development.  Also, the database is sha
 
 To launch the api:
 ``` bash
-rails server -p 3001
+rails server
 ```
+*NOTE:* PORT is set by default in `config/puma.rb` to 3001, so it is not necessary to specify a port when running `rails s`
 
 
 ## Running Tests ##
