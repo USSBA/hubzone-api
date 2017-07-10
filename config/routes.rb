@@ -10,10 +10,13 @@ Rails.application.routes.draw do
     end
   end
 
-  # Leave the health check as a scope.
+  # Leave non-versioned routes as a scope.
   scope 'api' do
     # A route for AWS to hit to "test" the health of the instance
     get 'aws-hc', to: 'health_check#status', as: 'aws_hc'
+
+    # A route for AWS to hit to "test" the health of the instance
+    get 'version', to: 'version#show', as: 'version'
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
