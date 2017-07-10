@@ -27,10 +27,10 @@ required_fields = {
   qnmc_r: %w[county_fips county state],
   indian_lands: %w[name census type class gnis],
   brac: %w[brac_sba_name fac_type effective],
-  qct_brac: %w[brac_sba_name fac_type effective tract_fips county_name state],
-  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county_name state],
-  qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county_name state],
-  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county_name state]
+  qct_brac: %w[brac_sba_name fac_type effective tract_fips county state],
+  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state],
+  qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
+  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state]
 }
 
 test_queries = {
@@ -237,6 +237,12 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         it 'should succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
+        it 'should include a query search value' do
+          expect(json[:search_q]).not_to be_empty
+        end
+        it 'should not include the latlng search value' do
+          expect(json[:search_latlng]).to be_nil
+        end
         it 'should contain the correct formatted address' do
           expect(json[:formatted_address]).to eql(tquery[:results_address])
         end
@@ -301,6 +307,12 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         end
         it 'should succeed' do
           expect(response.status).to eql(tquery[:http_status])
+        end
+        it 'should include the latlng search value' do
+          expect(json[:search_latlng]).not_to be_empty
+        end
+        it 'should not include a query search value' do
+          expect(json[:search_q]).to be_nil
         end
         it "should have #{tquery[:designations].size} designation(s)" do
           expect(json[:hubzone].size).to eql(tquery[:designations].size)
