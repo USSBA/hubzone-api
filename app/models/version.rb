@@ -77,6 +77,7 @@ class Version
   end
 
   private def parsed_version(components)
+    Rails.logger.info { "\n#{'*' * 10} parsing version info from tag" }
     { major:       components[1],
       minor:       components[2],
       patch:       components[3],
@@ -84,9 +85,9 @@ class Version
   end
 
   private def config_version
-    { major:       MAP_CONFIG[:hubzone_map_version][:major],
-      minor:       MAP_CONFIG[:hubzone_map_version][:minor],
-      patch:       MAP_CONFIG[:hubzone_map_version][:patch],
-      pre_release: MAP_CONFIG[:hubzone_map_version][:pre_release] }
+    { major:       MAP_CONFIG[:hubzone_api_version][:major],
+      minor:       MAP_CONFIG[:hubzone_api_version][:minor],
+      patch:       MAP_CONFIG[:hubzone_api_version][:patch],
+      pre_release: MAP_CONFIG[:hubzone_api_version][:pre_release] }
   end
 end
