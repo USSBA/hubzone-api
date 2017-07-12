@@ -7,7 +7,7 @@ class BracAssertion
       assertion_by_type 'brac', location
       assertion_by_type('brac', location).each do |brac|
         brac['brac_sba_name'] = brac['sba_name']
-        brac['effective']     = brac['closure']
+        brac['effective']     = brac['effective']
         brac
       end
     end
