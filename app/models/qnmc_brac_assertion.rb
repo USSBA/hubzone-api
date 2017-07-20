@@ -23,7 +23,7 @@ class QnmcBracAssertion
         'county' => '',
         'state' => '',
         'expires' => '',
-        'closure' => '',
+        'closure' => [],
         'hz_type' => 'qnmc_brac' }
     end
 

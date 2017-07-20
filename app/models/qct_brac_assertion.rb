@@ -24,7 +24,7 @@ class QctBracAssertion
         'county' => '',
         'state' => '',
         'expires' => '',
-        'closure' => '',
+        'closure' => [],
         'hz_type' => 'qct_brac' }
     end
 
