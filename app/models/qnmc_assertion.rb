@@ -3,6 +3,10 @@ class QnmcAssertion
   extend AssertionHelper
 
   class << self
+    #rubocop:disable MethodLength
+    #rubocop:disable Metrics/AbcSize
+    #rubocop:disable Metrics/CyclomaticComplexity
+    #rubocop:disable Metrics/PerceivedComplexity
     def assertion(location)
       assertion_by_type('qnmc', location).each do |qnmc|
         qnmc['hz_type'] = 'qnmc_r'    if qnmc_r qnmc
