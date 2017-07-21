@@ -29,7 +29,8 @@ required_fields = {
   qct_brac: %w[brac_sba_name fac_type effective tract_fips county state],
   qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state],
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
-  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state]
+  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
+  non_qnmc: %w[county_fips county state]
 }
 
 test_queries = {
@@ -130,6 +131,15 @@ test_queries = {
     http_status: 200,
     results_address: 'Nome, AK, USA',
     designations: %w[qnmc_abc],
+    until_date: nil
+  },
+  non_qnmc: {
+    context: 'Error check: in a county that is not qualfied but got into the db',
+    query: 'terrebonne, LA',
+    latlng: '29.4301161517758,-90.8647853753743',
+    http_status: 200,
+    results_address: 'Terrebonne Parish, LA, USA',
+    designations: %w[non_qnmc],
     until_date: nil
   },
   indian_lands: {

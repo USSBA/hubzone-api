@@ -249,6 +249,14 @@ module TestDataHelper
            'SRID=4326;MULTIPOLYGON(((-171.849984 62.937527,-171.849984 66.581706,-159.37937 66.581706,-159.37937 62.937527,-171.849984 62.937527)))',
            ('now'::text)::date, null),
 
+          -- What happens if there is a hubzone with all false designations
+          (85, '22109', 'Terrebonne Parish', 'LA',
+           'Not-Qualified', 'Not-Qualified',
+           NULL,
+           false, false, false, false, NULL,
+           'SRID=4326;MULTIPOLYGON(((-91.353067 29.03658,-91.353067 29.778008,-90.376573 29.778008,-90.376573 29.03658,-91.353067 29.03658)))',
+           ('now'::text)::date, null),
+
            -- qnmc_r in pine view tn
            (2496, '47135', 'Pine View', 'TN',
            'Redesignated until July 2018', 'Redesignated until July 2018',

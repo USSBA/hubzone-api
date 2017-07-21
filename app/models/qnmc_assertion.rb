@@ -17,6 +17,7 @@ class QnmcAssertion
         qnmc['hz_type'] = 'qnmc_ac'   if qnmc_ac qnmc
         qnmc['hz_type'] = 'qnmc_bc'   if qnmc_bc qnmc
         qnmc['hz_type'] = 'qnmc_abc'  if qnmc_abc qnmc
+        qnmc['hz_type'] = 'non_qnmc'  if non_qnmc qnmc
         qnmc
       end
     end
@@ -53,6 +54,10 @@ class QnmcAssertion
 
     def qnmc_abc(qnmc)
       qnmc['income'] && qnmc['unemployment'] && qnmc['dda']
+    end
+
+    def non_qnmc(qnmc)
+      !qnmc['income'] && !qnmc['unemployment'] && !qnmc['dda'] && !qnmc['redesignated']
     end
   end
 end
