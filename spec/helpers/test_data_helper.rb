@@ -180,48 +180,80 @@ module TestDataHelper
           county_fips character varying(5),
           county character varying(32),
           state character varying(2),
-          f2016_sba_ character varying(32),
-          f2016_sba1 character varying(32),
+          f2016_sba_ varchar,
+          f2016_sba1 varchar,
           brac_2016 character varying(36),
-          unemployment boolean,
-          income boolean,
           redesignated boolean,
-          brac_id integer,
+          income boolean,
+          unemployment boolean,
           dda boolean,
+          brac_id integer,
           geom geometry(MultiPolygon,4326),
           start date NOT NULL DEFAULT ('now'::text)::date,
           expires date);
 
         INSERT INTO data.qnmc_2016_01_01 VALUES
-          -- qnmc-a in stilwell ok
+          -- qnmc_a in stilwell ok
           (235, '40001', 'Stilwell', 'OK',
-           'Qualified by Unemployment', 'Qualified by Unemployment',
+           'Qualified by income', 'Qualified by income',
            NULL,
-           true, false, false, NULL, false,
+           false, true, false,false, NULL,
            'SRID=4326;MULTIPOLYGON(((-94.80779 35.638215,-94.80779 36.161902,-94.472647 36.161902,-94.472647 35.638215,-94.80779 35.638215)))',
-           ('now'::text)::date, null),
-
-          -- qnmc_not_brac in buckeye wv
-          (722, '54075', 'Buckeye', 'WV',
-           'Redesignated until July 2017', 'Qualified by Unemployment',
-           NULL,
-           true, false, false, NULL, false,
-           'SRID=4326;MULTIPOLYGON(((-80.363295 38.03611,-80.363295 38.739811,-79.617906 38.739811,-79.617906 38.03611,-80.363295 38.03611)))',
            ('now'::text)::date, null),
 
           -- qnmc_b in navajo
           (999, '99999', 'Navajo', 'AZ',
-           'Qualified by Income', 'Qualified by Income',
+           'Qualified by Unemployment', 'Qualified by Unemployment',
            NULL,
-           false, true, false, NULL, false,
+           false, false, true, false, NULL,
            'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))',
+           ('now'::text)::date, null),
+
+          -- qnmc_c in buckeye wv
+          (722, '54075', 'Buckeye', 'WV',
+           'Redesignated until July 2017', 'Qualified by dda',
+           NULL,
+           false, false, false, true, NULL,
+           'SRID=4326;MULTIPOLYGON(((-80.363295 38.03611,-80.363295 38.739811,-79.617906 38.739811,-79.617906 38.03611,-80.363295 38.03611)))',
+           ('now'::text)::date, null),
+
+          -- qnmc_ab in McDowell County,WV
+          (3016, '54047', 'Buckeye', 'WV',
+           'Redesignated until July 2017', 'Qualified by income and Unemployment',
+           NULL,
+           false, true, true, false, NULL,
+           'SRID=4326;MULTIPOLYGON(((-81.996578 37.20154,-81.996578 37.54901,-81.311201 37.54901,-81.311201 37.20154,-81.996578 37.20154)))',
+           ('now'::text)::date, null),
+
+          -- qnmc_ac (this is a fake one, not currently any qnmc_ac designations in the DB)
+          (1194, '24031', 'Montgomery County', 'MD',
+           'Qualified by Income and DDA', 'Qualified by Income and DDA',
+           NULL,
+           false, true, false, true, NULL,
+           'SRID=4326;MULTIPOLYGON(((-77.526786 38.935356,-77.526786 39.353502,-76.888628 39.353502,-76.888628 38.935356,-77.526786 38.935356)))',
+           ('now'::text)::date, null),
+
+          -- qnmc_bc Las Marias PR
+          (3195, '72083', 'Las Marias Municipio', 'PR',
+           'Qualified by Unemployment and DDA', 'Qualified by Unemployment and DDA',
+           NULL,
+           false, false, true, true, NULL,
+           'SRID=4326;MULTIPOLYGON(((-67.082002 18.187744,-67.082002 18.289867,-66.897964 18.289867,-66.897964 18.187744,-67.082002 18.187744)))',
+           ('now'::text)::date, null),
+
+          -- qnmc_abc in Nome Census Area,AK
+          (85, '02180', 'Nome Census Area', 'AK',
+           'Qualified by Income and Unemployment and DDA', 'Qualified by Income and Unemployment and DDA',
+           NULL,
+           false, true, true, true, NULL,
+           'SRID=4326;MULTIPOLYGON(((-171.849984 62.937527,-171.849984 66.581706,-159.37937 66.581706,-159.37937 62.937527,-171.849984 62.937527)))',
            ('now'::text)::date, null),
 
            -- qnmc_r in pine view tn
            (2496, '47135', 'Pine View', 'TN',
            'Redesignated until July 2018', 'Redesignated until July 2018',
            NULL,
-           false, false, true, NULL, false,
+           true, false, false, false, NULL,
            'SRID=4326;MULTIPOLYGON(((-88.042086 35.424525,-88.042086 35.840593,-87.648488 35.840593,-87.648488 35.424525,-88.042086 35.424525)))',
            ('now'::text)::date, '2018-07-31');
 
@@ -249,11 +281,11 @@ module TestDataHelper
           f2016_sba_ character varying(32),
           f2016_sba1 character varying(32),
           brac_sba_name character varying(36),
-          unemployment boolean,
-          income boolean,
           redesignated boolean,
-          brac_id integer,
+          income boolean,
+          unemployment boolean,
           dda boolean,
+          brac_id integer,
           geom geometry(MultiPolygon,4326),
           effective date NOT NULL DEFAULT ('now'::text)::date,
           expires date);
@@ -263,7 +295,7 @@ module TestDataHelper
           (723, '54083', 'Mabie', 'WV', 'Army Installation',
            'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
            'Elkins USARC/OMS, Beverly',
-           false, false, false, 1, false,
+           false, false, false, false, 1,
            'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))',
            ('now'::text)::date,'2020-04-16'),
 
@@ -271,7 +303,7 @@ module TestDataHelper
            (453, '53025', 'Warden', 'WA', 'Army Installation',
            'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
            'Wagener USARC, Pasco',
-           false, false, false, 60, false,
+           false, false, false, false, 60,
            'SRID=4326;MULTIPOLYGON(((-120.035858 46.62578,-120.035858 47.962152,-118.973572 47.962152,-118.973572 46.62578,-120.035858 46.62578)))',
            ('now'::text)::date,'2020-12-31');
 
