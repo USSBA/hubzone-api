@@ -9,10 +9,6 @@ def search_url
   api_search_url
 end
 
-def json
-  JSON.parse(response.body).symbolize_keys
-end
-
 def parameters(p, version = 1)
   { params: p, headers: {'Accept' => "application/sba.hubzone-api.v#{version}"} }
 end

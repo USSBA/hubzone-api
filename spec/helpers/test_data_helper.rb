@@ -382,7 +382,7 @@ module TestDataHelper
           county character varying(36),
           st_name character varying(25),
           fac_type character varying(25),
-          closure character varying(15),
+          effective character varying(15),
           geom geometry(MultiPolygon,4326),
           expires date);
 

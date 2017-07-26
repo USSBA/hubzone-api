@@ -21,3 +21,6 @@ coverage
 
 # ignore the .env file
 .env
+
+# Ignore the REVISION file.
+REVISION
