@@ -23,12 +23,13 @@ class QnmcBracAssertion
         'county' => '',
         'state' => '',
         'expires' => '',
+        'closure' => [],
         'hz_type' => 'qnmc_brac' }
     end
 
     def combine_qnmc_values(qnmc, qnmc_combined)
       # since these keys are uniuq, keep them all
-      %w[brac_id brac_sba_name fac_type effective].each do |k|
+      %w[brac_id brac_sba_name fac_type effective closure].each do |k|
         qnmc_combined[k].push(qnmc[k])
       end
 
@@ -40,7 +41,7 @@ class QnmcBracAssertion
     end
 
     def join_array_values(qnmc_combined)
-      %w[brac_id brac_sba_name fac_type effective].each do |k|
+      %w[brac_id brac_sba_name fac_type effective closure].each do |k|
         next if qnmc_combined[k].blank?
         qnmc_combined[k] = qnmc_combined[k].join('; ')
       end

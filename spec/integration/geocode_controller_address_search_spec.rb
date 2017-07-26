@@ -22,9 +22,9 @@ required_fields = {
   qnmc_ab: %w[county_fips county state],
   qnmc_r: %w[county_fips county state],
   indian_lands: %w[name census type class gnis],
-  brac: %w[brac_sba_name fac_type effective],
-  qct_brac: %w[brac_sba_name fac_type effective tract_fips county state],
-  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state],
+  brac: %w[brac_sba_name fac_type effective closure],
+  qct_brac: %w[brac_sba_name fac_type effective tract_fips county state closure],
+  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state closure],
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state]
 }

@@ -24,12 +24,13 @@ class QctBracAssertion
         'county' => '',
         'state' => '',
         'expires' => '',
+        'closure' => [],
         'hz_type' => 'qct_brac' }
     end
 
     def combine_qct_values(qct, qct_combined)
       # since these keys are uniuq, keep them all
-      %w[brac_id brac_sba_name fac_type effective].each do |k|
+      %w[brac_id brac_sba_name fac_type effective closure].each do |k|
         qct_combined[k].push(qct[k])
       end
 
@@ -41,7 +42,7 @@ class QctBracAssertion
     end
 
     def join_array_values(qct_combined)
-      %w[brac_id brac_sba_name fac_type effective].each do |k|
+      %w[brac_id brac_sba_name fac_type effective closure].each do |k|
         next if qct_combined[k].blank?
         qct_combined[k] = qct_combined[k].join('; ')
       end
