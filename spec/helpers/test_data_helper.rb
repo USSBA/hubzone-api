@@ -139,6 +139,7 @@ module TestDataHelper
           brac_sba_name character varying(36),
           redesignated boolean,
           brac_id integer,
+          closure date,
           geom geometry(MultiPolygon,4326),
           effective date NOT NULL DEFAULT ('now'::text)::date,
           expires date);
@@ -148,7 +149,7 @@ module TestDataHelper
           (18606, '72037160100',
            'PR', 'Roosevelt Roads', 'Ceiba', 'Naval Installation',
            'No', 'No', 'Not Qualified', 'Naval Station Roosevelt Roads',
-           false, 13,
+           false, 13, '2013-01-01',
            'SRID=4326;MULTIPOLYGON(((-65.670649 18.198661,-65.670649 18.284649,-65.575676 18.284649,-65.575676 18.198661,-65.670649 18.198661)))',
            ('now'::text)::date, '2020-09-15'),
 
@@ -156,7 +157,7 @@ module TestDataHelper
           (8190, '05103950100',
            'AR', 'Onalaska', 'Ouachita', 'Naval Installation',
            'No', 'No', 'Not Qualified', 'USARC Camden',
-           false, 21,
+           false, 21, '2013-01-01',
            'SRID=4326;MULTIPOLYGON(((-92.905266 33.54363,-92.905266 33.809988,-92.583054 33.809988,-92.583054 33.54363,-92.905266 33.54363)))',
            ('now'::text)::date, '2021-11-05');
 
@@ -294,6 +295,7 @@ module TestDataHelper
           unemployment boolean,
           dda boolean,
           brac_id integer,
+          closure date,
           geom geometry(MultiPolygon,4326),
           effective date NOT NULL DEFAULT ('now'::text)::date,
           expires date);
@@ -303,7 +305,7 @@ module TestDataHelper
           (723, '54083', 'Mabie', 'WV', 'Army Installation',
            'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
            'Elkins USARC/OMS, Beverly',
-           false, false, false, false, 1,
+           false, false, false, false, 1, '2013-01-01',
            'SRID=4326;MULTIPOLYGON(((-80.280059 38.388457,-80.280059 39.118303,-79.349366 39.118303,-79.349366 38.388457,-80.280059 38.388457)))',
            ('now'::text)::date,'2020-04-16'),
 
@@ -311,7 +313,7 @@ module TestDataHelper
            (453, '53025', 'Warden', 'WA', 'Army Installation',
            'Not Qualified (Non-metropolitan)', 'Not Qualified (Non-metropolitan)',
            'Wagener USARC, Pasco',
-           false, false, false, false, 60,
+           false, false, false, false, 60, '2013-01-01',
            'SRID=4326;MULTIPOLYGON(((-120.035858 46.62578,-120.035858 47.962152,-118.973572 47.962152,-118.973572 46.62578,-120.035858 46.62578)))',
            ('now'::text)::date,'2020-12-31');
 
@@ -423,18 +425,19 @@ module TestDataHelper
           st_name character varying(25),
           fac_type character varying(25),
           effective character varying(15),
+          closure date,
           geom geometry(MultiPolygon,4326),
           expires date);
 
         INSERT INTO data.brac VALUES
           (13, 'Naval Station Roosevelt Roads',
            'Ceiba', 'Puerto Rico', 'Navy Installation',
-           '5/7/2015',
+           '5/7/2015', '2013-01-01',
            'SRID=4326;MULTIPOLYGON(((-65.687988 18.198784,-65.687988 18.284628,-65.589973 18.284628,-65.589973 18.198784,-65.687988 18.198784)))',
            '2020-09-15'),
           (21, 'USARC Camden',
            'Ouachita', 'Arkansas', 'Army Installation',
-           '9/12/2011',
+           '9/12/2011', '2013-01-01',
            'SRID=4326;MULTIPOLYGON(((-92.769916 33.619565,-92.769916 33.62095,-92.769049 33.62095,-92.769049 33.619565,-92.769916 33.619565)))',
            '2020-08-15');
 

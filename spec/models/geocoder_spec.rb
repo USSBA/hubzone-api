@@ -7,7 +7,7 @@ test_data = {
   blank_request: ' '
 }
 
-# rubocop:disable Style/CommentIndentation, Metrics/BlockLength
+# rubocop:disable Layout/CommentIndentation, Metrics/BlockLength
 describe Geocoder, vcr: true, type: :model do
   describe '.search' do
     context "when given a empty request" do
