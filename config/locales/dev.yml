@@ -19,7 +19,8 @@
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
 
-en:
+dev:
   hello: "Hello world"
   version:
-    title_html: "HUBZone API Software Version"
+    title_html: "Versión del software API de HUBZone"
+

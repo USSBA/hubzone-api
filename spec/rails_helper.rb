@@ -64,3 +64,7 @@ VCR.configure do |config|
   config.configure_rspec_metadata!
   config.filter_sensitive_data('<GOOGLE_API_KEY>') { ENV.fetch('HUBZONE_GOOGLE_API_KEY', 'need to set HUBZONE_GOOGLE_API_KEY in your environment!') }
 end
+
+def json
+  JSON.parse(response.body).symbolize_keys
+end
