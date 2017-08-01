@@ -121,6 +121,15 @@ test_queries = {
     designations: %w[qnmc_c],
     until_date: nil
   },
+  adams_county: {
+    context: 'of Adams County OH',
+    query: 'adams county OH',
+    latlng: '38.8907822,-83.5070203',
+    http_status: 200,
+    results_address: 'Adams County, OH, USA',
+    designations: %w[qnmc_ab],
+    until_date: nil
+  },
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
     query: 'roosevelt roads, pr',

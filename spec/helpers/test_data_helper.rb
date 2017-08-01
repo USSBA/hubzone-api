@@ -194,7 +194,7 @@ module TestDataHelper
           expires date);
 
         INSERT INTO data.qnmc_2016_01_01 VALUES
-          -- qnmc-a in stilwell ok
+          -- qnmc_a in stilwell ok
           (235, '40001', 'Stilwell', 'OK',
            'Qualified by Unemployment', 'Qualified by Unemployment',
            NULL,
@@ -217,14 +217,22 @@ module TestDataHelper
             false, true, false, NULL, false,
             'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))',
             ('now'::text)::date, null),
-            
-            -- qnmc_c in juneau
+
+          -- qnmc_c in juneau
           (78, '02110', 'Juneau City and Borough', 'AK',
             'Qualified by DDA', 'Qualified by DDA',
             NULL,
             false, false, false, NULL, true,
             'SRID=4326;MULTIPOLYGON(((-135.219128 57.795075,-135.219128 58.9749719,-133.176444 58.9749719,-133.176444 57.795075,-135.219128 57.795075)))',
             ('now'::text)::date, null),
+
+          -- qnmc_ab in adams county
+          -- (2044, '39001', 'Adams County', 'OH',
+          --   'Qualified by Income and Unemployment', 'Qualified by Income and Unemployment',
+          --   NULL,
+          --   true, true, false, NULL, false,
+          --   'SRID=4326;MULTIPOLYGON(((-83.7053179 38.5965879,-83.7053179 39.055202,-83.2675501 39.055202,-83.2675501 38.5965879,-83.7053179 38.5965879)))',
+          --   ('now'::text)::date, null),
 
            -- qnmc_r in pine view tn
            (2496, '47135', 'Pine View', 'TN',
