@@ -211,12 +211,20 @@ module TestDataHelper
            ('now'::text)::date, null),
 
           -- qnmc_b in navajo
-          (999, '99999', 'Navajo', 'AZ',
-           'Qualified by Income', 'Qualified by Income',
-           NULL,
-           false, true, false, NULL, false,
-           'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))',
-           ('now'::text)::date, null),
+           (999, '99999', 'Navajo', 'AZ',
+            'Qualified by Income', 'Qualified by Income',
+            NULL,
+            false, true, false, NULL, false,
+            'SRID=4326;MULTIPOLYGON(((-110.000000 34.500000,-110.000000 37.000000,-108.000000 37.000000,-108.000000 34.500000,-110.000000 34.500000)))',
+            ('now'::text)::date, null),
+            
+            -- qnmc_c in juneau
+          (78, '02110', 'Juneau City and Borough', 'AK',
+            'Qualified by DDA', 'Qualified by DDA',
+            NULL,
+            false, false, false, NULL, true,
+            'SRID=4326;MULTIPOLYGON(((-135.219128 57.795075,-135.219128 58.9749719,-133.176444 58.9749719,-133.176444 57.795075,-135.219128 57.795075)))',
+            ('now'::text)::date, null),
 
            -- qnmc_r in pine view tn
            (2496, '47135', 'Pine View', 'TN',

@@ -112,6 +112,18 @@ test_queries = {
     designations: %w[indian_lands qct_e qnmc_b],
     until_date: nil
   },
+
+  juneau: {
+    context: 'of juneau',
+    query: 'juneau',
+    #latlng: '35.9000121,-109.0339832',
+    latlng: '58.3019444,-134.4197222',
+    http_status: 200,
+    results_address: 'Juneau, AK, USA',
+    designations: %w[qnmc_c],
+    until_date: nil
+  },
+
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
     query: 'roosevelt roads, pr',
