@@ -20,13 +20,17 @@ required_fields = {
   qnmc_b: %w[county_fips county state],
   qnmc_c: %w[county_fips county state],
   qnmc_ab: %w[county_fips county state],
+  qnmc_ac: %w[county_fips county state],
+  qnmc_bc: %w[county_fips county state],
+  qnmc_abc: %w[county_fips county state],
   qnmc_r: %w[county_fips county state],
   indian_lands: %w[name census type class gnis],
   brac: %w[brac_sba_name fac_type effective closure],
   qct_brac: %w[brac_sba_name fac_type effective tract_fips county state closure],
   qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state closure],
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
-  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state]
+  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
+  non_qnmc: %w[county_fips county state]
 }
 
 test_queries = {
@@ -90,7 +94,52 @@ test_queries = {
     latlng: '38.1902273,-80.1360778',
     http_status: 200,
     results_address: 'Buckeye, WV, USA',
-    designations: %w[qnmc_a],
+    designations: %w[qnmc_c],
+    until_date: nil
+  },
+  qnmc_ab: {
+    context: 'in a QNMC that is qualified by income and unemployment',
+    query: 'mcdowell county, wv',
+    latlng: '37.3784254787199,-81.6533743864188',
+    http_status: 200,
+    results_address: 'McDowell County, WV, USA',
+    designations: %w[qnmc_ab],
+    until_date: nil
+  },
+  qnmc_ac: {
+    context: 'in a QNMC that is qualified by income and dda',
+    query: 'Montgomery county, MD',
+    latlng: '39.1375983881007,-77.2013015061578',
+    http_status: 200,
+    results_address: 'Montgomery County, MD, USA',
+    designations: %w[qnmc_ac],
+    until_date: nil
+  },
+  qnmc_bc: {
+    context: 'in a QNMC that is qualified by unemployment and dda',
+    query: 'Las Marias Municipio, PR',
+    latlng: '18.2369874876476,-66.9834681952306',
+    http_status: 200,
+    results_address: 'Las Marías, 00685, Puerto Rico',
+    designations: %w[qnmc_bc],
+    until_date: nil
+  },
+  qnmc_abc: {
+    context: 'in a QNMC that is qualified by income and unemployment and dda',
+    query: 'nome, ak',
+    latlng: '64.897820896618,-163.953755957951',
+    http_status: 200,
+    results_address: 'Nome, AK, USA',
+    designations: %w[qnmc_abc],
+    until_date: nil
+  },
+  non_qnmc: {
+    context: 'Error check: in a county that is not qualfied but got into the db',
+    query: 'terrebonne, LA',
+    latlng: '29.4301161517758,-90.8647853753743',
+    http_status: 200,
+    results_address: 'Terrebonne Parish, LA, USA',
+    designations: %w[non_qnmc],
     until_date: nil
   },
   indian_lands: {
@@ -105,7 +154,6 @@ test_queries = {
   navajo: {
     context: 'of navajo',
     query: 'navajo',
-    #latlng: '35.9000121,-109.0339832',
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
     results_address: 'Navajo Nation Reservation, AZ, USA',
