@@ -226,14 +226,6 @@ module TestDataHelper
             'SRID=4326;MULTIPOLYGON(((-135.219128 57.795075,-135.219128 58.9749719,-133.176444 58.9749719,-133.176444 57.795075,-135.219128 57.795075)))',
             ('now'::text)::date, null),
 
-          -- qnmc_ab in adams county
-          -- (2044, '39001', 'Adams County', 'OH',
-          --   'Qualified by Income and Unemployment', 'Qualified by Income and Unemployment',
-          --   NULL,
-          --   true, true, false, NULL, false,
-          --   'SRID=4326;MULTIPOLYGON(((-83.7053179 38.5965879,-83.7053179 39.055202,-83.2675501 39.055202,-83.2675501 38.5965879,-83.7053179 38.5965879)))',
-          --   ('now'::text)::date, null),
-
            -- qnmc_r in pine view tn
            (2496, '47135', 'Pine View', 'TN',
            'Redesignated until July 2018', 'Redesignated until July 2018',
