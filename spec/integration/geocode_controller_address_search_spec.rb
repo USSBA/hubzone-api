@@ -271,10 +271,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
             req_fields = required_fields[hz["hz_type"].to_sym]
             req_fields.each do |req|
               it "should include a request" do
-              expect(hz.keys.include?(req))
+                expect(hz.keys.include?(req))
               end
               it "should not be blank" do
-              expect(hz[req].blank?).to be(false)
+                expect(hz[req].blank?).to be(false)
               end
             end
             # field_diff = (req_fields - hz.keys)
