@@ -266,8 +266,8 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           get search_url, parameters(q: tquery[:query])
         end
 
-          it "#{hztype} contains the correct fields" do
-            json[:hubzone].each do |hz|
+        it "#{hztype} contains the correct fields" do
+          json[:hubzone].each do |hz|
             req_fields = required_fields[hz["hz_type"].to_sym]
             req_fields.each do |req|
               # it "should include the required field" do
