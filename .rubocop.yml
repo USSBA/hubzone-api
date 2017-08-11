@@ -1,3 +1,4 @@
+require: rubocop-rspec
 Style/Encoding:
   Enabled: false
 
