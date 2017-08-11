@@ -266,19 +266,17 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
           get search_url, parameters(q: tquery[:query])
         end
 
-        context "#{hztype} contains the correct fields" do
+        it "#{hztype} contains the correct fields" do
           json[:hubzone].each do |hz|
             req_fields = required_fields[hz["hz_type"].to_sym]
             req_fields.each do |req|
-              it "should include a request" do
-              expect(hz.keys.include?(req))
-              end
-              it "should not be blank" do
+              # it "should include the required field" do
+              # expect(hz.keys.include?(req))
+              # end
+              # it "should not be blank" do
               expect(hz[req].blank?).to be(false)
-              end
+              # end
             end
-            # field_diff = (req_fields - hz.keys)
-            # expect(field_diff.empty?).to be(true)
           end
         end
 
