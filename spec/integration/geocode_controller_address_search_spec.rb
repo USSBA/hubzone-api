@@ -206,12 +206,12 @@ test_queries = {
     until_date: '2021-10-10'
   },
   qct_qda: {
-    context: 'of mcbee SC',
+    context: 'of mcbee SC where there are two qct_qda designations',
     query: 'mcbee SC',
     latlng: '34.4690418,-80.2559033',
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
-    designations: %w[qct_qda],
+    designations: %w[qct_qda qct_qda],
     until_date: '2021-12-25'
   }
 }
@@ -267,18 +267,16 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         end
 
         context "#{hztype} contains the correct fields" do
-          json[:hubzone].each do |hz|
-            req_fields = required_fields[hz["hz_type"].to_sym]
-            req_fields.each do |req|
-              it "should include a request" do
-              expect(hz.keys.include?(req))
+          it "#{hztype} contains the correct fields" do
+            json[:hubzone].each do |hz|
+              req_fields = required_fields[hz["hz_type"].to_sym]
+              req_fields.each do |req|
+                expect(hz.keys.include?(req))
+                expect(hz[req].blank?).to be(false)
               end
-              it "should not be blank" do
-              expect(hz[req].blank?).to be(false)
-              end
+              # field_diff = (req_fields - hz.keys)
+              # expect(field_diff.empty?).to be(true)
             end
-            # field_diff = (req_fields - hz.keys)
-            # expect(field_diff.empty?).to be(true)
           end
         end
 
