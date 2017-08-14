@@ -156,7 +156,7 @@ test_queries = {
     query: 'navajo',
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
-    results_address: 'Navajo Nation Reservation, AZ, USA',
+    results_address: 'Navajo Nation Reservation, Utah, USA',
     designations: %w[indian_lands qct_e qnmc_b],
     until_date: nil
   },
@@ -206,12 +206,12 @@ test_queries = {
     until_date: '2021-10-10'
   },
   qct_qda: {
-    context: 'of mcbee SC',
+    context: 'of mcbee SC where there are two qct_qda designations',
     query: 'mcbee SC',
     latlng: '34.4690418,-80.2559033',
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
-    designations: %w[qct_qda],
+    designations: %w[qct_qda qct_qda],
     until_date: '2021-12-25'
   }
 }
@@ -227,7 +227,7 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters({q: test_queries[:qct][:query]}, version)
       end
-      it 'should include the API version in the response' do
+      it 'will include the API version in the response' do
         expect(version).to eq(json[:api_version])
       end
     end
@@ -237,10 +237,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     before do
       get search_url, parameters(message: 'Search for what?')
     end
-    it 'should result in an error' do
-      expect(400...500).to cover(response.status)
+    it 'will result in an error' do
+      expect(response.status).to be_between(400, 500)
     end
-    it 'should return the status INVALID_REQUEST' do
+    it 'will return the status INVALID_REQUEST' do
       expect(json[:status]).to eq('INVALID_REQUEST')
     end
   end
@@ -251,10 +251,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(q: "")
       end
-      it 'should result in an error' do
-        expect(400...500).to cover(response.status)
+      it 'will result in an error' do
+        expect(response.status).to be_between(400, 500)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -262,46 +262,34 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     # map over each hash in test_queries and run this templated test
     test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
-        before do
-          get search_url, parameters(q: tquery[:query])
-        end
+        before { get search_url, parameters(q: tquery[:query]) }
 
-        context "#{hztype} contains the correct fields" do
+        it "#{hztype} contains the correct fields" do
           json[:hubzone].each do |hz|
-            req_fields = required_fields[hz["hz_type"].to_sym]
-            req_fields.each do |req|
-              it "should include a request" do
-              expect(hz.keys.include?(req))
-              end
-              it "should not be blank" do
-              expect(hz[req].blank?).to be(false)
-              end
-            end
-            # field_diff = (req_fields - hz.keys)
-            # expect(field_diff.empty?).to be(true)
+            required_fields[hz["hz_type"].to_sym].each { |req| expect(hz.keys.include?(req)) }
           end
         end
 
-        it 'should succeed' do
+        it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
-        it 'should include a query search value' do
+        it 'will include a query search value' do
           expect(json[:search_q]).not_to be_empty
         end
-        it 'should not include the latlng search value' do
+        it 'will not include the latlng search value' do
           expect(json[:search_latlng]).to be_nil
         end
-        it 'should contain the correct formatted address' do
+        it 'will contain the correct formatted address' do
           expect(json[:formatted_address]).to eql(tquery[:results_address])
         end
-        it "should have #{tquery[:designations].size} designation(s)" do
+        it "will have #{tquery[:designations].size} designation(s)" do
           expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
-        it "should have #{tquery[:designations].join(', ')} designation(s)" do
+        it "will have #{tquery[:designations].join(', ')} designation(s)" do
           hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
-        it "should have a calculated expiration date" do
+        it "will have a calculated expiration date" do
           expect(json[:until_date]).to eq(tquery[:until_date])
         end
       end
@@ -315,10 +303,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(latlng: "")
       end
-      it 'should result in an error' do
-        expect(response.status).to eql(400)
+      it 'will result in an error' do
+        expect(response.status).to be(400)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -327,10 +315,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(latlng: '123')
       end
-      it 'should result in an error' do
-        expect(response.status).to eql(400)
+      it 'will result in an error' do
+        expect(response.status).to be(400)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -339,10 +327,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(latlng: 'abc.def,-ghi.jkl')
       end
-      it 'should result in an error' do
-        expect(response.status).to eql(400)
+      it 'will result in an error' do
+        expect(response.status).to be(400)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -353,23 +341,23 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         before do
           get search_url, parameters(latlng: tquery[:latlng])
         end
-        it 'should succeed' do
+        it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
-        it 'should include the latlng search value' do
+        it 'will include the latlng search value' do
           expect(json[:search_latlng]).not_to be_empty
         end
-        it 'should not include a query search value' do
+        it 'will not include a query search value' do
           expect(json[:search_q]).to be_nil
         end
-        it "should have #{tquery[:designations].size} designation(s)" do
+        it "will have #{tquery[:designations].size} designation(s)" do
           expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
-        it "should have #{tquery[:designations].join(', ')} designation(s)" do
+        it "will have #{tquery[:designations].join(', ')} designation(s)" do
           hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
-        it "should have a calculated expiration date" do
+        it "will have a calculated expiration date" do
           expect(json[:until_date]).to eq(tquery[:until_date])
         end
       end
