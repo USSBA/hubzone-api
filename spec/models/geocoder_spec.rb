@@ -8,7 +8,7 @@ test_data = {
 }
 
 # rubocop:disable Layout/CommentIndentation, Metrics/BlockLength
-describe Geocoder, vcr: true, type: :model do
+describe Geocoder, type: :model do
   describe '.search' do
     context "when given a empty request" do
       let(:response) { Geocoder.search(test_data[:empty_request]) }
