@@ -117,7 +117,7 @@ test_queries = {
   },
   qnmc_bc: {
     context: 'in a QNMC that is qualified by unemployment and dda',
-    query: 'Las Marias Municipio, PR',
+    query: 'Las Marias, PR',
     latlng: '18.2369874876476,-66.9834681952306',
     http_status: 200,
     results_address: 'Las Marías, 00685, Puerto Rico',

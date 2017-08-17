@@ -35,6 +35,5 @@ group :development do
 end
 
 group :test do
-  gem 'vcr' # capture external API traffic for testing
   gem 'webmock' # used by vcr gem
 end
