@@ -1,0 +1,102 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=terrebonne,%20LA&country=UM&key=<GOOGLE_API_KEY>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 11 Aug 2017 23:33:01 GMT
+      Expires:
+      - Sat, 12 Aug 2017 23:33:01 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Vary:
+      - Accept-Language
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      Content-Length:
+      - '444'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="39,38,37,35"
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "Terrebonne Parish",
+                       "short_name" : "Terrebonne Parish",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "Louisiana",
+                       "short_name" : "LA",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    }
+                 ],
+                 "formatted_address" : "Terrebonne Parish, LA, USA",
+                 "geometry" : {
+                    "bounds" : {
+                       "northeast" : {
+                          "lat" : 29.778008,
+                          "lng" : -90.376864
+                       },
+                       "southwest" : {
+                          "lat" : 28.985911,
+                          "lng" : -91.35427199999999
+                       }
+                    },
+                    "location" : {
+                       "lat" : 29.2299682,
+                       "lng" : -90.75328089999999
+                    },
+                    "location_type" : "APPROXIMATE",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 29.778008,
+                          "lng" : -90.376864
+                       },
+                       "southwest" : {
+                          "lat" : 28.985911,
+                          "lng" : -91.35427199999999
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJs9U9QuigIYYRUA4WGWGx6-M",
+                 "types" : [ "administrative_area_level_2", "political" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version: 
+  recorded_at: Fri, 11 Aug 2017 23:33:01 GMT
+recorded_with: VCR 3.0.3

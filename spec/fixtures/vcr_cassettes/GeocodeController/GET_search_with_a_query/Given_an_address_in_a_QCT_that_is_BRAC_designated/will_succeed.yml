@@ -1,0 +1,107 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://maps.googleapis.com/maps/api/geocode/json?address=amy,%20ar&country=UM&key=<GOOGLE_API_KEY>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Fri, 11 Aug 2017 23:32:24 GMT
+      Expires:
+      - Sat, 12 Aug 2017 23:32:24 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Vary:
+      - Accept-Language
+      Access-Control-Allow-Origin:
+      - "*"
+      Server:
+      - mafe
+      Content-Length:
+      - '484'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Frame-Options:
+      - SAMEORIGIN
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="39,38,37,35"
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        {
+           "results" : [
+              {
+                 "address_components" : [
+                    {
+                       "long_name" : "Amy",
+                       "short_name" : "Amy",
+                       "types" : [ "locality", "political" ]
+                    },
+                    {
+                       "long_name" : "Carroll Township",
+                       "short_name" : "Carroll Township",
+                       "types" : [ "administrative_area_level_3", "political" ]
+                    },
+                    {
+                       "long_name" : "Ouachita County",
+                       "short_name" : "Ouachita County",
+                       "types" : [ "administrative_area_level_2", "political" ]
+                    },
+                    {
+                       "long_name" : "Arkansas",
+                       "short_name" : "AR",
+                       "types" : [ "administrative_area_level_1", "political" ]
+                    },
+                    {
+                       "long_name" : "United States",
+                       "short_name" : "US",
+                       "types" : [ "country", "political" ]
+                    },
+                    {
+                       "long_name" : "71701",
+                       "short_name" : "71701",
+                       "types" : [ "postal_code" ]
+                    }
+                 ],
+                 "formatted_address" : "Amy, AR 71701, USA",
+                 "geometry" : {
+                    "location" : {
+                       "lat" : 33.7320525,
+                       "lng" : -92.8154404
+                    },
+                    "location_type" : "APPROXIMATE",
+                    "viewport" : {
+                       "northeast" : {
+                          "lat" : 33.7413315,
+                          "lng" : -92.79943300000001
+                       },
+                       "southwest" : {
+                          "lat" : 33.7227725,
+                          "lng" : -92.83144779999999
+                       }
+                    }
+                 },
+                 "place_id" : "ChIJh3Jky6dfMoYR-PAS2KFqv1c",
+                 "types" : [ "locality", "political" ]
+              }
+           ],
+           "status" : "OK"
+        }
+    http_version: 
+  recorded_at: Fri, 11 Aug 2017 23:32:25 GMT
+recorded_with: VCR 3.0.3

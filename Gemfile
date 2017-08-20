@@ -23,6 +23,7 @@ group :development, :test do
   gem 'rb-readline'
   gem 'rspec-rails', '~> 3.5'
   gem 'rubocop', require: false
+  gem 'rubocop-rspec'
   gem 'simplecov', require: false # determine code coverage of tests
 end
 

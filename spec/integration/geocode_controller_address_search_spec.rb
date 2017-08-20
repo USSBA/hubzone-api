@@ -20,13 +20,17 @@ required_fields = {
   qnmc_b: %w[county_fips county state],
   qnmc_c: %w[county_fips county state],
   qnmc_ab: %w[county_fips county state],
+  qnmc_ac: %w[county_fips county state],
+  qnmc_bc: %w[county_fips county state],
+  qnmc_abc: %w[county_fips county state],
   qnmc_r: %w[county_fips county state],
   indian_lands: %w[name census type class gnis],
-  brac: %w[brac_sba_name fac_type effective],
-  qct_brac: %w[brac_sba_name fac_type effective tract_fips county state],
-  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state],
+  brac: %w[brac_sba_name fac_type effective closure],
+  qct_brac: %w[brac_sba_name fac_type effective tract_fips county state closure],
+  qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state closure],
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
-  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state]
+  qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
+  non_qnmc: %w[county_fips county state]
 }
 
 test_queries = {
@@ -90,7 +94,52 @@ test_queries = {
     latlng: '38.1902273,-80.1360778',
     http_status: 200,
     results_address: 'Buckeye, WV, USA',
-    designations: %w[qnmc_a],
+    designations: %w[qnmc_c],
+    until_date: nil
+  },
+  qnmc_ab: {
+    context: 'in a QNMC that is qualified by income and unemployment',
+    query: 'mcdowell county, wv',
+    latlng: '37.3784254787199,-81.6533743864188',
+    http_status: 200,
+    results_address: 'McDowell County, WV, USA',
+    designations: %w[qnmc_ab],
+    until_date: nil
+  },
+  qnmc_ac: {
+    context: 'in a QNMC that is qualified by income and dda',
+    query: 'Montgomery county, MD',
+    latlng: '39.1375983881007,-77.2013015061578',
+    http_status: 200,
+    results_address: 'Montgomery County, MD, USA',
+    designations: %w[qnmc_ac],
+    until_date: nil
+  },
+  qnmc_bc: {
+    context: 'in a QNMC that is qualified by unemployment and dda',
+    query: 'Las Marias Municipio, PR',
+    latlng: '18.2369874876476,-66.9834681952306',
+    http_status: 200,
+    results_address: 'Las Marías, 00685, Puerto Rico',
+    designations: %w[qnmc_bc],
+    until_date: nil
+  },
+  qnmc_abc: {
+    context: 'in a QNMC that is qualified by income and unemployment and dda',
+    query: 'nome, ak',
+    latlng: '64.897820896618,-163.953755957951',
+    http_status: 200,
+    results_address: 'Nome, AK, USA',
+    designations: %w[qnmc_abc],
+    until_date: nil
+  },
+  non_qnmc: {
+    context: 'Error check: in a county that is not qualfied but got into the db',
+    query: 'terrebonne, LA',
+    latlng: '29.4301161517758,-90.8647853753743',
+    http_status: 200,
+    results_address: 'Terrebonne Parish, LA, USA',
+    designations: %w[non_qnmc],
     until_date: nil
   },
   indian_lands: {
@@ -105,10 +154,9 @@ test_queries = {
   navajo: {
     context: 'of navajo',
     query: 'navajo',
-    #latlng: '35.9000121,-109.0339832',
     latlng: '36.0672173,-109.1880047',
     http_status: 200,
-    results_address: 'Navajo Nation Reservation, AZ, USA',
+    results_address: 'Navajo Nation Reservation, Utah, USA',
     designations: %w[indian_lands qct_e qnmc_b],
     until_date: nil
   },
@@ -158,12 +206,12 @@ test_queries = {
     until_date: '2021-10-10'
   },
   qct_qda: {
-    context: 'of mcbee SC',
+    context: 'of mcbee SC where there are two qct_qda designations',
     query: 'mcbee SC',
     latlng: '34.4690418,-80.2559033',
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
-    designations: %w[qct_qda],
+    designations: %w[qct_qda qct_qda],
     until_date: '2021-12-25'
   }
 }
@@ -179,7 +227,7 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters({q: test_queries[:qct][:query]}, version)
       end
-      it 'should include the API version in the response' do
+      it 'will include the API version in the response' do
         expect(version).to eq(json[:api_version])
       end
     end
@@ -189,10 +237,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     before do
       get search_url, parameters(message: 'Search for what?')
     end
-    it 'should result in an error' do
-      expect(400...500).to cover(response.status)
+    it 'will result in an error' do
+      expect(response.status).to be_between(400, 500)
     end
-    it 'should return the status INVALID_REQUEST' do
+    it 'will return the status INVALID_REQUEST' do
       expect(json[:status]).to eq('INVALID_REQUEST')
     end
   end
@@ -203,10 +251,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(q: "")
       end
-      it 'should result in an error' do
-        expect(400...500).to cover(response.status)
+      it 'will result in an error' do
+        expect(response.status).to be_between(400, 500)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -214,42 +262,34 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
     # map over each hash in test_queries and run this templated test
     test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
-        before do
-          get search_url, parameters(q: tquery[:query])
-        end
+        before { get search_url, parameters(q: tquery[:query]) }
 
         it "#{hztype} contains the correct fields" do
           json[:hubzone].each do |hz|
-            req_fields = required_fields[hz["hz_type"].to_sym]
-            req_fields.each do |req|
-              expect(hz.keys.include?(req))
-              expect(hz[req].blank?).to be(false)
-            end
-            # field_diff = (req_fields - hz.keys)
-            # expect(field_diff.empty?).to be(true)
+            required_fields[hz["hz_type"].to_sym].each { |req| expect(hz.keys.include?(req)) }
           end
         end
 
-        it 'should succeed' do
+        it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
-        it 'should include a query search value' do
+        it 'will include a query search value' do
           expect(json[:search_q]).not_to be_empty
         end
-        it 'should not include the latlng search value' do
+        it 'will not include the latlng search value' do
           expect(json[:search_latlng]).to be_nil
         end
-        it 'should contain the correct formatted address' do
+        it 'will contain the correct formatted address' do
           expect(json[:formatted_address]).to eql(tquery[:results_address])
         end
-        it "should have #{tquery[:designations].size} designation(s)" do
+        it "will have #{tquery[:designations].size} designation(s)" do
           expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
-        it "should have #{tquery[:designations].join(', ')} designation(s)" do
+        it "will have #{tquery[:designations].join(', ')} designation(s)" do
           hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
-        it "should have a calculated expiration date" do
+        it "will have a calculated expiration date" do
           expect(json[:until_date]).to eq(tquery[:until_date])
         end
       end
@@ -263,10 +303,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(latlng: "")
       end
-      it 'should result in an error' do
-        expect(response.status).to eql(400)
+      it 'will result in an error' do
+        expect(response.status).to be(400)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -275,10 +315,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(latlng: '123')
       end
-      it 'should result in an error' do
-        expect(response.status).to eql(400)
+      it 'will result in an error' do
+        expect(response.status).to be(400)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -287,10 +327,10 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
       before do
         get search_url, parameters(latlng: 'abc.def,-ghi.jkl')
       end
-      it 'should result in an error' do
-        expect(response.status).to eql(400)
+      it 'will result in an error' do
+        expect(response.status).to be(400)
       end
-      it 'should return the status INVALID_REQUEST' do
+      it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
     end
@@ -301,23 +341,23 @@ RSpec.describe GeocodeController, vcr: true, type: :request do
         before do
           get search_url, parameters(latlng: tquery[:latlng])
         end
-        it 'should succeed' do
+        it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
-        it 'should include the latlng search value' do
+        it 'will include the latlng search value' do
           expect(json[:search_latlng]).not_to be_empty
         end
-        it 'should not include a query search value' do
+        it 'will not include a query search value' do
           expect(json[:search_q]).to be_nil
         end
-        it "should have #{tquery[:designations].size} designation(s)" do
+        it "will have #{tquery[:designations].size} designation(s)" do
           expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
-        it "should have #{tquery[:designations].join(', ')} designation(s)" do
+        it "will have #{tquery[:designations].join(', ')} designation(s)" do
           hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
-        it "should have a calculated expiration date" do
+        it "will have a calculated expiration date" do
           expect(json[:until_date]).to eq(tquery[:until_date])
         end
       end
