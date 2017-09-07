@@ -43,171 +43,18 @@ test_queries = {
     designations: %w[qct_e],
     until_date: nil
   },
-  qct_r: {
-    context: 'in a redesignated QCT in baltimore',
-    query: 'Holgate Dr, Essex, MD 21221, USA',
-    latlng: '39.30428,-76.44791',
-    http_status: 200,
-    results_address: 'Holgate Dr, Essex, MD 21221, USA',
-    designations: %w[qct_r],
-    until_date: '2019-10-15'
-  },
-  brac_base: {
-    context: 'in a BRAC base in Puerto Rico',
-    query: 'forrestal dr, ceiba',
-    latlng: '18.240392,-65.62385970000001',
-    http_status: 200,
-    results_address: 'Forrestal Dr, Ceiba, 00735, Puerto Rico',
-    designations: %w[brac qct_brac],
-    until_date: '2020-09-15'
-  },
-  brac_qct: {
-    context: 'in a QCT that is BRAC designated',
-    query: 'amy, ar',
-    latlng: '33.7320525,-92.8154404',
-    http_status: 200,
-    results_address: 'Amy, AR 71701, USA',
-    designations: %w[qct_brac], # not added to test data: qnmc_brac)
-    until_date: '2021-11-05'
-  },
-  qct_not_brac: {
-    context: 'in a QCT that is near a BRAC, but is QCT designated',
-    query: 'chidester, ar',
-    latlng: '33.7023315,-93.02044370000002',
-    http_status: 200,
-    results_address: 'Chidester, AR 71726, USA',
-    designations: %w[qct_e], # not added to test data: qnmc_brac)
-    until_date: nil
-  },
-  brac_qnmc: {
-    context: 'in a QNMC that is BRAC designated',
-    query: 'mabie, wv',
-    latlng: '38.8764985,-79.9853181',
-    http_status: 200,
-    results_address: 'Mabie, WV 26257, USA',
-    designations: %w[qnmc_brac], # not added to test data: qct_b),
-    until_date: '2020-04-16'
-  },
-  qnmc_not_brac: {
-    context: 'in a QNMC that is near a BRAC, but is QNMC designated',
-    query: 'buckeye, wv',
-    latlng: '38.1902273,-80.1360778',
-    http_status: 200,
-    results_address: 'Buckeye, WV, USA',
-    designations: %w[qnmc_c],
-    until_date: nil
-  },
-  qnmc_ab: {
-    context: 'in a QNMC that is qualified by income and unemployment',
-    query: 'mcdowell county, wv',
-    latlng: '37.3784254787199,-81.6533743864188',
-    http_status: 200,
-    results_address: 'McDowell County, WV, USA',
-    designations: %w[qnmc_ab],
-    until_date: nil
-  },
-  qnmc_ac: {
-    context: 'in a QNMC that is qualified by income and dda',
-    query: 'Montgomery county, MD',
-    latlng: '39.1375983881007,-77.2013015061578',
-    http_status: 200,
-    results_address: 'Montgomery County, MD, USA',
-    designations: %w[qnmc_ac],
-    until_date: nil
-  },
-  qnmc_bc: {
-    context: 'in a QNMC that is qualified by unemployment and dda',
-    query: 'Las Marias, PR',
-    latlng: '18.2369874876476,-66.9834681952306',
-    http_status: 200,
-    results_address: 'Las Marías, 00685, Puerto Rico',
-    designations: %w[qnmc_bc],
-    until_date: nil
-  },
-  qnmc_abc: {
-    context: 'in a QNMC that is qualified by income and unemployment and dda',
-    query: 'nome, ak',
-    latlng: '64.897820896618,-163.953755957951',
-    http_status: 200,
-    results_address: 'Nome, AK, USA',
-    designations: %w[qnmc_abc],
-    until_date: nil
-  },
-  non_qnmc: {
-    context: 'Error check: in a county that is not qualfied but got into the db',
-    query: 'terrebonne, LA',
-    latlng: '29.4301161517758,-90.8647853753743',
-    http_status: 200,
-    results_address: 'Terrebonne Parish, LA, USA',
-    designations: %w[non_qnmc],
-    until_date: nil
-  },
-  indian_lands: {
-    context: 'in an Indian Lands hubzone',
-    query: '2424 S. Country Club Road, El Reno, OK 73036',
-    latlng: '35.5112912,-97.9732157',
-    http_status: 200,
-    results_address: '2424 S Country Club Rd, El Reno, OK 73036, USA',
-    designations: %w[indian_lands],
-    until_date: nil
-  },
-  navajo: {
-    context: 'of navajo',
-    query: 'navajo',
-    latlng: '36.0672173,-109.1880047',
-    http_status: 200,
-    results_address: 'Navajo Nation Reservation, Utah, USA',
-    designations: %w[indian_lands qct_e qnmc_b],
-    until_date: nil
-  },
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
-    query: 'roosevelt roads, pr',
+    query: 'Roosevelt Roads, Ceiba, Puerto Rico',
     latlng: '18.237248,-65.6480292',
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
     designations: %w[brac qct_brac],
     until_date: '2020-09-15'
   },
-  stilwell: {
-    context: 'of stilwell, ok',
-    query: 'stilwell, ok',
-    latlng: '35.8185419,-94.6675625',
-    http_status: 200,
-    results_address: 'Stilwell, OK 74960, USA',
-    designations: %w[qct_e qnmc_a indian_lands],
-    until_date: nil
-  },
-  redesignated_qnmc_and_qct: {
-    context: 'of pine view, TN',
-    query: 'pine view tn',
-    latlng: '35.73027,-87.93413',
-    http_status: 200,
-    results_address: 'Pine View, TN 37096, USA',
-    designations: %w[qct_r qnmc_r],
-    until_date: '2018-07-31'
-  },
-  redesignated_qct_and_qnmc_brac: {
-    context: 'of warden washington',
-    query: '121 ash st warden wa',
-    latlng: '46.96861,-119.03905',
-    http_status: 200,
-    results_address: '121 S Ash Ave, Warden, WA 98857, USA',
-    designations: %w[qct_r qnmc_brac],
-    until_date: '2020-12-31'
-  },
-  qnmc_qda: {
-    context: 'of rockyhock nc',
-    query: 'Rockyhock, NC, USA',
-    latlng: '36.18011,-76.69318',
-    http_status: 200,
-    results_address: 'Rockyhock, NC 27932, USA',
-    designations: %w[qnmc_qda],
-    until_date: '2021-10-10'
-  },
   qct_qda: {
     context: 'of mcbee SC where there are two qct_qda designations',
-    query: 'mcbee SC',
+    query: 'McBee, SC 29101, USA',
     latlng: '34.4690418,-80.2559033',
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
@@ -262,9 +109,9 @@ RSpec.describe GeocodeController do
     # map over each hash in test_queries and run this templated test
     test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
-        before {
+        before do
           get search_url, parameters(q: tquery[:query])
-        }
+        end
 
         it "#{hztype} contains the correct fields" do
           json[:hubzone].each do |hz|
