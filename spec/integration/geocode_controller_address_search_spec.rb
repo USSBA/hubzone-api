@@ -262,7 +262,11 @@ RSpec.describe GeocodeController do
     # map over each hash in test_queries and run this templated test
     test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
-        before { get search_url, parameters(q: tquery[:query]) }
+        before {
+          # latlng = tquery[:latlng].split(',')
+          # Excon.stub({Geocoder.geocoder_url(tquery[:query])}, { status: 200, body: "{'formatted_address':'#{tquery[:results_address]}','geometry':{'location':{'lat':#{latlng[0]},'lng':#{latlng[1]}}}}"})
+          get search_url, parameters(q: tquery[:query])
+        }
 
         it "#{hztype} contains the correct fields" do
           json[:hubzone].each do |hz|
