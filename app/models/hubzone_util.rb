@@ -9,7 +9,6 @@ class HubzoneUtil
                 else
                   build_response("INVALID_REQUEST")
                 end
-
       append_search_values results, params
     end
 
@@ -26,6 +25,7 @@ class HubzoneUtil
       return build_response("INVALID_REQUEST") if term.blank? || term.empty?
 
       results = geocode term
+      # byebug
       error_status = error_check(results['status'])
       return error_status if error_status.present?
 
