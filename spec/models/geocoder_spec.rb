@@ -7,7 +7,7 @@ test_data = {
   blank_request: ' '
 }
 
-# rubocop:disable Layout/CommentIndentation, Metrics/BlockLength
+# rubocop:disable Metrics/BlockLength
 describe Geocoder, type: :model do
   describe '.search' do
     context "when given a empty request" do
@@ -68,7 +68,6 @@ describe Geocoder, type: :model do
         expect(response.status).to eql(Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok])
       end
       it "will return a status of REQUEST_DENIED" do
-        #skip "skipped because we cant really test this response"
         body_json = JSON.parse(response.body)
         expect(body_json['status']).to eq('REQUEST_DENIED')
       end
