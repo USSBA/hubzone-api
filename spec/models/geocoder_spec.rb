@@ -58,19 +58,6 @@ describe Geocoder, type: :model do
       end
     end
 
-#    context "when over the quota limit" do
-#      let(:response) {Geocoder.search(test_data[:good_request])}
-#      it "returns error" do
-#        skip "skipped because we cant really test this response"
-#        expect(400...500).to cover(response.status)
-#      end
-#      it "returns OVER_QUOTA_LIMIT" do
-#        skip "skipped because we cant really test this response"
-#        body_json = JSON.parse(response.body)
-#        expect(body_json['status']).to eq('OVER_QUOTA_LIMIT')
-#      end
-#    end
-
     context "when the API key is bad" do
       let(:api_key) { MAP_CONFIG[:google_api_key] }
       let(:response) { Geocoder.search(test_data[:good_request]) }
@@ -87,18 +74,5 @@ describe Geocoder, type: :model do
       end
       after { MAP_CONFIG[:google_api_key] = api_key }
     end
-
-#    context "when an unknown error occurs" do
-#      let(:response) {Geocoder.search(test_data[:good_request])}
-#      it "returns error" do
-#        skip "skipped because we cant really test this response"
-#        expect(400...500).to cover(response.status)
-#      end
-#      it "returns UNKNOWN_ERROR" do
-#        skip "skipped because we cant really test this response"
-#        body_json = JSON.parse(response.body)
-#        expect(body_json['status']).to eq('UNKNOWN_ERROR')
-#      end
-#    end
   end
 end
