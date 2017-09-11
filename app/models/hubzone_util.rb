@@ -9,7 +9,6 @@ class HubzoneUtil
                 else
                   build_response("INVALID_REQUEST")
                 end
-
       append_search_values results, params
     end
 

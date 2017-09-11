@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 # rubocop:disable Metrics/BlockLength
-RSpec.describe VersionController, vcr: false, type: :request do
+RSpec.describe VersionController do
   MAP_CONFIG[:hubzone_api_version] = {
     major: 100,
     minor: 50,
