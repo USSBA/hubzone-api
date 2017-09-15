@@ -1,7 +1,8 @@
 # a Class to encapsulate the api call to Google's geocoder API
 class Geocoder
   def self.search(term)
-    Faraday.get geocoder_url(term)
+    # Faraday.get geocoder_url(term)
+    Excon.new(geocoder_url(term)).get
   end
 
   def self.geocoder_url(search)
