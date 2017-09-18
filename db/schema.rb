@@ -18,11 +18,11 @@ ActiveRecord::Schema.define(version: 20161003200320) do
   enable_extension "uuid-ossp"
   enable_extension "postgis"
 
-  create_table "spatial_ref_sys", primary_key: "srid", id: :integer, force: :cascade do |t|
-    t.string  "auth_name", limit: 256
+  create_table "spatial_ref_sys", primary_key: "srid", id: :integer, default: nil, force: :cascade do |t|
+    t.string "auth_name", limit: 256
     t.integer "auth_srid"
-    t.string  "srtext",    limit: 2048
-    t.string  "proj4text", limit: 2048
+    t.string "srtext", limit: 2048
+    t.string "proj4text", limit: 2048
   end
 
 end
