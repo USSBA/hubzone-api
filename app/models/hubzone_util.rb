@@ -68,6 +68,7 @@ class HubzoneUtil
       return geocoder_results unless geocoder_results['status'].eql? 'OK'
 
       results = geocoder_results['results'][0]
+      results[:status] = geocoder_results['status']
       results[:http_status] = g.status
       results
     end
