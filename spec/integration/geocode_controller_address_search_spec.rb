@@ -122,6 +122,9 @@ RSpec.describe GeocodeController do
         it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
+        it 'will have a status code' do
+          expect(json[:status]).to eql('OK')
+        end
         it 'will include a query search value' do
           expect(json[:search_q]).not_to be_empty
         end
