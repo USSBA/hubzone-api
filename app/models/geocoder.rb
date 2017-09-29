@@ -1,7 +1,7 @@
 # a Class to encapsulate the api call to Google's geocoder API
+# rubocop:disable Lint/UriEscapeUnescape
 class Geocoder
   def self.search(term)
-    # Faraday.get geocoder_url(term)
     Excon.new(geocoder_url(term)).get
   end
 
