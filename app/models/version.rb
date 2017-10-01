@@ -9,7 +9,8 @@ class Version
 
   def git_describe
     desc = IO.popen(['git', 'describe', '--long'], err: File::NULL).read
-    desc = File.read(Rails.root.join("REVISION")) if desc.nil? || desc.blank?
+    rev_file = Rails.root.join('REVISION')
+    desc = File.read(rev_file) if File.exist?(rev_file) && (desc.nil? || desc.blank?)
     desc
   end
 
@@ -77,7 +78,6 @@ class Version
   end
 
   private def parsed_version(components)
-    Rails.logger.info { "\n#{'*' * 10} parsing version info from tag" }
     { major:       components[1],
       minor:       components[2],
       patch:       components[3],
