@@ -18,7 +18,7 @@ class QnmcAssertion
         qnmc['hz_type'] = 'qnmc_bc'   if qnmc_bc qnmc
         qnmc['hz_type'] = 'qnmc_abc'  if qnmc_abc qnmc
         qnmc['hz_type'] = 'non_qnmc'  if non_qnmc qnmc
-        qnmc
+        # qnmc
       end
     end
 
