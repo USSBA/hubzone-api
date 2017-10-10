@@ -25,7 +25,8 @@ required_fields = {
   qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state closure],
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
-  non_qnmc: %w[county_fips county state]
+  non_qnmc: %w[county_fips county state],
+  likely_qda: %w[incident_description qda_declaration]
 }
 
 test_queries = {
@@ -211,6 +212,19 @@ test_queries = {
   }
 }
 
+# likely qda stub
+test_likely_qda_queries = {
+  likely_qda: {
+    context: 'a likely_qda in florida',
+    query: 'palm beach, fl',
+    latlng: '26.705621, -80.036430',
+    http_status: 200,
+    results_address: 'Palm Beach, FL, USA',
+    designations: nil,
+    until_date: nil
+  }
+}
+
 #rubocop:disable Metrics/BlockLength, RSpec/BeforeAfterAll
 RSpec.describe HubzoneUtil do
   before do
@@ -253,6 +267,34 @@ RSpec.describe HubzoneUtil do
     end
   end
 
+  # response in an area with likely qda has the correct other_information
+  test_likely_qda_queries.map do |_likely, tquery|
+    context 'Given a address in ' + tquery[:context] do
+      let!(:params) { { q: tquery[:query] } }
+      let(:response) { described_class.search params }
+
+      before do
+        lat = tquery[:latlng].split(',')[0].to_f
+        lng = tquery[:latlng].split(',')[1].to_f
+        geocode_response = {"results" => [{"formatted_address" => tquery[:results_address], "geometry" => {"location" => {"lat" => lat, "lng" => lng}}}], "status" => "OK"}
+
+        Excon.stub({}, status: 200, body: geocode_response.to_json)
+      end
+
+      it 'will include the other_information content' do
+        expect(response[:other_information][:alerts][:likely_qda_designations]).not_to be_nil
+      end
+
+      it 'will contain the correct fields' do
+        likely_qda_designations = response[:other_information][:alerts][:likely_qda_designations]
+        likely_qda_designations.each do |qda|
+          all_fields = required_fields[:likely_qda].map { |req| qda.keys.include?(req) }
+          expect(all_fields.all?).to be(true)
+        end
+      end
+    end
+  end
+
   # map over each hash in test_queries and run this templated test
   test_queries.map do |hztype, tquery|
     context 'Given an address ' + tquery[:context] do
@@ -269,7 +311,8 @@ RSpec.describe HubzoneUtil do
 
       it "#{hztype} contains the correct fields" do
         response[:hubzone].each do |hz|
-          required_fields[hz["hz_type"].to_sym].each { |req| expect(hz.keys.include?(req)).to be true }
+          all_fields = required_fields[hz["hz_type"].to_sym].each { |req| hz.keys.include?(req) }
+          expect(all_fields.all?).to be(true)
         end
       end
 

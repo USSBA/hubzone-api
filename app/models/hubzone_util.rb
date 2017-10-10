@@ -28,8 +28,7 @@ class HubzoneUtil
       error_status = error_check(results['status'])
       return error_status if error_status.present?
 
-      append_assertions(results)
-      latest_expiration(results)
+      add_assertions(results)
       results
     end
 
@@ -39,8 +38,16 @@ class HubzoneUtil
       return build_response("INVALID_REQUEST") if regex.match(loc).nil?
 
       results = default_location_results loc
+      add_assertions(results)
+      results
+    end
+
+    # helper for adding assertion data
+    def add_assertions(results)
+      results[:other_information] = {alerts: {}}
       append_assertions(results)
       latest_expiration(results)
+      likely_qda_assertions(results)
       results
     end
 
@@ -97,6 +104,13 @@ class HubzoneUtil
         end
       end
       results[:until_date] = has_indefinite_expiration ? nil : dates.max
+    end
+
+    # query the likley_qda view and append results
+    def likely_qda_assertions(results)
+      location = results['geometry']['location']
+      likely_qda_designations = LikelyQdaAssertion.assertion location
+      results[:other_information][:alerts][:likely_qda_designations] = likely_qda_designations unless likely_qda_designations.blank?
     end
 
     def build_response(status)
