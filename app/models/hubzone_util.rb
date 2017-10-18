@@ -1,4 +1,5 @@
 # A utility class to perform hubzone searches against the db
+# rubocop:disable Metrics/ClassLength
 class HubzoneUtil
   class << self
     def search(params)
@@ -47,7 +48,7 @@ class HubzoneUtil
       results[:other_information] = {alerts: {}}
       append_assertions(results)
       latest_expiration(results)
-      likely_qda_assertions(results)
+      append_other_information(results)
       results
     end
 
@@ -91,6 +92,28 @@ class HubzoneUtil
       end
     end
 
+    # add other information to response
+    def append_other_information(results)
+      location = results['geometry']['location']
+
+      # get likely designations
+      likely_qda_designations = likely_qda_assertion location
+      results[:other_information][:alerts][:likely_qda_designations] = likely_qda_designations unless likely_qda_designations.blank?
+
+      # get congressional district
+      results[:other_information][:congressional_district] = congressional_district_assertion location || nil
+    end
+
+    # query the likley_qda view and append results
+    def likely_qda_assertion(location)
+      LikelyQdaAssertion.assertion location
+    end
+
+    # check for congressional district
+    def congressional_district_assertion(location)
+      CongressionalDistrictAssertion.assertion location
+    end
+
     #rubocop:disable MethodLength
     def latest_expiration(results)
       dates = []
@@ -104,13 +127,6 @@ class HubzoneUtil
         end
       end
       results[:until_date] = has_indefinite_expiration ? nil : dates.max
-    end
-
-    # query the likley_qda view and append results
-    def likely_qda_assertions(results)
-      location = results['geometry']['location']
-      likely_qda_designations = LikelyQdaAssertion.assertion location
-      results[:other_information][:alerts][:likely_qda_designations] = likely_qda_designations unless likely_qda_designations.blank?
     end
 
     def build_response(status)
