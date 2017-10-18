@@ -20,6 +20,7 @@ module TestDataHelper
     create_brac_data
     create_indian_lands_data
     create_likely_qda_data
+    create_congressional_district_data
   end
 
   def create_qct_data
@@ -547,6 +548,44 @@ module TestDataHelper
       CREATE VIEW likely_qda AS
           SELECT *
             FROM data.likely_qda;
+    SQL
+  end
+
+  def create_congressional_district_data
+    ActiveRecord::Base.connection.execute congressional_district_sql
+  end
+
+  def congressional_district_sql
+    <<-SQL
+      CREATE TABLE IF NOT EXISTS data.congressional_districts
+      (
+        gid integer,
+        statefp varchar,
+        cd115fp varchar,
+        geoid varchar,
+        namelsad varchar,
+        lsad varchar,
+        cdsessn varchar,
+        mtfcc varchar,
+        funcstat varchar,
+        aland numeric,
+        awater numeric,
+        intptlat varchar,
+        intptlon varchar,
+        geom geometry(MultiPolygon, 4326),
+        effective date,
+        state varchar
+      );
+
+      INSERT INTO data.congressional_districts VALUES
+      (278,'25','09','2509','Congressional District 9','C2','115','G5200','N',3149602733,5148720788,'41.6903601','-070.4943141',
+      'SRID=4326;MULTIPOLYGON(((-71.201162 41.187053,-71.201162 42.195372,-69.858861 42.195372,-69.858861 41.187053,-71.201162 41.187053)))',
+      '2017-10-18'::date,'MA');
+
+      CREATE VIEW congressional_districts AS
+        SELECT *
+          FROM data.congressional_districts;
+
     SQL
   end
 end
