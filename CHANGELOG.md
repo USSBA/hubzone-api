@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.0] - 2017-10-27
+### hubzone-sprint-28
+### Added
+  - HUB-889
+    - Adds in the call to the congressional districts layer.
+    - Wraps calls to non-HUBZone layers for a location in a new abstracted method `append_other_information()`, which includes congressional districts and likely_qda
+
 ## [1.7.0] - 2017-10-12
 ### hubzone-sprint-27
 ### Added
