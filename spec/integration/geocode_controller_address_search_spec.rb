@@ -115,7 +115,7 @@ RSpec.describe GeocodeController do
 
         it "#{hztype} contains the correct fields" do
           json[:hubzone].each do |hz|
-            required_fields[hz["hz_type"].to_sym].each { |req| expect(hz.keys.include?(req)) }
+            required_fields[hz["hz_type"].to_sym].each { |req| expect(hz.keys.include?(req)).to be true }
           end
         end
 

@@ -19,6 +19,7 @@ module TestDataHelper
     create_qnmc_qda_data
     create_brac_data
     create_indian_lands_data
+    create_likely_qda_data
   end
 
   def create_qct_data
@@ -498,6 +499,54 @@ module TestDataHelper
         CREATE VIEW indian_lands AS
           SELECT *
             FROM data.indian_lands;
+    SQL
+  end
+
+  # create several likley qda records
+  def create_likely_qda_data
+    ActiveRecord::Base.connection.execute likely_qda_sql
+  end
+
+  def likely_qda_sql
+    <<-SQL
+      CREATE TABLE IF NOT EXISTS data.likely_qda
+      (
+        gid integer,
+        disaster_state varchar,
+        fema_code integer,
+        disaster_type varchar,
+        declaration_date date,
+        incident_description varchar,
+        incidence_period varchar,
+        amendment integer,
+        state varchar,
+        county varchar,
+        state_fips varchar,
+        county_fips_3 varchar,
+        effective date,
+        county_fips varchar,
+        import date,
+        import_table varchar,
+        geom geometry(MultiPolygon,4326)
+      );
+
+      INSERT INTO data.likely_qda VALUES
+        (1160,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',0,'FL','COLLIER',
+          '12','021','2017-10-01'::date,'12021','2017-10-06'::date,'qda_2017_10_01',
+          'SRID=4326;MULTIPOLYGON(((-81.8459 25.803038,-81.8459 26.517069,-80.872748 26.517069,-80.872748 25.803038,-81.8459 25.803038)))'),
+        (1172,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',1,'FL','PALM BEACH',
+          '12','099','2017-10-01'::date,'12099','2017-10-06'::date,'qda_2017_10_01',
+          'SRID=4326;MULTIPOLYGON(((-80.886232 26.320755,-80.886232 26.970943,-80.031362 26.970943,-80.031362 26.320755,-80.886232 26.320755)))'),
+        (1164,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',0,'FL','MIAMI-DADE',
+          '12','086','2017-10-01'::date,'12086','2017-10-06'::date,'qda_2017_10_01',
+          'SRID=4326;MULTIPOLYGON(((-80.8736 25.13742,-80.8736 25.979434,-80.118009 25.979434,-80.118009 25.13742,-80.8736 25.13742)))'),
+        (1178,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',2,'FL','POLK',
+          '12','105','2017-10-01'::date,'12105','2017-10-06'::date,'qda_2017_10_01',
+          'SRID=4326;MULTIPOLYGON(((-82.106236 27.643238,-82.106236 28.361868,-81.131044 28.361868,-81.131044 27.643238,-82.106236 27.643238)))');
+
+      CREATE VIEW likely_qda AS
+          SELECT *
+            FROM data.likely_qda;
     SQL
   end
 end

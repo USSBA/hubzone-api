@@ -9,7 +9,7 @@ class BracAssertion
         brac['brac_sba_name'] = brac['sba_name']
         brac['effective']     = brac['effective']
         brac['closure']       = brac['closure']
-        brac
+        # brac
       end
     end
   end

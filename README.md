@@ -2,7 +2,13 @@
 
 This application houses the custom HUBZone Geo API for the Small Business Administration.
 
-Requirements:
+#### Table of Contents
+- [Installation](#installation)
+- [Tests](#tests)
+- [Changelog](#changelog)
+
+## Installation
+### Requirements:
 * rvm
   - http://rvm.io/
 * ruby 2.3.3
@@ -53,9 +59,8 @@ rails server
 *NOTE:* PORT is set by default in `config/puma.rb` to 3001, so it is not necessary to specify a port when running `rails s`
 
 
-## Running Tests ##
-
-### RSpec Tests ###
+## Tests
+### RSpec Tests
 
 A note on tests, test API Assertions (HZ assertion by latlng or by address) are relative to a dummy test database hzgeo_test, that is populated by `spec/helpers/test_data_helper.rb`.  Updates to main data schema need to be mirrored in the SQL in that file.
 
@@ -74,7 +79,10 @@ To view the coverage report, open
 coverage/index.html
 ```
 
-## Rubocop ##
+### Rubocop
 ```
 rubocop -D
 ```
+
+## Changelog
+Refer to the changelog for details on changes to API. [CHANGELOG](CHANGELOG.md)
