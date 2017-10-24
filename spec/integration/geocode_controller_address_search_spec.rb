@@ -41,7 +41,35 @@ test_queries = {
     http_status: 200,
     results_address: '8 Market Pl, Baltimore, MD 21202, USA',
     designations: %w[qct_e],
-    until_date: nil
+    until_date: nil,
+    response: {
+      status: "OK",
+      http_status: 200,
+      formatted_address: "8 Market Pl, Baltimore, MD 21202, USA",
+      other_information: {"alerts": {}, "congressional_district": []},
+      hubzone: [
+        {
+          "gid": 14426,
+          "tract_fips": "24510040100",
+          "state": "MD",
+          "city": "Baltimore",
+          "county": "Baltimore City",
+          "qualified_": "Yes",
+          "qualified1": "Yes",
+          "current_status": "Qualified",
+          "brac_2016": nil,
+          "redesignated": false,
+          "brac_id": nil,
+          "effective": "2017-10-23",
+          "expires": nil,
+          "hz_type": "qct_e"
+        }],
+      until_date: nil,
+      query_date: nil,
+      search_q: "8 Market Place Baltimore MD 21202",
+      search_latlng: nil,
+      api_version: 1
+    }
   },
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
@@ -50,7 +78,49 @@ test_queries = {
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
     designations: %w[brac qct_brac],
-    until_date: '2020-09-15'
+    until_date: '2020-09-15',
+    response: {
+      formatted_address: "Roosevelt Roads, Ceiba, Puerto Rico",
+      status: "OK",
+      http_status: 200,
+      other_information: {"alerts": {}, "congressional_district": []},
+      hubzone: [
+        {
+          "gid": 13,
+          "sba_name": "Naval Station Roosevelt Roads",
+          "county": "Ceiba",
+          "st_name": "Puerto Rico",
+          "fac_type": "Navy Installation",
+          "effective": "5/7/2015",
+          "closure": "2013-01-01",
+          "expires": "2020-09-15",
+          "hz_type": "brac",
+          "brac_sba_name": "Naval Station Roosevelt Roads"
+        },
+        {
+          "gid": 18606,
+          "tract_fips": "72037160100",
+          "state": "PR",
+          "city": "Roosevelt Roads",
+          "county": "Ceiba",
+          "fac_type": "Naval Installation",
+          "qualified_": "No",
+          "qualified1": "No",
+          "current_status": "Not Qualified",
+          "brac_sba_name": "Naval Station Roosevelt Roads",
+          "redesignated": false,
+          "brac_id": 13,
+          "closure": "2013-01-01",
+          "effective": "2017-10-24",
+          "expires": "2020-09-15",
+          "hz_type": "qct_brac"
+        }],
+        until_date: "2020-09-15",
+        query_date: nil,
+        search_q: "Roosevelt Roads, Ceiba, Puerto Rico",
+        search_latlng: nil,
+        api_version: 1
+    }
   },
   qct_qda: {
     context: 'of mcbee SC where there are two qct_qda designations',
@@ -59,7 +129,52 @@ test_queries = {
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
     designations: %w[qct_qda qct_qda],
-    until_date: '2021-12-25'
+    until_date: '2021-12-25',
+    response: {
+      formatted_address: "McBee, SC 29101, USA",
+      types: ["locality", "political"],
+      status: "OK",
+      http_status: 200,
+      other_information: {"alerts": {}, "congressional_district": []},
+      hubzone: [
+        {
+          "gid": 76,
+          "county_fips": "45025",
+          "tract_fips": "45025950800",
+          "county": "McBee",
+          "state": "SC",
+          "qda_id": 43,
+          "qda_publish": "2016-11-01",
+          "qda_declaration": "2016-10-14",
+          "qct_max_expires": "2015-10-31",
+          "qct_current_status": "not-qualified",
+          "qda_designation": "2016-10-14",
+          "expires": "2021-10-14",
+          "incident_description": "Hurricane Insane",
+          "hz_type": "qct_qda"
+        },
+        {
+          "gid": 77,
+          "county_fips": "45025",
+          "tract_fips": "45025950800",
+          "county": "McBee",
+          "state": "SC",
+          "qda_id": 43,
+          "qda_publish": "2017-01-01",
+          "qda_declaration": "2016-12-25",
+          "qct_max_expires": "2015-10-31",
+          "qct_current_status": "not-qualified",
+          "qda_designation": "2016-12-25",
+          "expires": "2021-12-25",
+          "incident_description": "Hurricane Insane",
+          "hz_type": "qct_qda"
+        }],
+      until_date: "2021-12-25",
+      query_date: nil,
+      search_q: "McBee, SC 29101, USA",
+      search_latlng: nil,
+      api_version: 1
+    }
   }
 }
 
@@ -110,10 +225,12 @@ RSpec.describe GeocodeController do
     test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
         before do
+          Excon.stub({}, body: tquery[:response].to_json)
           get search_url, parameters(q: tquery[:query])
         end
 
         it "#{hztype} contains the correct fields" do
+          # byebug
           json[:hubzone].each do |hz|
             required_fields[hz["hz_type"].to_sym].each { |req| expect(hz.keys.include?(req)).to be true }
           end
@@ -191,6 +308,7 @@ RSpec.describe GeocodeController do
     test_queries.map do |_hztype, tquery|
       context 'Given an lat,lng ' + tquery[:context] do
         before do
+          Excon.stub({}, body: tquery[:response].to_json)
           get search_url, parameters(latlng: tquery[:latlng])
         end
         it 'will succeed' do

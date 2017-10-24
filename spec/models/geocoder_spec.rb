@@ -26,6 +26,7 @@ describe Geocoder, type: :model do
       let(:response) { Geocoder.search(test_data[:good_request]) }
 
       it "will succeed" do
+        byebug
         expect(response.status).to eql(Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok])
       end
       it "will return a status of OK" do
