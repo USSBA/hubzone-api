@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 ## [1.8.0] - 2017-10-27
 ### hubzone-sprint-28
 ### Added
+
+  - HUB-928
+    - Changed testing to for geocoder to use Excon stubs
+
   - HUB-889
     - Adds in the call to the congressional districts layer.
     - Wraps calls to non-HUBZone layers for a location in a new abstracted method `append_other_information()`, which includes congressional districts and likely_qda
