@@ -63,7 +63,8 @@ test_queries = {
           "effective": "2017-10-23",
           "expires": nil,
           "hz_type": "qct_e"
-        }],
+        }
+      ],
       until_date: nil,
       query_date: nil,
       search_q: "8 Market Place Baltimore MD 21202",
@@ -114,12 +115,13 @@ test_queries = {
           "effective": "2017-10-24",
           "expires": "2020-09-15",
           "hz_type": "qct_brac"
-        }],
-        until_date: "2020-09-15",
-        query_date: nil,
-        search_q: "Roosevelt Roads, Ceiba, Puerto Rico",
-        search_latlng: nil,
-        api_version: 1
+        }
+      ],
+      until_date: "2020-09-15",
+      query_date: nil,
+      search_q: "Roosevelt Roads, Ceiba, Puerto Rico",
+      search_latlng: nil,
+      api_version: 1
     }
   },
   qct_qda: {
@@ -132,7 +134,7 @@ test_queries = {
     until_date: '2021-12-25',
     response: {
       formatted_address: "McBee, SC 29101, USA",
-      types: ["locality", "political"],
+      types: %w[locality political],
       status: "OK",
       http_status: 200,
       other_information: {"alerts": {}, "congressional_district": []},
@@ -168,7 +170,8 @@ test_queries = {
           "expires": "2021-12-25",
           "incident_description": "Hurricane Insane",
           "hz_type": "qct_qda"
-        }],
+        }
+      ],
       until_date: "2021-12-25",
       query_date: nil,
       search_q: "McBee, SC 29101, USA",
