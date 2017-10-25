@@ -25,6 +25,10 @@ describe Geocoder, type: :model do
     context "when given a good request" do
       let(:response) { Geocoder.search(test_data[:good_request]) }
 
+      before do
+        Excon.stub({}, body: "{\"status\" : \"OK\"\n}\n")
+      end
+
       it "will succeed" do
         expect(response.status).to eql(Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok])
       end
@@ -37,6 +41,10 @@ describe Geocoder, type: :model do
     context "when given a garbage request" do
       let(:response) { Geocoder.search(test_data[:garbage_request]) }
 
+      before do
+        Excon.stub({}, body: "{\"status\" : \"ZERO_RESULTS\"\n}\n")
+      end
+
       it "will succeed" do
         expect(response.status).to be_between(200, 300)
       end
@@ -48,6 +56,10 @@ describe Geocoder, type: :model do
 
     context "when given a blank request" do
       let(:response) { Geocoder.search(test_data[:blank_request]) }
+
+      before do
+        Excon.stub({}, body: "{\"status\" : \"ZERO_RESULTS\"\n}\n")
+      end
 
       it "will succeed" do
         expect(response.status).to be_between(200, 300)
