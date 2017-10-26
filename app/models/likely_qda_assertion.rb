@@ -7,6 +7,7 @@ class LikelyQdaAssertion
       likely_qdas = []
       assertion_by_type('likely_qda', location).each do |qda|
         likely_qda = {}
+        likely_qda["qda_id"] = qda["gid"]
         likely_qda["incident_description"] = qda["incident_description"]
         likely_qda["qda_declaration"] = qda["declaration_date"]
         likely_qdas.push(likely_qda)
