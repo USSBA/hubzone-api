@@ -26,7 +26,7 @@ required_fields = {
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
   non_qnmc: %w[county_fips county state],
-  likely_qda: %w[incident_description qda_declaration qda_id],
+  likely_qda: %w[incident_description qda_declaration],
   congressional_district: %w[state namelsad cdsessn]
 }
 
