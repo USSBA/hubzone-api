@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.1] - 2017-11-10
+### hubzone-sprint-29
+### Changed
+  - HUB-934
+    - Changes the business logic for when the `likely_qda_designations` array is returned depending on the other present hubzone statuses.  Refer to confluence for details about details of this [likely_qda display decision tree](https://sbaone.atlassian.net/wiki/spaces/FEAR/pages/93880465/Likely+QDA+Display+Decision+Tree)
+    - Includes the entire qda designation data structure in the `likely_qda` information to help in diffing between the likely_qda and a `qct_qda` or `qnmc_qda`.
+
 ## [1.8.0] - 2017-10-27
 ### hubzone-sprint-28
 ### Added
