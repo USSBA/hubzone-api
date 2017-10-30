@@ -11,20 +11,16 @@ class VerifiedHubzone
   # HUB-934 only return likely qda status if certain other conditions are met
   def verify_likely_qda
     #doesn't have a likely_qda, skip verification
-    # example: charlotte NC
     return @hubzone_results unless likely_qda?
 
     # level 1: likely_qda is present and is not qct_e qct_r qnmc_e qnmc_r = do not show likely_qda
-    # example: peachland NC
     return drop_likely_qda unless contains_qualified_or_redesignated_hubzones
 
     # level 2: likely_qda is present, location DOES have qct_e qct_r qnmc_e qnmc_r, location DOES NOT have QDA hubzones = DO show likely_qda
-    # exaple: lowrys NC
     return @hubzone_results unless contains_qda_hubzones
 
     # level 3: likely_qda is present, location DOES have qct_e qct_r qnmc_e qnmc_r, location DOES have QDA hubzones
     # if qnmc_qda or qct_qda are in likely_qda, do not show likely_qda else show the likely_qda
-    # example: pageland, sc
     hubzone_qdas = likely_qda_in_hubzones
     remove_qdas hubzone_qdas if hubzone_qdas
 
@@ -37,7 +33,7 @@ class VerifiedHubzone
   end
 
   def qualified_or_redesignated_hubzones
-    %w[qct_e qct_r qnmc_e qnmc_r]
+    %w[qct_e qct_r qnmc_r qnmc_r qnmc_a qnmc_b qnmc_c qnmc_ab qnmc_ac qnmc_bc qnmc_abc]
   end
 
   # checks if there are qualified or redesignated hubzones present in the hash
@@ -46,7 +42,7 @@ class VerifiedHubzone
   end
 
   def qda_hubzones
-    %w[qda_qct qnmc_qda]
+    %w[qct_qda qnmc_qda]
   end
 
   # checks if there are qda hubzones present in the hash
@@ -69,7 +65,7 @@ class VerifiedHubzone
 
   # return a unique identifying qda string for each qda snce there are no official qda_ids per declaration and the db can have multiple versions/rows of the same declaration
   def unique_qda(qda)
-    identifying_props = %w[disaster_state fema_code disaster_type qda_declaration incident_description incidence_period amendment county_fips]
+    identifying_props = %w[disaster_state disaster_type qda_declaration incident_description county_fips]
     unique_qda_string = []
     identifying_props.each do |p|
       unique_qda_string.push(qda[p].to_s)
