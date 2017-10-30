@@ -266,14 +266,6 @@ module TestDataHelper
            NULL,
            true, false, false, false, NULL,
            'SRID=4326;MULTIPOLYGON(((-88.042086 35.424525,-88.042086 35.840593,-87.648488 35.840593,-87.648488 35.424525,-88.042086 35.424525)))',
-           ('now'::text)::date, '2018-07-31'),
-
-          -- qnmc_r in florida that will get likely_qda
-           (2497, '12099', 'Palm Beach', 'FL',
-           'Redesignated until July 2018', 'Redesignated until July 2018',
-           NULL,
-           true, false, false, false, NULL,
-           'SRID=4326;MULTIPOLYGON(((-80.886232 26.320755,-80.886232 26.970943,-80.031362 26.970943,-80.031362 26.320755,-80.886232 26.320755)))',
            ('now'::text)::date, '2018-07-31');
 
         CREATE VIEW qnmc AS
@@ -525,7 +517,6 @@ module TestDataHelper
         fema_code integer,
         disaster_type varchar,
         declaration_date date,
-        qda_declaration date,
         incident_description varchar,
         incidence_period varchar,
         amendment integer,
@@ -541,16 +532,16 @@ module TestDataHelper
       );
 
       INSERT INTO data.likely_qda VALUES
-        (1160,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'2017-09-10'::date,'Hurricane Irma','09/04/17 -',0,'FL','COLLIER',
+        (1160,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',0,'FL','COLLIER',
           '12','021','2017-10-01'::date,'12021','2017-10-06'::date,'qda_2017_10_01',
           'SRID=4326;MULTIPOLYGON(((-81.8459 25.803038,-81.8459 26.517069,-80.872748 26.517069,-80.872748 25.803038,-81.8459 25.803038)))'),
-        (1172,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'2017-09-10'::date,'Hurricane Irma','09/04/17 -',1,'FL','PALM BEACH',
+        (1172,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',1,'FL','PALM BEACH',
           '12','099','2017-10-01'::date,'12099','2017-10-06'::date,'qda_2017_10_01',
           'SRID=4326;MULTIPOLYGON(((-80.886232 26.320755,-80.886232 26.970943,-80.031362 26.970943,-80.031362 26.320755,-80.886232 26.320755)))'),
-        (1164,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'2017-09-10'::date,'Hurricane Irma','09/04/17 -',0,'FL','MIAMI-DADE',
+        (1164,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',0,'FL','MIAMI-DADE',
           '12','086','2017-10-01'::date,'12086','2017-10-06'::date,'qda_2017_10_01',
           'SRID=4326;MULTIPOLYGON(((-80.8736 25.13742,-80.8736 25.979434,-80.118009 25.979434,-80.118009 25.13742,-80.8736 25.13742)))'),
-        (1178,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'2017-09-10'::date,'Hurricane Irma','09/04/17 -',2,'FL','POLK',
+        (1178,'FL-00130',4337,'PRES_IA','2017-09-10'::date,'Hurricane Irma','09/04/17 -',2,'FL','POLK',
           '12','105','2017-10-01'::date,'12105','2017-10-06'::date,'qda_2017_10_01',
           'SRID=4326;MULTIPOLYGON(((-82.106236 27.643238,-82.106236 28.361868,-81.131044 28.361868,-81.131044 27.643238,-82.106236 27.643238)))');
 

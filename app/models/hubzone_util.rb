@@ -49,7 +49,7 @@ class HubzoneUtil
       append_assertions(results)
       latest_expiration(results)
       append_other_information(results)
-      VerifiedHubzone.new results
+      results
     end
 
     def default_location_results(loc)
