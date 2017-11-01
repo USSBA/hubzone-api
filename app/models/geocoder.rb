@@ -3,6 +3,7 @@
 class Geocoder
   def self.search(term)
     Excon.new(geocoder_url(term)).get
+    # byebug
   end
 
   def self.geocoder_url(search)
