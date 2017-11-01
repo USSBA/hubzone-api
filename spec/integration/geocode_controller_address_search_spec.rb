@@ -38,6 +38,8 @@ test_queries = {
     context: 'in a QCT in baltimore',
     query: '8 Market Place Baltimore MD 21202',
     latlng: '39.2888915,-76.6069962',
+    lat: '39.2888915',
+    lng: '-76.6069962',
     http_status: 200,
     results_address: '8 Market Pl, Baltimore, MD 21202, USA',
     designations: %w[qct_e],
@@ -76,6 +78,8 @@ test_queries = {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
     query: 'Roosevelt Roads, Ceiba, Puerto Rico',
     latlng: '18.237248,-65.6480292',
+    lat: '18.237248',
+    lng: '-65.6480292',
     http_status: 200,
     results_address: 'Roosevelt Roads, Ceiba, Puerto Rico',
     designations: %w[brac qct_brac],
@@ -128,6 +132,8 @@ test_queries = {
     context: 'of mcbee SC where there are two qct_qda designations',
     query: 'McBee, SC 29101, USA',
     latlng: '34.4690418,-80.2559033',
+    lat: '34.4690418',
+    lng: '-80.2559033',
     http_status: 200,
     results_address: 'McBee, SC 29101, USA',
     designations: %w[qct_qda qct_qda],
@@ -190,6 +196,20 @@ RSpec.describe GeocodeController do
   (1..2).each do |version|
     describe "Get data from v#{version} of the API" do
       before do
+        # Excon.stub({}, )
+        geocode_response = {
+          results: [
+            formatted_address: test_queries[:qct][:response][:formatted_address],
+            geometry: {
+              location: {
+                lat: test_queries[:qct][:lat],
+                lng: test_queries[:qct][:lng]
+              }
+            }
+          ],
+          status: "OK"
+        }
+        Excon.stub({:host=>"maps.googleapis.com"}, {:status => 200, :body => geocode_response.to_json})
         get search_url, parameters({q: test_queries[:qct][:query]}, version)
       end
       it 'will include the API version in the response' do
@@ -228,8 +248,25 @@ RSpec.describe GeocodeController do
     test_queries.map do |hztype, tquery|
       context 'Given an address ' + tquery[:context] do
         before do
-          Excon.stub({}, body: tquery[:response].to_json)
+          # Excon.stub({}, body: tquery[:response].to_json)
+          geocode_response = {
+            results: [
+              formatted_address: tquery[:response][:formatted_address],
+              geometry: {
+                location: {
+                  lat: tquery[:lat],
+                  lng: tquery[:lng]
+                }
+              }
+            ],
+            status: "OK"
+          }
+          Excon.stub({:host=>"maps.googleapis.com"}, {:status => 200, :body => geocode_response.to_json})
           get search_url, parameters(q: tquery[:query])
+        end
+
+        after do
+          Excon.stubs.clear
         end
 
         it "#{hztype} contains the correct fields" do
