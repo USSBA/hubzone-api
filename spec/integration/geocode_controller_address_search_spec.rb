@@ -209,7 +209,7 @@ RSpec.describe GeocodeController do
           ],
           status: "OK"
         }
-        Excon.stub({:host=>"maps.googleapis.com"}, {:status => 200, :body => geocode_response.to_json})
+        Excon.stub({host: "maps.googleapis.com"}, status: 200, body: geocode_response.to_json)
         get search_url, parameters({q: test_queries[:qct][:query]}, version)
       end
       it 'will include the API version in the response' do
@@ -261,7 +261,7 @@ RSpec.describe GeocodeController do
             ],
             status: "OK"
           }
-          Excon.stub({:host=>"maps.googleapis.com"}, {:status => 200, :body => geocode_response.to_json})
+          Excon.stub({host: "maps.googleapis.com"}, status: 200, body: geocode_response.to_json)
           get search_url, parameters(q: tquery[:query])
         end
 
