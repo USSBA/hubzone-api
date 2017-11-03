@@ -54,6 +54,11 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.before(:all) do
+    Excon.defaults[:mock] = true
+    # Excon.stub({}, {:body => 'Fallback', :status => 200})
+  end
 end
 
 def json
