@@ -37,7 +37,6 @@ test_queries = {
   qct: {
     context: 'in a QCT in baltimore',
     query: '8 Market Place Baltimore MD 21202',
-    latlng: '39.2888915,-76.6069962',
     lat: '39.2888915',
     lng: '-76.6069962',
     http_status: 200,
@@ -77,7 +76,6 @@ test_queries = {
   roosevelt: {
     context: 'for a location in a BRAC, in a CT that is only BRAC designated',
     query: 'Roosevelt Roads, Ceiba, Puerto Rico',
-    latlng: '18.237248,-65.6480292',
     lat: '18.237248',
     lng: '-65.6480292',
     http_status: 200,
@@ -131,7 +129,6 @@ test_queries = {
   qct_qda: {
     context: 'of mcbee SC where there are two qct_qda designations',
     query: 'McBee, SC 29101, USA',
-    latlng: '34.4690418,-80.2559033',
     lat: '34.4690418',
     lng: '-80.2559033',
     http_status: 200,
@@ -348,7 +345,6 @@ RSpec.describe GeocodeController do
         before do
           latlng = "#{tquery[:lat]},#{tquery[:lng]}"
           Excon.stub({}, body: tquery[:response].to_json)
-          # get search_url, parameters(latlng: tquery[:latlng])
           get search_url, parameters(latlng: latlng)
         end
         it 'will succeed' do
