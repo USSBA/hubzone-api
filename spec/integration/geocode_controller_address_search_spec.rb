@@ -196,7 +196,6 @@ RSpec.describe GeocodeController do
   (1..2).each do |version|
     describe "Get data from v#{version} of the API" do
       before do
-        # Excon.stub({}, )
         geocode_response = {
           results: [
             formatted_address: test_queries[:qct][:response][:formatted_address],
