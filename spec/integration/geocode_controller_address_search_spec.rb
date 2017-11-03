@@ -346,8 +346,10 @@ RSpec.describe GeocodeController do
     test_queries.map do |_hztype, tquery|
       context 'Given an lat,lng ' + tquery[:context] do
         before do
+          latlng = "#{tquery[:lat]},#{tquery[:lng]}"
           Excon.stub({}, body: tquery[:response].to_json)
-          get search_url, parameters(latlng: tquery[:latlng])
+          # get search_url, parameters(latlng: tquery[:latlng])
+          get search_url, parameters(latlng: latlng)
         end
         it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
