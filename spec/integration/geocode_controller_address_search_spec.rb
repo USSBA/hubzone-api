@@ -298,7 +298,6 @@ RSpec.describe GeocodeController do
         end
       end
     end
-
   end
 
   # tests for latlng
