@@ -2,25 +2,35 @@
 
 This application houses the custom HUBZone Geo API for the Small Business Administration.
 
-#### Table of Contents
+### Table of Contents
+- [License](#license)
 - [Installation](#installation)
-- [Tests](#tests)
+  - [Requirements](#requirements)
+  - [Building](#building)
+  - [Deploying](#deploying)
+- [API Specification](#api specification)
+- [Testing](#testing)
+- [Additional Configuration](#additional configuration)
+- [External Services](#external services)
 - [Changelog](#changelog)
+- [Contributing](#contributing)
+- [Security Issues](#security issues)
+- [Code of Conduct](#code of conduct)
 
 ## Installation
 ### Requirements:
-* rvm
+* RVM
   - http://rvm.io/
-* ruby 2.3.3
+* Ruby 2.3.3
   - `rvm install 2.3.3`
 * JavaScript interpreter (node)
-  * nvm
-    * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash`
-  * Install node
-    * `nvm install 5`
-* bundler 1.13.6
-  - `gem install -v 1.13.6 bundler`
-* postgresql 9.5
+  * [NodeJS](https://nodejs.org/en/download/)  JavaScript Interpreter 6.11.5, or newer
+    - Mac
+      - `brew install node`
+* Bundler
+  - `rvm @global do gem install bundler`
+  - Tested with version 1.13.6 or later
+* PostgreSQL 9.5
   * Mac
     - I use [Postgres.app](http://postgresapp.com/)
     - could also use `brew install postgresql`
@@ -36,6 +46,7 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
       * `echo 'export PGSQL_HOME=/usr/pgsql-9.5' >> ~/.bashrc`
       * `echo 'export PATH=${PATH}:${PGSQL_HOME}/bin' >> ~/.bashrc`
 
+### Building
 After cloning the repo, checkout out the `develop` branch and set up your environment:
 ```
 git checkout develop
@@ -52,12 +63,14 @@ If the `bundle install` fails due to the pg gem, make sure you have the ENV vars
 
 Note that we run on  port 3001 for local development.  Also, the database is shared between this repo and the hubzone-data-etl repo, with the etl repo creating and populating the database.
 
+### Deploying
 To launch the api:
 ``` bash
 rails server
 ```
 *NOTE:* PORT is set by default in `config/puma.rb` to 3001, so it is not necessary to specify a port when running `rails s`
 
+## API Specification
 
 ## Tests
 ### RSpec Tests
@@ -84,5 +97,14 @@ coverage/index.html
 rubocop -D
 ```
 
+## External services
+- Connect to [Google Map API](https://developers.google.com/maps/) by putting your key in the .env file
+
 ## Changelog
 Refer to the changelog for details on changes to API. [CHANGELOG](CHANGELOG.md)
+
+## Contributing
+
+## Security Issues
+
+## Code of Conduct
