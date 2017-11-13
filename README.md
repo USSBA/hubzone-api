@@ -8,14 +8,13 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
   - [Requirements](#requirements)
   - [Building](#building)
   - [Deploying](#deploying)
-- [API Specification](#api specification)
+- [API Specification](#api-specification)
 - [Testing](#testing)
-- [Additional Configuration](#additional configuration)
-- [External Services](#external services)
+- [External Services](#external-services)
 - [Changelog](#changelog)
 - [Contributing](#contributing)
-- [Security Issues](#security issues)
-- [Code of Conduct](#code of conduct)
+- [Security Issues](#security-issues)
+- [Code of Conduct](#code-of-conduct)
 
 ## License
 
