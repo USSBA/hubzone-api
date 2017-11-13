@@ -17,16 +17,14 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
 - [Security Issues](#security issues)
 - [Code of Conduct](#code of conduct)
 
+## License
+
 ## Installation
 ### Requirements:
 * RVM
   - http://rvm.io/
 * Ruby 2.3.3
   - `rvm install 2.3.3`
-* JavaScript interpreter (node)
-  * [NodeJS](https://nodejs.org/en/download/)  JavaScript Interpreter 6.11.5, or newer
-    - Mac
-      - `brew install node`
 * Bundler
   - `rvm @global do gem install bundler`
   - Tested with version 1.13.6 or later
@@ -51,7 +49,7 @@ After cloning the repo, checkout out the `develop` branch and set up your enviro
 ```
 git checkout develop
 cp example.env .env
-# edit .env to provide your postgresql user/password and, if necessary, override any defaults
+# edit .env to provide your PostgreSQL user/password and, if necessary, override any defaults
 ```
 
 Then run the following:
@@ -71,6 +69,52 @@ rails server
 *NOTE:* PORT is set by default in `config/puma.rb` to 3001, so it is not necessary to specify a port when running `rails s`
 
 ## API Specification
+### Search - `GET` \\api\\search
+#### Request Parameters
+* `q`
+  - The string used for the search. Will be sent to Google Geocoding API to get a specific latitude/longitude
+* `latlng`
+  - A specific latitude/longitude in string format
+* `query_date`
+  - The date of the query
+Search requests can include either `q` or `latlng`
+
+#### Response
+Search requests return a JSON object with the following fields
+
+* `address_components`
+  - an array of the address after it has been parsed by Google Geocoding API
+* `hubzone`
+  - an array the Hubzone status and details
+* `place_id`
+  - a Google Geocoding API UUID string for this particular location
+* `types`
+  - an array of the types for this location as determined by the Google Geocoding API
+* `http_status`
+  - the status of the request to Google Geocoding API
+* `other_information`
+  - an array of pertinent information about this location including pending disasters and Congressional district
+* `status`
+  - the http status of the
+* `formatted_address`
+  - the search string reformatted by the Google Geocoding API
+* `geometry`
+  - an array defining the bounding box of the search query
+* `until_date`
+  - a defined expiration date for the results of the search
+* `search_q`
+  - the `q` parameter used in this request
+* `search_latlng`
+  - the `latlng` parameter used in this request
+* `api_version`
+  - the version of the Hubzone API that was used in this request
+
+### Version - `GET` \\api\\version
+
+Returns the currently deployed version of the Hubzone API as a string
+
+### Health Check - `GET` \\api\\aws-hc
+ Returns the string `"I'm OK"` if the Hubzone API is running
 
 ## Tests
 ### RSpec Tests
