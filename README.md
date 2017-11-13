@@ -69,7 +69,7 @@ rails server
 *NOTE:* PORT is set by default in `config/puma.rb` to 3001, so it is not necessary to specify a port when running `rails s`
 
 ## API Specification
-### Search - `GET` \\api\\search
+### Search - `GET` /api/search
 #### Request Parameters
 * `q`
   - The string used for the search. Will be sent to Google Geocoding API to get a specific latitude/longitude
@@ -109,11 +109,11 @@ Search requests return a JSON object with the following fields
 * `api_version`
   - the version of the Hubzone API that was used in this request
 
-### Version - `GET` \\api\\version
+### Version - `GET` /api/version
 
 Returns the currently deployed version of the Hubzone API as a string
 
-### Health Check - `GET` \\api\\aws-hc
+### Health Check - `GET` /api/aws-hc
  Returns the string `"I'm OK"` if the Hubzone API is running
 
 ## Tests
