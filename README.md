@@ -2,25 +2,32 @@
 
 This application houses the custom HUBZone Geo API for the Small Business Administration.
 
-#### Table of Contents
+### Table of Contents
+- [License](#license)
 - [Installation](#installation)
-- [Tests](#tests)
+  - [Requirements](#requirements)
+  - [Building](#building)
+  - [Deploying](#deploying)
+- [API Specification](#api-specification)
+- [Testing](#testing)
+- [External Services](#external-services)
 - [Changelog](#changelog)
+- [Contributing](#contributing)
+- [Security Issues](#security-issues)
+- [Code of Conduct](#code-of-conduct)
+
+## License
 
 ## Installation
 ### Requirements:
-* rvm
+* RVM
   - http://rvm.io/
-* ruby 2.3.3
+* Ruby 2.3.3
   - `rvm install 2.3.3`
-* JavaScript interpreter (node)
-  * nvm
-    * `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.32.0/install.sh | bash`
-  * Install node
-    * `nvm install 5`
-* bundler 1.13.6
-  - `gem install -v 1.13.6 bundler`
-* postgresql 9.5
+* Bundler
+  - `rvm @global do gem install bundler`
+  - Tested with version 1.13.6 or later
+* PostgreSQL 9.5
   * Mac
     - I use [Postgres.app](http://postgresapp.com/)
     - could also use `brew install postgresql`
@@ -36,11 +43,12 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
       * `echo 'export PGSQL_HOME=/usr/pgsql-9.5' >> ~/.bashrc`
       * `echo 'export PATH=${PATH}:${PGSQL_HOME}/bin' >> ~/.bashrc`
 
+### Building
 After cloning the repo, checkout out the `develop` branch and set up your environment:
 ```
 git checkout develop
 cp example.env .env
-# edit .env to provide your postgresql user/password and, if necessary, override any defaults
+# edit .env to provide your PostgreSQL user/password and, if necessary, override any defaults
 ```
 
 Then run the following:
@@ -52,12 +60,60 @@ If the `bundle install` fails due to the pg gem, make sure you have the ENV vars
 
 Note that we run on  port 3001 for local development.  Also, the database is shared between this repo and the hubzone-data-etl repo, with the etl repo creating and populating the database.
 
+### Deploying
 To launch the api:
 ``` bash
 rails server
 ```
 *NOTE:* PORT is set by default in `config/puma.rb` to 3001, so it is not necessary to specify a port when running `rails s`
 
+## API Specification
+### Search - `GET` /api/search
+#### Request Parameters
+* `q`
+  - The string used for the search. Will be sent to Google Geocoding API to get a specific latitude/longitude
+* `latlng`
+  - A specific latitude/longitude in string format
+* `query_date`
+  - The date of the query
+Search requests can include either `q` or `latlng`
+
+#### Response
+Search requests return a JSON object with the following fields
+
+* `address_components`
+  - an array of the address after it has been parsed by Google Geocoding API
+* `hubzone`
+  - an array the Hubzone status and details
+* `place_id`
+  - a Google Geocoding API UUID string for this particular location
+* `types`
+  - an array of the types for this location as determined by the Google Geocoding API
+* `http_status`
+  - the status of the request to Google Geocoding API
+* `other_information`
+  - an array of pertinent information about this location including pending disasters and Congressional district
+* `status`
+  - the http status of the
+* `formatted_address`
+  - the search string reformatted by the Google Geocoding API
+* `geometry`
+  - an array defining the bounding box of the search query
+* `until_date`
+  - a defined expiration date for the results of the search
+* `search_q`
+  - the `q` parameter used in this request
+* `search_latlng`
+  - the `latlng` parameter used in this request
+* `api_version`
+  - the version of the Hubzone API that was used in this request
+
+### Version - `GET` /api/version
+
+Returns the currently deployed version of the Hubzone API as a string
+
+### Health Check - `GET` /api/aws-hc
+ Returns the string `"I'm OK"` if the Hubzone API is running
 
 ## Tests
 ### RSpec Tests
@@ -84,5 +140,14 @@ coverage/index.html
 rubocop -D
 ```
 
+## External services
+- Connect to [Google Map API](https://developers.google.com/maps/) by putting your key in the .env file
+
 ## Changelog
 Refer to the changelog for details on changes to API. [CHANGELOG](CHANGELOG.md)
+
+## Contributing
+
+## Security Issues
+
+## Code of Conduct
