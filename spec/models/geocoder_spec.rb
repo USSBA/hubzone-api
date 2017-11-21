@@ -9,9 +9,13 @@ test_data = {
 
 # rubocop:disable Metrics/BlockLength
 describe Geocoder, type: :model do
-  describe '.search' do
+  describe 'search' do
     context "when given a empty request" do
       let(:response) { Geocoder.search(test_data[:empty_request]) }
+
+      before do
+        Excon.stub({}, status: 400, body: "{\"status\" : \"INVALID_REQUEST\"\n}\n")
+      end
 
       it "will result in an error" do
         expect(response.status).to be_between(400, 500)
@@ -74,7 +78,10 @@ describe Geocoder, type: :model do
       let(:api_key) { MAP_CONFIG[:google_api_key] }
       let(:response) { Geocoder.search(test_data[:good_request]) }
 
-      before { MAP_CONFIG[:google_api_key] = "SyBsR78bM2H5vM" }
+      before do
+        MAP_CONFIG[:google_api_key] = "SyBsR78bM2H5vM"
+        Excon.stub({}, body: "{\"status\" : \"REQUEST_DENIED\"\n}\n")
+      end
 
       it "will 'succeed' because Google is crazy" do
         expect(response.status).to eql(Rack::Utils::SYMBOL_TO_STATUS_CODE[:ok])
