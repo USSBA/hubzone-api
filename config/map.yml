@@ -1,7 +1,7 @@
 default: &defaults
   hubzone_api_version:
     major: 1
-    minor: 7
+    minor: 8
     patch: 0
     pre_release:
   google_api_key: <%= ENV.fetch('HUBZONE_GOOGLE_API_KEY') { 'AIzaSyBsR78bM2H5vMlO60MAtaL9FVtPGWGyQ7c' } %>
