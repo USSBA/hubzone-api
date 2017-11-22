@@ -1,4 +1,11 @@
 require: rubocop-rspec
+
+AllCops:
+  Exclude:
+      - 'db/schema.rb'
+      - 'bin/*'
+      - 'vendor/**/*'
+
 Style/Encoding:
   Enabled: false
 
