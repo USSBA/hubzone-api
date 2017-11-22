@@ -4,7 +4,8 @@ module AssertionHelper
   private
 
   def assertion_by_type(type, location)
-    res = ActiveRecord::Base.connection.execute(assertion_query(location, type))
+    res = make_query(type, location)
+
     hubzones = []
     res.each do |r|
       r.delete('geom')
@@ -21,5 +22,15 @@ module AssertionHelper
        WHERE ST_Intersects(geom,
          ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
     SQL
+  end
+
+  def make_query(type, location)
+    res = []
+    begin
+      res = ActiveRecord::Base.connection.execute(assertion_query(location, type))
+    rescue ActiveRecord::StatementInvalid => e
+      Rails.logger.warn { "Invalid Statement generated for type assertion:\n#{e}" }
+    end
+    res
   end
 end
