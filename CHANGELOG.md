@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.2] - 2017-11-22
+### hubzone-sprint-30
+### Changed
+  - HUB-986
+    - Guards against an invalid statement in an assertion query.  This will protect the system if the geo database has not been updated with new tables that the api is expecting.
+
 ## [1.8.1] - 2017-11-10
 ### hubzone-sprint-29
 ### Changed
