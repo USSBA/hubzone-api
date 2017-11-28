@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.3] - 2017-12-08
+### shared-services-sprint-31
+### Changed
+  - HUB-984 Remove Google API keys from the config files -- use .env file instead
+
 ## [1.8.2] - 2017-11-22
 ### hubzone-sprint-30
 ### Changed
