@@ -3,7 +3,6 @@
 This application houses the custom HUBZone Geo API for the Small Business Administration.
 
 ### Table of Contents
-- [License](#license)
 - [Installation](#installation)
   - [Requirements](#requirements)
   - [Building](#building)
@@ -12,11 +11,9 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
 - [Testing](#testing)
 - [External Services](#external-services)
 - [Changelog](#changelog)
+- [License](#license)
 - [Contributing](#contributing)
 - [Security Issues](#security-issues)
-- [Code of Conduct](#code-of-conduct)
-
-## License
 
 ## Installation
 ### Requirements:
@@ -146,8 +143,25 @@ rubocop -D
 ## Changelog
 Refer to the changelog for details on changes to API. [CHANGELOG](CHANGELOG.md)
 
+## License
+HUBZone-API is licensed permissively under the Apache License v2.0.
+A copy of that license is distributed with this software.
+
+This project may use Google APIs. The Google API are license under their Google API's [terms and conditions](https://developers.google.com/maps/terms).
+
 ## Contributing
+We welcome contributions. Please read [CONTRIBUTING](CONTRIBUTING.md) for how to contribute.
+
+We strive for a welcoming and inclusive environment for the HUBZone-API project.
+
+Please follow this guidelines in all interactions:
+
+1. Be Respectful: use welcoming and inclusive language.
+2. Assume best intentions: seek to understand other's opinions.
 
 ## Security Issues
+Please do not submit an issue on GitHub for a security vulnerability. Please contact the development team through the Certify Help Desk at [help@certify.sba.gov](mailto:help@certify.sba.gov).
 
-## Code of Conduct
+Be sure to include all the pertinent information.
+
+<sub>The agency reserves the right to change this policy at any time.</sub>
