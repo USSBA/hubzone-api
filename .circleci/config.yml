@@ -9,7 +9,7 @@ workflows:
     jobs:
       - rubocop
       - rspec
-      -poirot
+      - poirot
 jobs:
   rubocop:
     docker:
