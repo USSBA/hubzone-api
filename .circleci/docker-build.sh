@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 if [[ -z "$1" || -z $(echo $1 | cut -s -d. -f1) || -z $(echo $1 | cut -s -d. -f2) || -z $(echo $1 | cut -s -d. -f3) ]]; then
   echo "Please set the VERSION environment variable to the semantic version 'x.y.z' this should be tagged with"
   exit 1
