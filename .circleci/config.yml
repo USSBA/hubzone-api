@@ -9,6 +9,7 @@ workflows:
     jobs:
       - rubocop
       - rspec
+      - poirot
 jobs:
   rubocop:
     docker:
@@ -26,6 +27,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            gem install bundler
             bundle install --jobs=4 --retry=3 --path vendor/bundle
       - save_cache:
           paths:
@@ -48,7 +50,7 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-       - image: circleci/postgres:9.6
+       - image: circleci/ruby:2.3
          environment:
            POSTGRES_USER: postgres
            POSTGRES_PASSWORD: postgres
@@ -68,6 +70,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            gem install bundler
             bundle install --jobs=4 --retry=3 --path vendor/bundle
 
       - save_cache:
@@ -87,6 +90,41 @@ jobs:
                               --out /tmp/test-results/rspec.xml \
                               --format progress \
                               spec
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+  poirot:
+    docker:
+      # specify the version you desire here
+       - image: sbagov/cc-sba-hz-api:1.0
+         environment:
+           HUBZONE_API_DB_USER: postgres
+           HUBZONE_API_DB_PASSWORD: postgres
+           RAILS_ENV: test
+           #MSG_API_DB_HOST=postgres
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+       - image: circleci/ruby:2.3
+         environment:
+           POSTGRES_USER: postgres
+           POSTGRES_PASSWORD: postgres
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # run tests!
+      - run:
+          name: run poirot
+          command: |
+            poirot --patterns hubzone-poirot-patterns.txt --revlist="develop^..HEAD" --verbose
 
       # collect reports
       - store_test_results:
