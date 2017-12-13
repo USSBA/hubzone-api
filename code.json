@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "measurementType": { "method": "projects"},
+    "agency": "SBA",
+    "releases": [
+        {
+            "name": "HUBZone Map API",
+            "repositoryURL": "https://github.com/USSBA/hubzone-api",
+            "description": "GeoSpatial API for the HUBZone program's HUBZone Map.",
+            "permissions": {
+              "license": [{
+                  "name": "Apache License 2.0",
+                  "URL": "https://www.apache.org/licenses/LICENSE-2.0.html"
+              }],
+              "usageType": "openSource",
+              "exemptionText": null
+            },
+            "laborHours": 9600,
+            "tags": ["SBA", "Map", "Web", "Rails", "geopspatial"],
+            "contact": { "email" : "Andrew.Davy@sba.gov" },
+            "vcs" : "git",
+            "homepageURl": "https://maps.certify.sba.gov"
+        }
+    ]
+}
