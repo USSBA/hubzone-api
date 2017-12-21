@@ -8,6 +8,8 @@ We welcome contributions.
 
 The HUBZone-API team handles development of this project in the open. As such, the development team uses GitHub to keep track of project development. We may not accept contributions if they introduce operational complexity or don't align with the goals of the project. All contributions are subject to the license and in no way imply compensation for contributions.
 
+Contributions that include appropriate unit tests are more likely to be accepted by the HUBZone-API team.
+
 ## Feedback
 
 To provide feedback on the code please create an issue on GitHub.
@@ -28,4 +30,5 @@ For documentation changes you can edit the file directly on GitHub and select th
 ## Tests and Continuous Integration
 
 All pull requests must pass our continuous integration (CI) tests in order to be accepted.
+
 We use [rubocop](https://github.com/bbatsov/rubocop) with a style guide to enforce style on Ruby on Rails projects as part of the CI tests.
