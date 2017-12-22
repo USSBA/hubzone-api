@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.4] - 2017-12-22
+### shared-services-sprint-32
+
+Prepared repository for open source release.
+
+### Added
+  - LICENSE
+  - CONTRIBUTING.md
+  - code.json
+
 ## [1.8.3] - 2017-12-08
 ### shared-services-sprint-31
 ### Changed
