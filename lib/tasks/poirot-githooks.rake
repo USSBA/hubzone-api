@@ -5,7 +5,7 @@ namespace :hz do
     `chmod +x #{Rails.root}/.git/hooks/pre-commit-poirot`
     poirot_hook = ".git/hooks/pre-commit-poirot -p #{Rails.root}/hubzone-poirot-patterns.txt"
     pre_commit = ".git/hooks/pre-commit"
-    if File.open(pre_commit).read.match(poirot_hook)
+    if File.exist?(pre_commit) && File.open(pre_commit).read.match(poirot_hook)
       puts "Poirot pre-commit hook already detected in #{pre_commit}, not adding again"
     else
       puts "Adding Poirot pre-commit hook to #{pre_commit}"
