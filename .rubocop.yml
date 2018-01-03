@@ -1,37 +1,47 @@
-require: rubocop-rspec
-
 AllCops:
   Exclude:
       - 'db/schema.rb'
       - 'bin/*'
       - 'vendor/**/*'
 
-Style/Encoding:
+Metrics/ClassLength:
+  Max: 250
+
+Metrics/LineLength:
+  Max: 199
+
+Metrics/MethodLength:
+  Max: 30
+
+Rails:
+  Enabled: true
+
+Style/BlockComments:
   Enabled: false
 
-Style/StringLiterals:
+Style/EmptyMethod:
+  Enabled: false
+
+Style/Encoding:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Style/BlockComments:
-  Enabled: false
-
 Layout/LeadingCommentSpace:
-  Enabled: false
-
-Layout/SpaceInsideBrackets:
   Enabled: false
 
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
 
-Layout/EmptyLinesAroundBlockBody:
+Style/NumericLiterals:
   Enabled: false
 
-Metrics/LineLength:
-  Max: 199
+Style/SingleLineMethods:
+  Enabled: false
 
-Style/NumericLiterals:
+Layout/SpaceInsideBrackets:
+  Enabled: false
+
+Style/StringLiterals:
   Enabled: false
