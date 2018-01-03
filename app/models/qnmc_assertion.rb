@@ -3,7 +3,6 @@ class QnmcAssertion
   extend AssertionHelper
 
   class << self
-    #rubocop:disable MethodLength
     #rubocop:disable Metrics/AbcSize
     #rubocop:disable Metrics/CyclomaticComplexity
     #rubocop:disable Metrics/PerceivedComplexity

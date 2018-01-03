@@ -1,2 +1,2 @@
 # Same settings as production
-require Rails.root.join("config/environments/development")
+require Rails.root.join("config", "environments", "development")

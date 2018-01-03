@@ -239,7 +239,7 @@ test_other_information_queries = {
   }
 }
 
-#rubocop:disable Metrics/BlockLength, RSpec/BeforeAfterAll
+# rubocop:disable Metrics/BlockLength
 RSpec.describe HubzoneUtil do
   before do
     create_test_data

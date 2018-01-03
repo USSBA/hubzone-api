@@ -1,5 +1,4 @@
 # A utility class to perform hubzone searches against the db
-# rubocop:disable Metrics/ClassLength
 class HubzoneUtil
   class << self
     def search(params)
@@ -98,7 +97,7 @@ class HubzoneUtil
 
       # get likely designations
       likely_qda_designations = likely_qda_assertion location
-      results[:other_information][:alerts][:likely_qda_designations] = likely_qda_designations unless likely_qda_designations.blank?
+      results[:other_information][:alerts][:likely_qda_designations] = likely_qda_designations if likely_qda_designations.present?
 
       # get congressional district
       results[:other_information][:congressional_district] = congressional_district_assertion location || nil
@@ -114,7 +113,6 @@ class HubzoneUtil
       CongressionalDistrictAssertion.assertion location
     end
 
-    #rubocop:disable MethodLength
     def latest_expiration(results)
       dates = []
       has_indefinite_expiration = false
