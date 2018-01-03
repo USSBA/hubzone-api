@@ -3,7 +3,14 @@ namespace :hz do
   task :poirot_hooks do
     `cp #{Rails.root}/lib/tasks/pre-commit-poirot #{Rails.root}/.git/hooks/pre-commit-poirot`
     `chmod +x #{Rails.root}/.git/hooks/pre-commit-poirot`
-    `echo '.git/hooks/pre-commit-poirot -p \"#{Rails.root}/\hubzone-poirot-patterns.txt"' > .git/hooks/pre-commit`
-    `chmod +x .git/hooks/pre-commit`
+    poirot_hook = ".git/hooks/pre-commit-poirot -p #{Rails.root}/hubzone-poirot-patterns.txt"
+    pre_commit = ".git/hooks/pre-commit"
+    if File.open(pre_commit).read.match(poirot_hook)
+      puts "Poirot pre-commit hook already detected in #{pre_commit}, not adding again"
+    else
+      puts "Adding Poirot pre-commit hook to #{pre_commit}"
+      `echo #{poirot_hook} >> #{pre_commit}`
+      `chmod +x #{pre_commit}`
+    end
   end
 end
