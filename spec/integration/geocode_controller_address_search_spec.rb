@@ -9,8 +9,8 @@ def search_url
   api_search_url
 end
 
-def parameters(p, version = 1)
-  { params: p, headers: {'Accept' => "application/sba.hubzone-api.v#{version}"} }
+def headers_arg(version = 1)
+  {'Accept' => "application/sba.hubzone-api.v#{version}"}
 end
 
 required_fields = {
@@ -206,7 +206,7 @@ RSpec.describe GeocodeController do
           status: "OK"
         }
         Excon.stub({host: "maps.googleapis.com"}, status: 200, body: geocode_response.to_json)
-        get search_url, parameters({q: test_queries[:qct][:query]}, version)
+        get search_url, params: {q: test_queries[:qct][:query]}, headers: headers_arg(version)
       end
       it 'will include the API version in the response' do
         expect(version).to eq(json[:api_version])
@@ -216,7 +216,7 @@ RSpec.describe GeocodeController do
 
   describe 'GET #search without any query or location' do
     before do
-      get search_url, parameters(message: 'Search for what?')
+      get search_url, params: {message: 'Search for what?'}
     end
     it 'will result in an error' do
       expect(response.status).to be_between(400, 500)
@@ -230,7 +230,7 @@ RSpec.describe GeocodeController do
   describe 'GET #search with a query' do
     context 'when given a empty query' do
       before do
-        get search_url, parameters(q: "")
+        get search_url, params: {q: ""}
       end
       it 'will result in an error' do
         expect(response.status).to be_between(400, 500)
@@ -258,7 +258,7 @@ RSpec.describe GeocodeController do
             status: "OK"
           }
           Excon.stub({host: "maps.googleapis.com"}, status: 200, body: geocode_response.to_json)
-          get search_url, parameters(q: tquery[:query])
+          get search_url, params: {q: tquery[:query]}
         end
 
         after do
@@ -304,7 +304,7 @@ RSpec.describe GeocodeController do
   describe 'GET #search with a lat, lng location' do
     context 'when given an empty latlng' do
       before do
-        get search_url, parameters(latlng: "")
+        get search_url, params: {latlng: ""}
       end
       it 'will result in an error' do
         expect(response.status).to be(400)
@@ -316,7 +316,7 @@ RSpec.describe GeocodeController do
 
     context 'when given an incomplete location' do
       before do
-        get search_url, parameters(latlng: '123')
+        get search_url, params: {latlng: '123'}
       end
       it 'will result in an error' do
         expect(response.status).to be(400)
@@ -328,7 +328,7 @@ RSpec.describe GeocodeController do
 
     context 'when given a mal-formed location' do
       before do
-        get search_url, parameters(latlng: 'abc.def,-ghi.jkl')
+        get search_url, params: {latlng: 'abc.def,-ghi.jkl'}
       end
       it 'will result in an error' do
         expect(response.status).to be(400)
@@ -344,7 +344,7 @@ RSpec.describe GeocodeController do
         before do
           latlng = "#{tquery[:lat]},#{tquery[:lng]}"
           Excon.stub({}, body: tquery[:response].to_json)
-          get search_url, parameters(latlng: latlng)
+          get search_url, params: {latlng: latlng}
         end
         it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
