@@ -243,14 +243,11 @@ test_other_information_queries = {
 RSpec.describe HubzoneUtil do
   before do
     create_test_data
-  end
-
-  before(:all) do
     Excon.defaults[:mock] = true
     Excon.stub({}, body: 'Fallback', status: 200)
   end
 
-  after(:all) do
+  after do
     Excon.stubs.clear
     Excon.defaults[:mock] = false
   end
