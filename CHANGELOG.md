@@ -3,8 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.5] - 2018-01-05
+### hubzone-sprint-33
+### Added
+  - HUB-1033 Adds in a Poirot pre-commit template and a rake task for adding this to the local users `.git/hooks` folder.
+### Changed
+  - HUB-1033 Tweaks the Poirot patterns a bit.
+
 ## [1.8.4] - 2017-12-22
-### shared-services-sprint-32
+### hubzone-sprint-32
 
 Prepared repository for open source release.
 
@@ -14,7 +21,7 @@ Prepared repository for open source release.
   - code.json
 
 ## [1.8.3] - 2017-12-08
-### shared-services-sprint-31
+### hubzone-sprint-31
 ### Changed
   - HUB-984 Remove Google API keys from the config files -- use .env file instead
 
