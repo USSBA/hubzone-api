@@ -107,4 +107,4 @@ jobs:
       - run:
           name: run poirot
           command: |
-            poirot --patterns hubzone-poirot-patterns.txt --revlist="develop^..HEAD" --verbose
+            poirot --patterns https://raw.githubusercontent.com/USSBA/hubzone-webmap/develop/hubzone-poirot-patterns.txt --revlist="develop^..HEAD" --verbose
