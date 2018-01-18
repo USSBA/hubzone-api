@@ -108,3 +108,30 @@ jobs:
           name: run poirot
           command: |
             poirot --patterns https://raw.githubusercontent.com/USSBA/hubzone-webmap/develop/hubzone-poirot-patterns.txt --revlist="develop^..HEAD" --verbose
+  brakeman:
+    docker:
+      # specify the version you desire here
+      - image: sbagov/cc-sba-hz-api:1.1
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: run brakeman
+          parallel: true
+          command: |
+            gem install --no-rdoc --no-ri brakeman
+            brakeman --exit-on-warn .
