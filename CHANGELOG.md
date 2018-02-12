@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.9.0] - 2018-02-15
+### hubzone-sprint-36
+### Changed
+  - HUB-1133
+    - Changes the Likely QDA logic to not show Likely QDAs for QCT_E and QNMC_E due to the updating rules imposed by NDAA 2018.
+
 ## [1.8.5] - 2018-01-05
 ### hubzone-sprint-33
 ### Added

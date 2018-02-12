@@ -108,8 +108,53 @@ test_queries = {
       }
     ]
   },
-  likely_qda_AND_qct_or_qnmc_hubzone: {
+  likely_qda_AND_qct_r_or_qnmc_r_hubzone: {
     show_likely_qda: true,
+    other_information: {
+      alerts: {
+        likely_qda_designations: [
+          {
+            'gid' => 1428,
+            'disaster_state' => 'NC-00081',
+            'fema_code' => 4285,
+            'disaster_type' => 'PRES_IA',
+            'declaration_date' => '2016-10-10',
+            'incident_description' => 'Hurricane Matthew',
+            'incidence_period' => '10/04/16 - 10/24/16',
+            'amendment' => 12,
+            'state' => 'NC',
+            'county' => 'ANSON',
+            'state_fips' => '37',
+            'county_fips_3' => '007',
+            'effective' => '2017-10-01',
+            'county_fips' => '37007',
+            'import' => '2017-10-16',
+            'import_table' => 'qda_2017_10_01',
+            'hz_type' => 'likely_qda',
+            'qda_declaration' => '2016-10-10'
+          }
+        ]
+      }
+    },
+    hubzone: [
+      {
+        'gid' => 1866,
+        'tract_fips' => '37007920600',
+        'county' => 'Anson County',
+        'state' => 'NC',
+        'omb_delineation' => 'Non-Metropolitan',
+        'prior_status' => 'Not Qualified',
+        'current_status' => 'Redesignated Until Dec 2021',
+        'status_change' => true,
+        'redesignated' => true,
+        'expires' => '2021-12-31',
+        'effective' => '2017-01-01',
+        'hz_type' => 'qct_r'
+      }
+    ]
+  },
+  likely_qda_AND_qct_e_or_qnmc_e_hubzone: {
+    show_likely_qda: false,
     other_information: {
       alerts: {
         likely_qda_designations: [
@@ -153,7 +198,7 @@ test_queries = {
       }
     ]
   },
-  likely_qda_AND_qct_or_qnmc_hubzone_AND_qda_hubzones_also_in_likely: {
+  likely_qda_AND_qct_r_or_qnmc_r_hubzone_AND_qda_hubzones_also_in_likely: {
     show_likely_qda: false,
     other_information: {
       alerts: {
@@ -189,12 +234,12 @@ test_queries = {
         'state' => 'SC',
         'omb_delineation' => 'Non-Metropolitan',
         'prior_status' => 'Qualified',
-        'current_status' => 'Qualified',
+        'current_status' => 'Redesignated',
         'status_change' => false,
-        'redesignated' => false,
+        'redesignated' => true,
         'expires' => nil,
         'effective' => '2017-01-01',
-        'hz_type' => 'qct_e'
+        'hz_type' => 'qct_r'
       },
       {
         'gid' => 206,
@@ -255,12 +300,12 @@ test_queries = {
         'state' => 'SC',
         'omb_delineation' => 'Non-Metropolitan',
         'prior_status' => 'Qualified',
-        'current_status' => 'Qualified',
+        'current_status' => 'Redesignated',
         'status_change' => false,
-        'redesignated' => false,
+        'redesignated' => true,
         'expires' => nil,
         'effective' => '2017-01-01',
-        'hz_type' => 'qct_e'
+        'hz_type' => 'qct_r'
       },
       {
         'gid' => 206,

@@ -13,11 +13,19 @@ class VerifiedHubzone
     #doesn't have a likely_qda, skip verification
     return @hubzone_results unless likely_qda?
 
-    # level 1: likely_qda is present and is not qct_e qct_r qnmc_e qnmc_r = do not show likely_qda
-    return drop_likely_qda unless contains_qualified_or_redesignated_hubzones
+    # NDAA 2018:
+    # need to differentiate betweeen showing likely_qda for qct_r and qnmc_r vs qct_e and qnmc_e
+    # since it is now not possible for qualified hubzones to expire prior to 2021, \
+    # therefore they are not likely to get qda
 
-    # level 2: likely_qda is present, location DOES have qct_e qct_r qnmc_e qnmc_r, location DOES NOT have QDA hubzones = DO show likely_qda
-    return @hubzone_results unless contains_qda_hubzones
+    # level 1a: likely_qda is present and IS qct_e qnmc_e = do not show likely_qda
+    return drop_likely_qda unless contains_redesignated_hubzones
+
+    # level 2: likely_qda is present and IS qct_r qnmc_r = do not show likely_qda
+    return @hubzone_results if contains_redesignated_hubzones_not_qda_hubzones
+
+    # level 2: likely_qda is present, location DOES have qnmc_r, location DOES NOT have QDA hubzones = DO show likely_qda
+    # return @hubzone_results unless contains_qda_hubzones
 
     # level 3: likely_qda is present, location DOES have qct_e qct_r qnmc_e qnmc_r, location DOES have QDA hubzones
     # if qnmc_qda or qct_qda are in likely_qda, do not show likely_qda else show the likely_qda
@@ -36,13 +44,36 @@ class VerifiedHubzone
     %w[qct_e qct_r qnmc_r qnmc_r qnmc_a qnmc_b qnmc_c qnmc_ab qnmc_ac qnmc_bc qnmc_abc]
   end
 
+  def qualified_hubzones
+    %w[qct_e qnmc_a qnmc_b qnmc_c qnmc_ab qnmc_ac qnmc_bc qnmc_abc]
+  end
+
+  def redesignated_hubzones
+    %w[qct_r qnmc_r]
+  end
+
+  def qda_hubzones
+    %w[qct_qda qnmc_qda]
+  end
+
+  # checks if there are qualified hubzones present in the hash
+  def contains_qualified_hubzones
+    (hubzone_types & qualified_hubzones).present?
+  end
+
+  # checks if there are qualified hubzones present in the hash
+  def contains_redesignated_hubzones
+    (hubzone_types & redesignated_hubzones).present?
+  end
+
   # checks if there are qualified or redesignated hubzones present in the hash
   def contains_qualified_or_redesignated_hubzones
     (hubzone_types & qualified_or_redesignated_hubzones).present?
   end
 
-  def qda_hubzones
-    %w[qct_qda qnmc_qda]
+  # returns true if the hubzone types contains redesignated but not qdas
+  def contains_redesignated_hubzones_not_qda_hubzones
+    contains_redesignated_hubzones && !contains_qda_hubzones
   end
 
   # checks if there are qda hubzones present in the hash
