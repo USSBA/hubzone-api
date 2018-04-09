@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  postgres:
+    image: mdillon/postgis:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  hubzone-api:
+    build:
+      context: .
+      cache_from:
+      - hubzone/hubzone-api:latest
+    image: hubzone/hubzone-api:latest
+    restart: always
+    links:
+      - postgres
+    env_file:
+      - ./docker/hubzone-api.env
+    ports:
+      - '3001:3001'
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+    - "migrate-run.sh"

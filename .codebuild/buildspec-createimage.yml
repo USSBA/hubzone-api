@@ -1,0 +1,68 @@
+version: 0.2
+phases:
+  install:
+    commands:
+    - apt update
+    - apt install -y ssh jq
+    - mkdir ~/.ssh
+    - chmod 700 ~/.ssh
+  pre_build:
+    commands:
+    - env
+    # Currently getting inconsistent results from CODEBUILD_SOURCE_VERSION; getting commit hash another way until AWS settles down
+    #- export GIT_COMMIT="${CODEBUILD_SOURCE_VERSION}"
+    - export GIT_COMMIT="$(git rev-parse --verify HEAD)"
+    - export GIT_BRANCHTAG="$(git tag -l --points-at HEAD | grep -e '^v[0-9].*' | sort | head -1)"
+    - echo "Pre-Build started on `date` for GIT_COMMIT=${GIT_COMMIT} and GIT_BRANCHTAG=${GIT_BRANCHTAG}"
+    - "if [ -f /tmp/containercache_latest_v1.tar ]; then echo 'Loading docker cache...'; docker load < /tmp/containercache_latest_v1.tar; else echo 'No latest docker cache to load'; fi"
+    - dockerlogin="$(aws ecr get-login --region us-east-1 --no-include-email)"
+    - echo "Testing docker login..."
+    - ${dockerlogin}
+    - echo "Fetching latest base-image..."
+    - docker pull $(grep FROM Dockerfile | sed 's/.*FROM[ ]\+//')
+  build:
+    commands:
+      - echo "Build started on `date` for GIT_COMMIT=${GIT_COMMIT} and GIT_BRANCHTAG=${GIT_BRANCHTAG}"
+      - export result="true" contains_underscore="true" skip_build="false"
+      - echo "${GIT_BRANCHTAG}" | grep -q '^v[0-9]' || export result="false"
+      - echo "${GIT_BRANCHTAG}" | grep -q '^v[0-9].*[_\-]' || export contains_underscore="false"
+      - 'if [ "$result" = "false" ]; then echo "WARN: Cannot match git revision to vX.Y.Z tag.  Refusing to build, but not a failure."; skip_build="true"; fi'
+      - git describe --long > REVISION || touch REVISION
+      - echo Building hubzone-api image...
+      - if [ "$skip_build" = "false" ]; then docker-compose build hubzone-api || ( echo 'FATAL-- base image build failed.  Aborting.'; exit 10 ); fi
+      - echo Building rspec image...
+      - if [ "$skip_build" = "false" ]; then docker-compose -f ./docker/docker-compose-test.yml build rspec || ( echo "FATAL-- rspec image build failed.  Aborting."; exit 20 ); fi
+      - echo Running rspec test...
+      - if [ "$skip_build" = "false" ]; then docker-compose -f ./docker/docker-compose-test.yml run rspec || ( echo "FATAL-- rspec test failed.  Aborting."; exit 40 ); fi
+      - echo Tests successful, tagging image.
+      - if [ "$skip_build" = "false" ]; then docker tag hubzone/hubzone-api:latest "${AMAZON_ECR_REPO}:${GIT_COMMIT}"; fi
+      - >
+        /bin/bash -ce 'if [ "$contains_underscore" = "true" ] && [ "$skip_build" = "false" ]; then
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+        elif [ "$result" = "true" ] && [ "$skip_build" = "false" ]; then
+          VERSION_MAJOR=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f1);
+          VERSION_MINOR=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f2);
+          VERSION_PATCH=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f3-);
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}";
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}";
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
+        else
+          echo "This deploy task should only run when GIT_BRANCHTAG, currently [${GIT_BRANCHTAG}], begins with v[0-9].  Refusing to push to ECR, but not a failure.";
+        fi'
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - if [ "$skip_build" = "false" ]; then docker save hubzone/hubzone-api:latest > /tmp/containercache_latest_v1.tar; fi
+cache:
+  paths:
+  - /tmp/containercache_latest_v1.tar
