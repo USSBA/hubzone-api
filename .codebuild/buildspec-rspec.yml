@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Build completed on `date`
+      - "if [ -f /tmp/containercache_v1.tar ]; then echo 'Loading docker cache...'; docker load < /tmp/containercache_v1.tar; else echo 'No docker cache to load'; fi"
+  build:
+    commands:
+      - echo Build started on `date`
+      - git describe --long > REVISION || touch REVISION
+      - docker-compose -f ./docker/docker-compose-test.yml build rspec
+      - docker-compose -f ./docker/docker-compose-test.yml run rspec
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - docker save hubzone/hubzone-api:latest > /tmp/containercache_v1.tar
+cache:
+  paths:
+  - /tmp/containercache_v1.tar

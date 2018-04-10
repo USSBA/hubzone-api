@@ -1,0 +1,30 @@
+version: '3.2'
+services:
+  postgres:
+    image: mdillon/postgis:9.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+  rspec:
+    build:
+      context: ..
+      cache_from:
+      - hubzone/hubzone-api:latest
+    image: hubzone/hubzone-api:latest
+    links:
+      - postgres
+    env_file:
+      - hubzone-api.env
+      - hubzone-api-test.env
+    entrypoint: ["/bin/bash"]
+    command: >
+      -c "
+        while ! nc -z postgres 5432;
+        do
+          echo waiting for postgres;
+          sleep 1;
+        done;
+        echo Connected to postgres!;
+        bundle exec rake db:create db:migrate &&
+        bundle exec rspec spec;
+      "
