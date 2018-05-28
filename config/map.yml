@@ -27,5 +27,8 @@ dev:
 development:
   <<: *defaults
 
+developmentdocker:
+  <<: *defaults
+
 test:
   <<: *defaults
