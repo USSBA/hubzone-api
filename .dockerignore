@@ -1,0 +1,10 @@
+**/*.env*
+.git
+.circleci
+.codebuild
+.bundle
+*.md
+
+tmp
+**/Dockerfile*
+**/docker-compose*

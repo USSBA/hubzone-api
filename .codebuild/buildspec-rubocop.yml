@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+    - echo Installing dependencies on `date`
+    - gem install rubocop -v 0.50.0
+    - gem install rubocop-rspec -v 1.18.0
+  build:
+    commands:
+    - echo Rubocop started on `date`
+    - rubocop .
+  post_build:
+    commands:
+    - echo Rubocop completed on `date`
