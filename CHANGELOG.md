@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
   - HUB-1171
     - Fixing migration to not die on concurrent migration with a parallel container
+    - v2.0.0 bump
 
 ## [1.9.1] - 2018-06-02
 ### Added
