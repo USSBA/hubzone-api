@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+## [1.9.1] - 2018-07-06
+### shared-services-sprint-46
+### Changed
+  - HUB-1416
+    - Updated sprockets gem
 
 ## [1.9.0] - 2018-02-15
 ### hubzone-sprint-36
