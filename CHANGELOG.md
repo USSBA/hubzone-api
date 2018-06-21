@@ -2,11 +2,29 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
-## [1.9.1] - 2018-07-06
+## [2.0.1] - 2018-07-06
 ### shared-services-sprint-46
 ### Changed
   - HUB-1416
     - Updated sprockets gem
+
+## [2.0.0]
+  - HUB-1171
+    - Fixing migration to not die on concurrent migration with a parallel container
+    - v2.0.0 bump
+
+## [1.9.1] - 2018-06-02
+### Added
+  - HUB-1138
+    - initial docker configuration
+  - HUB-1279
+    - adds the qa and training environments
+  - HUB-1171
+    - adds developmentdocker config
+
+### Changed
+  - HUB-1215
+    - updated the loofah and rails-sanitizer gems
 
 ## [1.9.0] - 2018-02-15
 ### hubzone-sprint-36

@@ -39,9 +39,9 @@ phases:
       - >
         /bin/bash -ce 'if [ "$contains_underscore" = "true" ] && [ "$skip_build" = "false" ]; then
           docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_BRANCHTAG}";
           docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_BRANCHTAG}";
         elif [ "$result" = "true" ] && [ "$skip_build" = "false" ]; then
           VERSION_MAJOR=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f1);
           VERSION_MINOR=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f2);

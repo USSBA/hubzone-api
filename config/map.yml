@@ -1,7 +1,7 @@
 default: &defaults
   hubzone_api_version:
-    major: 1
-    minor: 9
+    major: 2
+    minor: 0
     patch: 1
     pre_release:
   google_api_key: <%= ENV.fetch('HUBZONE_GOOGLE_API_KEY') { 'SetYourGoogleAPIKeyInYour.envFile' } %>
@@ -25,6 +25,9 @@ dev:
   <<: *defaults
 
 development:
+  <<: *defaults
+
+developmentdocker:
   <<: *defaults
 
 test:

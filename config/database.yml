@@ -58,6 +58,12 @@ development:
   <<: *default
   database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
 
+developmentdocker:
+  <<: *default
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
+  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'postgres' } %>
+  username: <%= ENV.fetch('HUBZONE_API_DB_USER') { 'dockeruser' } %>
+  password: <%= ENV.fetch('HUBZONE_API_DB_PASSWORD') { 'dockerpass' } %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
