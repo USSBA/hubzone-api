@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+## [2.0.1] - 2018-07-06
+### shared-services-sprint-46
+### Changed
+  - HUB-1416
+    - Updated sprockets gem
+
+## [2.0.0]
   - HUB-1171
     - Fixing migration to not die on concurrent migration with a parallel container
     - v2.0.0 bump
