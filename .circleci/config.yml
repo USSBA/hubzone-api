@@ -108,7 +108,7 @@ jobs:
       - run:
           name: run poirot
           command: |
-            poirot --patterns https://raw.githubusercontent.com/USSBA/hubzone-webmap/develop/hubzone-poirot-patterns.txt --revlist="develop^..HEAD" --verbose
+            poirot --patterns https://raw.githubusercontent.com/USSBA/hubzone-api/develop/poirot-patterns.txt --revlist="develop^..HEAD" --verbose
   brakeman:
     docker:
       # specify the version you desire here
