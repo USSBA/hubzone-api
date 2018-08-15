@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+
+## [2.0.2] - 2018-08-31
+### hubzone-sprint-50
+### Changed
+  - HUB-1467
+    - Updated to ruby 2.5 and rails 5.2
+
 ## [2.0.1] - 2018-07-06
 ### shared-services-sprint-46
 ### Changed
