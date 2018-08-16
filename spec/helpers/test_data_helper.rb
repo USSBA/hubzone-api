@@ -598,3 +598,4 @@ module TestDataHelper
     SQL
   end
 end
+# rubocop:enable Metrics/ModuleLength

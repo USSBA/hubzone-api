@@ -58,7 +58,6 @@ class Version
     desc = @git_description
     matches = desc_regex.match desc
     return version_components if matches.nil?
-
     tag = matches[1]
     delta = matches[2]
     commit_sha = matches[3]
