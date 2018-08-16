@@ -252,7 +252,7 @@ RSpec.describe HubzoneUtil do
     Excon.defaults[:mock] = false
   end
 
-  context "a search without any query or location" do
+  context "with a search without any query or location" do
     let(:params) { { message: "something" } }
 
     it "will result in an error" do
@@ -265,7 +265,7 @@ RSpec.describe HubzoneUtil do
     end
   end
 
-  context "a search with an empty query" do
+  context "with a search with an empty query" do
     let(:params) { { q: "" } }
 
     it "will result in an error" do
@@ -440,3 +440,4 @@ RSpec.describe HubzoneUtil do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

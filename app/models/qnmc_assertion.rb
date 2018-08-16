@@ -3,9 +3,9 @@ class QnmcAssertion
   extend AssertionHelper
 
   class << self
-    #rubocop:disable Metrics/AbcSize
-    #rubocop:disable Metrics/CyclomaticComplexity
-    #rubocop:disable Metrics/PerceivedComplexity
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def assertion(location)
       assertion_by_type('qnmc', location).each do |qnmc|
         qnmc['hz_type'] = 'qnmc_r'    if qnmc_r qnmc
@@ -17,9 +17,11 @@ class QnmcAssertion
         qnmc['hz_type'] = 'qnmc_bc'   if qnmc_bc qnmc
         qnmc['hz_type'] = 'qnmc_abc'  if qnmc_abc qnmc
         qnmc['hz_type'] = 'non_qnmc'  if non_qnmc qnmc
-        # qnmc
       end
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     private
 
