@@ -1,5 +1,5 @@
 # FROM mdillon/postgis:9.6 as postgis
-FROM ruby:2.3.3-slim
+FROM ruby:2.5.1-slim
 
 # Install general packages
 ENV PACKAGES build-essential libpq-dev netcat git curl apt-utils wget python3 python-pip python-dev software-properties-common

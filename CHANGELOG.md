@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.3] - 2018-09-14
+### shared-services-sprint-51
+### Changed
+  - HUB-1587
+    - Updated ruby version in Dockerfiles
+    
 ## [2.0.2] - 2018-08-31
 ### hubzone-sprint-50
 ### Changed

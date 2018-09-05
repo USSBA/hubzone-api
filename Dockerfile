@@ -1,4 +1,4 @@
-FROM ruby:2.4.3-slim
+FROM ruby:2.5.1-slim
 
 # Install general packages
 ENV PACKAGES build-essential libpq-dev netcat git python3 python-pip python-dev apt-utils wget unzip lftp ssh jq
