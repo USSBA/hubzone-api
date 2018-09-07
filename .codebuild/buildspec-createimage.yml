@@ -19,7 +19,7 @@ phases:
     - echo "Testing docker login..."
     - ${dockerlogin}
     - echo "Fetching latest base-image..."
-    - docker pull $(grep FROM Dockerfile | sed 's/.*FROM[ ]\+//')
+    - grep "^FROM" Dockerfile | sed 's/^FROM[ ]\+\([^ ]\+\)\( .*\)\?/\1/' | xargs -n 1 docker pull
   build:
     commands:
       - echo "Build started on `date` for GIT_COMMIT=${GIT_COMMIT} and GIT_BRANCHTAG=${GIT_BRANCHTAG}"
