@@ -15,7 +15,7 @@ jobs:
   rubocop:
     docker:
       # specify the version you desire here
-      - image: sbagov/cc-sba-hz-api:1.1
+      - image: ussba/cc-ruby:2.5
     working_directory: ~/repo
     steps:
       - checkout
@@ -40,7 +40,7 @@ jobs:
   rspec:
     docker:
       # specify the version you desire here
-       - image: sbagov/cc-sba-hz-api:1.1
+       - image: ussba/cc-ruby:2.5
          environment:
            HUBZONE_API_DB_USER: postgres
            HUBZONE_API_DB_PASSWORD: postgres
@@ -99,12 +99,10 @@ jobs:
   poirot:
     docker:
       # specify the version you desire here
-       - image: sbagov/cc-sba-hz-api:1.1
+       - image: ussba/cc-python:3
     working_directory: ~/repo
     steps:
       - checkout
-
-      # run tests!
       - run:
           name: run poirot
           command: |
@@ -112,7 +110,7 @@ jobs:
   brakeman:
     docker:
       # specify the version you desire here
-      - image: sbagov/cc-sba-hz-api:1.1
+      - image: ussba/cc-ruby:2.5
     working_directory: ~/repo
     steps:
       - checkout
