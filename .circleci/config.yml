@@ -109,11 +109,11 @@ jobs:
         command: |
           git describe --long > REVISION || touch REVISION
           cat REVISION
-          docker-compose -f docker-compose-test.yml build rspec
+          docker-compose -f docker/docker-compose-test.yml build rspec
     - run:
         name: Run rspec in Docker container
         command: |
-          docker-compose -f docker-compose-test.yml run rspec
+          docker-compose -f docker/docker-compose-test.yml run rspec
   poirot:
     docker:
       # specify the version you desire here
