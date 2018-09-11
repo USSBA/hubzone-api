@@ -100,7 +100,7 @@ jobs:
           destination: test-results
   rspec-docker:
     docker:
-    - image: sbagov/cc-docker-git-aws:latest
+    - image: ussba/cc-docker-git-aws:latest
     steps:
     - checkout
     - setup_remote_docker:
