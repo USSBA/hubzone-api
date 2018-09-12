@@ -1,7 +1,7 @@
-FROM ruby:2.4.3-slim
+FROM ruby:2.5-slim-stretch
 
 # Install general packages
-ENV PACKAGES build-essential libpq-dev netcat git python3 python-pip python-dev apt-utils wget unzip lftp ssh jq
+ENV PACKAGES build-essential libpq-dev netcat git python3 python-pip python-dev apt-utils wget unzip lftp ssh jq gnupg
 RUN echo "Updating repos..." && apt-get update > /dev/null && \
     echo "Installing packages: ${PACKAGES}..." && apt-get install -y $PACKAGES --fix-missing --no-install-recommends > /dev/null && \
     echo "Done" && rm -rf /var/lib/apt/lists/*
@@ -14,10 +14,10 @@ RUN echo "Fetching awscli installer..." && wget -qO "awscli-bundle.zip" "https:/
 
 # Configure/Install Postgres Repos/Deps
 ENV PG_PACKAGES postgresql-9.6 postgresql-9.6-postgis-2.4
-RUN echo deb http://apt.postgresql.org/pub/repos/apt jessie-pgdg main > /etc/apt/sources.list.d/jessie-pgdg.list && \
+RUN echo deb http://apt.postgresql.org/pub/repos/apt stretch-pgdg main > /etc/apt/sources.list.d/stretch-pgdg.list && \
     wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
 RUN echo "Updating repos..." && apt-get update > /dev/null && \
-    echo "Installing posgres packages: ${PG_PACKAGES}..." && apt-get -t jessie-pgdg install -y $PG_PACKAGES --fix-missing --no-install-recommends > /dev/null && \
+    echo "Installing posgres packages: ${PG_PACKAGES}..." && apt-get -t stretch-pgdg install -y $PG_PACKAGES --fix-missing --no-install-recommends > /dev/null && \
     echo "Done." && rm -rf /var/lib/apt/lists/*
 
 ENV INSTALL_PATH /app

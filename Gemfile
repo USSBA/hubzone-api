@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails' # Use dotenv to load environment variables
 gem 'excon-rails'
 gem 'faraday', '~> 0.9.2' # simple http requests
+gem 'ffi', '~> 1.9.24' # CVS-2018-1000201
 gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'newrelic_rpm', '~> 4.5' # NewRelic Application Performance Monitoring
 gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
