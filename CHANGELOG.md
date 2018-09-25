@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.4] - 2018-09-28
+### shared-services-sprint-52
+### Changed
+  - HUB-1612
+    - Updated start-rails and entrypoint scripts docker directory
+
 ## [2.0.3] - 2018-09-14
 ### shared-services-sprint-51
 ### Changed

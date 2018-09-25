@@ -34,9 +34,9 @@ RUN bundle install --quiet
 COPY . .
 
 # Setup Entrypoint
-RUN cp ./docker/docker-entrypoint-*.sh ./docker/migrate-run.sh /usr/bin/ && chmod 555 /usr/bin/docker-entrypoint-*.sh && chmod 555 /usr/bin/migrate-run.sh
-ENTRYPOINT ["docker-entrypoint-aws.sh"]
-CMD ["migrate-run.sh"]
+RUN cp ./docker/entrypoint.sh ./docker/start-rails.sh /usr/bin/ && chmod 555 /usr/bin/entrypoint.sh && chmod 555 /usr/bin/start-rails.sh
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["start-rails.sh"]
 
 ENV RAILS_LOG_TO_STDOUT true
 EXPOSE 3001

@@ -18,6 +18,19 @@ services:
       - ./docker/hubzone-api.env
     ports:
       - '3001:3001'
-    entrypoint: ["/bin/bash", "-c"]
-    command:
-    - "migrate-run.sh"
+    command: >
+      /bin/bash -c "
+        function waitfor() {
+          while ! nc -z $$1 $$2;
+          do
+            echo waiting for $$1;
+            sleep 3;
+          done;
+          echo Connected to $$1!;
+        }
+
+        waitfor postgres 5432;
+
+        start-rails.sh;
+        echo rails process exited, stopping container.;
+      "
