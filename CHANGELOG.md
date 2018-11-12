@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.5] - 2018-11-23
+### shared-services-sprint-56
+### Changed
+  - HUB-1678
+    - Updated updated Gemfile/Gemfile.lock to use nokogiri >= 1.8.5, rack >= 2.0.6, and loofah >= 2.2.3.
+
 ## [2.0.4] - 2018-09-28
 ### shared-services-sprint-52
 ### Changed
