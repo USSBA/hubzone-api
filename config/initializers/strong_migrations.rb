@@ -1,2 +1,1 @@
-StrongMigrations.start_after = 20181110000000
-
+StrongMigrations.start_after = 20181123000000 if Rails.env.development?
