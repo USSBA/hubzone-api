@@ -24,3 +24,7 @@ coverage
 
 # Ignore the REVISION file.
 REVISION
+
+# Jetbrains project config files
+.idea/*
+
