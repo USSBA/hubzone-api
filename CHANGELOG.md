@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.0.6] - 2018-12-04
+### shared-services-sprint-57
+### Changed
+  - HUB-1500
+    - Added `strong_migrations` gem
 
 ## [2.0.5] - 2018-11-23
 ### shared-services-sprint-56
@@ -20,7 +24,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
   - HUB-1587
     - Updated ruby version in Dockerfiles
-    
+
 ## [2.0.2] - 2018-08-31
 ### hubzone-sprint-50
 ### Changed

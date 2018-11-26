@@ -84,9 +84,9 @@ class Version
   end
 
   private def config_version
-    { major:       MAP_CONFIG[:hubzone_api_version][:major],
-      minor:       MAP_CONFIG[:hubzone_api_version][:minor],
-      patch:       MAP_CONFIG[:hubzone_api_version][:patch],
-      pre_release: MAP_CONFIG[:hubzone_api_version][:pre_release] }
+    { major:       VERSION_CONFIG[:hubzone_api_version][:major],
+      minor:       VERSION_CONFIG[:hubzone_api_version][:minor],
+      patch:       VERSION_CONFIG[:hubzone_api_version][:patch],
+      pre_release: VERSION_CONFIG[:hubzone_api_version][:pre_release] }
   end
 end
