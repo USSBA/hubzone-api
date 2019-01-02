@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [2.0.7] - 2019-01-03
+## [2.0.7] - 2019-01-04
 ### shared-services-sprint-59
 ### Changed
   - HUB-1768
