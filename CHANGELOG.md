@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.7] - 2019-01-04
+### shared-services-sprint-59
+### Changed
+  - HUB-1768
+    - Updated Rails to address security vulnerabilities
+
 ## [2.0.6] - 2018-12-04
 ### shared-services-sprint-57
 ### Changed
