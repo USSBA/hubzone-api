@@ -58,7 +58,6 @@ class Version
     desc = @git_description
     matches = desc_regex.match desc
     return version_components if matches.nil?
-
     tag = matches[1]
     delta = matches[2]
     commit_sha = matches[3]
@@ -85,9 +84,9 @@ class Version
   end
 
   private def config_version
-    { major:       MAP_CONFIG[:hubzone_api_version][:major],
-      minor:       MAP_CONFIG[:hubzone_api_version][:minor],
-      patch:       MAP_CONFIG[:hubzone_api_version][:patch],
-      pre_release: MAP_CONFIG[:hubzone_api_version][:pre_release] }
+    { major:       VERSION_CONFIG[:hubzone_api_version][:major],
+      minor:       VERSION_CONFIG[:hubzone_api_version][:minor],
+      patch:       VERSION_CONFIG[:hubzone_api_version][:patch],
+      pre_release: VERSION_CONFIG[:hubzone_api_version][:pre_release] }
   end
 end

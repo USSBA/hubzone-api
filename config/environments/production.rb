@@ -36,10 +36,9 @@ Rails.application.configure do
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :info
-  config.logger = Logger.new(File.join('/', 'var', 'log', 'hubzone-api', "#{Rails.env}.log"))
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -71,6 +70,8 @@ Rails.application.configure do
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
+  else
+    config.logger = Logger.new(File.join('/', 'var', 'log', 'hubzone-api', "#{Rails.env}.log"))
   end
 
   # Do not dump schema after migrations.

@@ -3,11 +3,13 @@ source 'https://rubygems.org'
 gem 'dotenv-rails' # Use dotenv to load environment variables
 gem 'excon-rails'
 gem 'faraday', '~> 0.9.2' # simple http requests
+gem 'ffi', '~> 1.9.24' # CVS-2018-1000201
 gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'newrelic_rpm', '~> 4.5' # NewRelic Application Performance Monitoring
 gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
 gem 'puma', '~> 3.0' # Use Puma as the app server
-gem 'rails', '~> 5.1' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.2' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'strong_migrations', '~> 0.3' # Catch unsafe migrations at dev time
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -23,7 +25,7 @@ group :development, :test do
   gem 'byebug', platform: :mri # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rb-readline'
   gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', require: false
+  gem 'rubocop', '~> 0.52.0', require: false
   gem 'rubocop-rspec'
   gem 'simplecov', require: false # determine code coverage of tests
 end

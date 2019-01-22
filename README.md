@@ -19,8 +19,8 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
 ### Requirements:
 * RVM
   - http://rvm.io/
-* Ruby 2.3.3
-  - `rvm install 2.3.3`
+* Ruby 2.5.1
+  - `rvm install 2.5.1`
 * Bundler
   - `rvm @global do gem install bundler`
   - Tested with version 1.13.6 or later

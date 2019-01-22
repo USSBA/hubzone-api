@@ -9,13 +9,14 @@ workflows:
     jobs:
       - rubocop
       - rspec
+      - rspec-docker
       - poirot
       - brakeman
 jobs:
   rubocop:
     docker:
       # specify the version you desire here
-      - image: sbagov/cc-sba-hz-api:1.1
+      - image: ussba/cc-ruby:2.5
     working_directory: ~/repo
     steps:
       - checkout
@@ -40,7 +41,7 @@ jobs:
   rspec:
     docker:
       # specify the version you desire here
-       - image: sbagov/cc-sba-hz-api:1.1
+       - image: ussba/cc-ruby:2.5
          environment:
            HUBZONE_API_DB_USER: postgres
            HUBZONE_API_DB_PASSWORD: postgres
@@ -91,28 +92,44 @@ jobs:
                               spec
 
       # collect reports
+      
       - store_test_results:
           path: /tmp/test-results
       - store_artifacts:
           path: /tmp/test-results
           destination: test-results
+  rspec-docker:
+    docker:
+    - image: ussba/cc-docker-git-aws:latest
+    steps:
+    - checkout
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - run:
+        name: Build rspec in Docker container
+        command: |
+          git describe --long > REVISION || touch REVISION
+          cat REVISION
+          docker-compose -f docker/docker-compose-test.yml build rspec
+    - run:
+        name: Run rspec in Docker container
+        command: |
+          docker-compose -f docker/docker-compose-test.yml run rspec
   poirot:
     docker:
       # specify the version you desire here
-       - image: sbagov/cc-sba-hz-api:1.1
+       - image: ussba/cc-python:3
     working_directory: ~/repo
     steps:
       - checkout
-
-      # run tests!
       - run:
           name: run poirot
           command: |
-            poirot --patterns https://raw.githubusercontent.com/USSBA/hubzone-webmap/develop/hubzone-poirot-patterns.txt --revlist="develop^..HEAD" --verbose
+            poirot --patterns https://raw.githubusercontent.com/USSBA/hubzone-api/develop/poirot-patterns.txt --revlist="develop^..HEAD" --verbose
   brakeman:
     docker:
       # specify the version you desire here
-      - image: sbagov/cc-sba-hz-api:1.1
+      - image: ussba/cc-ruby:2.5
     working_directory: ~/repo
     steps:
       - checkout

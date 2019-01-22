@@ -1,7 +1,52 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.0.7] - 2019-01-04
+### shared-services-sprint-59
+### Changed
+  - HUB-1768
+    - Updated Rails to address security vulnerabilities
+
+## [2.0.6] - 2018-12-04
+### shared-services-sprint-57
+### Changed
+  - HUB-1500
+    - Added `strong_migrations` gem
+
+## [2.0.5] - 2018-11-23
+### shared-services-sprint-56
+### Changed
+  - HUB-1678
+    - Updated updated Gemfile/Gemfile.lock to use nokogiri >= 1.8.5, rack >= 2.0.6, and loofah >= 2.2.3.
+
+## [2.0.4] - 2018-09-28
+### shared-services-sprint-52
+### Changed
+  - HUB-1612
+    - Updated start-rails and entrypoint scripts docker directory
+
+## [2.0.3] - 2018-09-14
+### shared-services-sprint-51
+### Changed
+  - HUB-1587
+    - Updated ruby version in Dockerfiles
+
+## [2.0.2] - 2018-08-31
+### hubzone-sprint-50
+### Changed
+  - HUB-1467
+    - Updated to ruby 2.5 and rails 5.2
+
+## [2.0.1] - 2018-07-06
+### shared-services-sprint-46
+### Changed
+  - HUB-1416
+    - Updated sprockets gem
+
+## [2.0.0]
+  - HUB-1171
+    - Fixing migration to not die on concurrent migration with a parallel container
+    - v2.0.0 bump
 
 ## [1.9.1] - 2018-06-02
 ### Added

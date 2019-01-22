@@ -42,8 +42,5 @@ Style/NumericLiterals:
 Style/SingleLineMethods:
   Enabled: false
 
-Layout/SpaceInsideBrackets:
-  Enabled: false
-
 Style/StringLiterals:
   Enabled: false

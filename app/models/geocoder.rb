@@ -12,4 +12,5 @@ class Geocoder
       MAP_CONFIG[:google_api_key] +
       '&country=US&country=UM'
   end
+  # rubocop:enable Lint/UriEscapeUnescape
 end

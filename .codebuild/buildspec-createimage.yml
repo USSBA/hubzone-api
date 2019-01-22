@@ -3,9 +3,15 @@ phases:
   install:
     commands:
     - apt update
-    - apt install -y ssh jq
-    - mkdir ~/.ssh
-    - chmod 700 ~/.ssh
+    - apt install -y jq
+    - echo "Updating docker-compose"
+    - curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-Linux-x86_64 > /usr/local/bin/docker-compose
+    - chmod +x /usr/local/bin/docker-compose
+    - echo "Creating tagpush script"
+    - echo '#!/bin/bash -ex'       > /usr/local/bin/tagpush
+    - echo 'docker tag "$1" "$2"' >> /usr/local/bin/tagpush
+    - echo 'docker push "$2"'     >> /usr/local/bin/tagpush
+    - chmod +x /usr/local/bin/tagpush
   pre_build:
     commands:
     - env
@@ -19,7 +25,7 @@ phases:
     - echo "Testing docker login..."
     - ${dockerlogin}
     - echo "Fetching latest base-image..."
-    - docker pull $(grep FROM Dockerfile | sed 's/.*FROM[ ]\+//')
+    - grep "^FROM" Dockerfile | sed 's/^FROM[ ]\+\([^ ]\+\)\( .*\)\?/\1/' | xargs -n 1 docker pull
   build:
     commands:
       - echo "Build started on `date` for GIT_COMMIT=${GIT_COMMIT} and GIT_BRANCHTAG=${GIT_BRANCHTAG}"
@@ -38,24 +44,17 @@ phases:
       - if [ "$skip_build" = "false" ]; then docker tag hubzone/hubzone-api:latest "${AMAZON_ECR_REPO}:${GIT_COMMIT}"; fi
       - >
         /bin/bash -ce 'if [ "$contains_underscore" = "true" ] && [ "$skip_build" = "false" ]; then
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+          tagpush "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
+          tagpush "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_BRANCHTAG}";
         elif [ "$result" = "true" ] && [ "$skip_build" = "false" ]; then
           VERSION_MAJOR=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f1);
           VERSION_MINOR=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f2);
           VERSION_PATCH=$(echo ${GIT_BRANCHTAG} | cut -s -d. -f3-);
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}";
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}";
-          docker tag "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}";
-          docker push "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
+          tagpush "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:latest";
+          tagpush "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${GIT_COMMIT}";
+          tagpush "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}";
+          tagpush "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}";
+          tagpush "${AMAZON_ECR_REPO}:${GIT_COMMIT}" "${AMAZON_ECR_ENDPOINT}/${AMAZON_ECR_REPO}:${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}";
         else
           echo "This deploy task should only run when GIT_BRANCHTAG, currently [${GIT_BRANCHTAG}], begins with v[0-9].  Refusing to push to ECR, but not a failure.";
         fi'
