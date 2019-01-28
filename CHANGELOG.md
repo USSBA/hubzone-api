@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.0.8] - 2019-02-01
+### shared-services-sprint-61
+### Changed
+  - HUB-1796
+    - ignore blank `q` in searches
+
 ## [2.0.7] - 2019-01-04
 ### shared-services-sprint-59
 ### Changed
