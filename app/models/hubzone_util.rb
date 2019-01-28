@@ -2,9 +2,9 @@
 class HubzoneUtil
   class << self
     def search(params)
-      results = if !params[:q].nil?
+      results = if params[:q].present?
                   search_by_query params[:q]
-                elsif !params[:latlng].nil?
+                elsif params[:latlng].present?
                   search_by_latlng params[:latlng]
                 else
                   build_response("INVALID_REQUEST")

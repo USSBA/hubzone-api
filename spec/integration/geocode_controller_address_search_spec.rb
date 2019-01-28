@@ -367,6 +367,35 @@ RSpec.describe GeocodeController do
         end
       end
     end
+
+    # rubocop:disable RSpec/NestedGroups
+    context 'when given a valid latlng and a blank q' do
+      let(:tquery) { test_queries[:qct] }
+      let(:latlng) { '39.2888915,-76.6069962' }
+      let(:qquery) { 'reset this in context' }
+
+      before do
+        latlng = "#{tquery[:lat]},#{tquery[:lng]}"
+        Excon.stub({}, body: tquery[:response].to_json)
+        get search_url, params: {latlng: latlng, q: qquery}
+      end
+
+      context 'with q == nil' do
+        let(:qquery) { nil }
+
+        it 'will succeed' do
+          expect(response.status).to eql(tquery[:http_status])
+        end
+      end
+      context 'with q == ""' do
+        let(:qquery) { "" }
+
+        it 'will succeed' do
+          expect(response.status).to eql(tquery[:http_status])
+        end
+      end
+    end
+    # rubocop:enable RSpec/NestedGroups
   end
 end
 # rubocop:enable Metrics/BlockLength
