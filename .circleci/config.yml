@@ -92,7 +92,7 @@ jobs:
                               spec
 
       # collect reports
-      
+
       - store_test_results:
           path: /tmp/test-results
       - store_artifacts:
@@ -151,5 +151,5 @@ jobs:
           name: run brakeman
           parallel: true
           command: |
-            gem install --no-rdoc --no-ri brakeman
+            gem install --no-document
             brakeman --exit-on-warn .
