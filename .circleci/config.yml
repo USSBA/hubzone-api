@@ -7,7 +7,7 @@ workflows:
   version: 2
   test:
     jobs:
-      - rubocop
+      # - rubocop
       - rspec
       - rspec-docker
       - poirot
