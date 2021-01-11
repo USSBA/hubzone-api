@@ -45,7 +45,7 @@ class VerifiedHubzone
   end
 
   def qualified_hubzones
-    %w[qct_e qnmc_a qnmc_b qnmc_c qnmc_ab qnmc_ac qnmc_bc qnmc_abc]
+    %w[qct_e qnmc_a qnmc_b qnmc_c qnmc_ab qnmc_ac qnmc_bc qnmc_abc mvw_gov_area_map]
   end
 
   def redesignated_hubzones
@@ -55,6 +55,7 @@ class VerifiedHubzone
   def qda_hubzones
     %w[qct_qda qnmc_qda]
   end
+
 
   # checks if there are qualified hubzones present in the hash
   def contains_qualified_hubzones
