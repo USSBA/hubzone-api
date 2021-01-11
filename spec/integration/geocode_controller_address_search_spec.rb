@@ -28,9 +28,12 @@ required_fields = {
   brac: %w[brac_sba_name fac_type effective closure],
   qct_brac: %w[brac_sba_name fac_type effective tract_fips county state closure],
   qnmc_brac: %w[brac_sba_name fac_type effective county_fips county state closure],
+  
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
-  non_qnmc: %w[county_fips county state]
+  non_qnmc: %w[county_fips county state],
+  mvw_gov_area_map: %w[state_fip county_fip tract_code date_approve] 
+  
 }
 
 test_queries = {

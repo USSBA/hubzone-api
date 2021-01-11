@@ -1,0 +1,249 @@
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/stack.rb:37: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/static.rb:111: warning: The called method `initialize' is defined here
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/activerecord-5.2.4.1/lib/active_record/type.rb:27: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/activerecord-5.2.4.1/lib/active_record/type/adapter_specific_registry.rb:9: warning: The called method `add_modifier' is defined here
+=> Booting Puma
+=> Rails 5.2.4.1 application starting in development 
+=> Run `rails server -h` for more startup options
+Puma starting in single mode...
+* Version 3.12.2 (ruby 2.7.0-p0), codename: Llamas in Pajamas
+* Min threads: 5, max threads: 5
+* Environment: development
+* Listening on tcp://localhost:3001
+Use Ctrl-C to stop
+Started GET "/api/search?latlng=42.661948%2C-100.754793&query_date=2020-09-29" for 127.0.0.1 at 2020-09-29 08:10:15 -0400
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/activemodel-5.2.4.1/lib/active_model/type/integer.rb:13: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/activemodel-5.2.4.1/lib/active_model/type/value.rb:8: warning: The called method `initialize' is defined here
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/activerecord-5.2.4.1/lib/active_record/connection_adapters/postgresql/oid/specialized_string.rb:12: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/activemodel-5.2.4.1/lib/active_model/type/value.rb:8: warning: The called method `initialize' is defined here
+  [1m[35m (71.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Api::V1::GeocodeController#search as JSON
+  Parameters: {"latlng"=>"42.661948,-100.754793", "query_date"=>"2020-09-29"}
+  [1m[35m (92.0ms)[0m  [1m[34m      SELECT *
+        FROM brac
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (0.9ms)[0m  [1m[34m      SELECT *
+        FROM brac
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (64.3ms)[0m  [1m[34m      SELECT *
+        FROM qct
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (1.8ms)[0m  [1m[34m      SELECT *
+        FROM qct_brac
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (23.8ms)[0m  [1m[34m      SELECT *
+        FROM qnmc
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (21.6ms)[0m  [1m[34m      SELECT *
+        FROM qnmc_brac
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (2.3ms)[0m  [1m[34m      SELECT *
+        FROM qnmc_qda
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (2.6ms)[0m  [1m[34m      SELECT *
+        FROM qct_qda
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (4.1ms)[0m  [1m[34m      SELECT *
+        FROM indian_lands
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (36.5ms)[0m  [1m[34m      SELECT *
+        FROM likely_qda
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+  [1m[35m (78.6ms)[0m  [1m[34m      SELECT *
+        FROM congressional_districts
+       WHERE ST_Intersects(geom,
+         ST_GeomFromText('POINT(-100.754793 42.661948)',4326));
+[0m
+Completed 200 OK in 430ms (Views: 0.3ms | ActiveRecord: 328.5ms)
+
+
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2020-09-29 08:12:22 -0400 ===
+- Goodbye!
+Exiting
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/stack.rb:37: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/static.rb:111: warning: The called method `initialize' is defined here
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+=> Booting Puma
+=> Rails 5.2.4.1 application starting in development 
+=> Run `rails server -h` for more startup options
+Puma starting in single mode...
+* Version 3.12.2 (ruby 2.7.0-p0), codename: Llamas in Pajamas
+* Min threads: 5, max threads: 5
+* Environment: development
+* Listening on tcp://localhost:3001
+Use Ctrl-C to stop
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2020-09-29 08:13:55 -0400 ===
+- Goodbye!
+Exiting
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/stack.rb:37: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/static.rb:111: warning: The called method `initialize' is defined here
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+=> Booting Puma
+=> Rails 5.2.4.1 application starting in development 
+=> Run `rails server -h` for more startup options
+Puma starting in single mode...
+* Version 3.12.2 (ruby 2.7.0-p0), codename: Llamas in Pajamas
+* Min threads: 5, max threads: 5
+* Environment: development
+* Listening on tcp://localhost:3001
+Use Ctrl-C to stop
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2020-09-29 08:15:49 -0400 ===
+- Goodbye!
+Exiting
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/stack.rb:37: warning: Using the last argument as keyword parameters is deprecated; maybe ** should be added to the call
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/actionpack-5.2.4.1/lib/action_dispatch/middleware/static.rb:111: warning: The called method `initialize' is defined here
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/rb-inotify-0.10.1/lib/rb-inotify/watcher.rb:66: warning: rb_safe_level will be removed in Ruby 3.0
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+A server is already running. Check /media/scotty/c84b6d57-460f-4ab5-a1e4-25e4e122f0141/SBA/github/hubzone-api/tmp/pids/server.pid.
+=> Booting Puma
+=> Rails 5.2.4.1 application starting in development 
+=> Run `rails server -h` for more startup options
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+Warning: the running version of Bundler (2.1.2) is older than the version that created the lockfile (2.1.4). We suggest you to upgrade to the version that created the lockfile by running `gem install bundler:2.1.4`.
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+/home/scotty/.rvm/gems/ruby-2.7.0/gems/faraday-0.9.2/lib/faraday/options.rb:153: warning: Capturing the given block using Proc.new is deprecated; use `&block` instead
+A server is already running. Check /media/scotty/c84b6d57-460f-4ab5-a1e4-25e4e122f0141/SBA/github/hubzone-api/tmp/pids/server.pid.
+=> Booting Puma
+=> Rails 5.2.4.1 application starting in development 
+=> Run `rails server -h` for more startup options
