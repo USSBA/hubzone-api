@@ -19,8 +19,8 @@ module AssertionHelper
     <<-SQL
       SELECT *
         FROM #{type}
-       WHERE ST_Intersects(geom,
-         ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
+        WHERE ST_Intersects(ST_SetSRID(geom, 4326),
+          ST_GeomFromText('POINT(#{location['lng']} #{location['lat']})',4326));
     SQL
   end
 
