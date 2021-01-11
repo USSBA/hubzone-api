@@ -217,8 +217,8 @@ test_queries = {
 test_likely_qda_queries = {
   likely_qda: {
     context: 'a likely_qda in florida',
-    query: 'palm beach, fl',
-    latlng: '26.705621, -80.036430',
+    query: 'broward, fl',
+    latlng: '26.118002,-80.139390',
     http_status: 200,
     results_address: 'Palm Beach, FL, USA',
     designations: nil,
