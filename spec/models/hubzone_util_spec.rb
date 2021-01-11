@@ -26,7 +26,7 @@ required_fields = {
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
   non_qnmc: %w[county_fips county state],
-  likely_qda: %w[incident_description qda_declaration],
+  #likely_qda: %w[incident_description qda_declaration],
   congressional_district: %w[state namelsad cdsessn]
 }
 
@@ -214,6 +214,7 @@ test_queries = {
 }
 
 # likely qda mock
+'''
 test_likely_qda_queries = {
   likely_qda: {
     context: 'a likely_qda in florida',
@@ -221,10 +222,11 @@ test_likely_qda_queries = {
     latlng: '26.118002,-80.139390',
     http_status: 200,
     results_address: 'Fort Lauderdale, FL, USA',
-    designations: %w[likely_qda],
+    designations: nil,
     until_date: nil
   }
 }
+'''
 
 # mocks for other information layers
 test_other_information_queries = {
