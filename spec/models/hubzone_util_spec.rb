@@ -214,19 +214,19 @@ test_queries = {
 }
 
 # likely qda mock
-'''
-test_likely_qda_queries = {
-  likely_qda: {
-    context: 'a likely_qda in florida',
-    query: 'fort lauderdale, fl',
-    latlng: '26.118002,-80.139390',
-    http_status: 200,
-    results_address: 'Fort Lauderdale, FL, USA',
-    designations: nil,
-    until_date: nil
-  }
-}
-'''
+
+#test_likely_qda_queries = {
+#  likely_qda: {
+#    context: 'a likely_qda in florida',
+#    query: 'fort lauderdale, fl',
+#    latlng: '26.118002,-80.139390',
+#    http_status: 200,
+#    results_address: 'Fort Lauderdale, FL, USA',
+#    designations: nil,
+#    until_date: nil
+#  }
+#}
+
 
 # mocks for other information layers
 test_other_information_queries = {
