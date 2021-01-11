@@ -26,7 +26,7 @@ required_fields = {
   qct_qda: %w[incident_description qda_declaration qda_designation qda_publish tract_fips county state],
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
   non_qnmc: %w[county_fips county state],
-  likely_qda: %w[incident_description declaration_date],
+  likely_qda: %w[incident_description qda_declaration],
   congressional_district: %w[state namelsad cdsessn]
 }
 
@@ -221,7 +221,7 @@ test_likely_qda_queries = {
     latlng: '26.118002,-80.139390',
     http_status: 200,
     results_address: 'Fort Lauderdale, FL, USA',
-    designations: nil,
+    designations: %w[likely_qda],
     until_date: nil
   }
 }
