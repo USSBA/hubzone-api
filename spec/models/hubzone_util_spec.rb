@@ -27,8 +27,7 @@ required_fields = {
   qnmc_qda: %w[incident_description qda_declaration qda_designation qda_publish county_fips county state],
   non_qnmc: %w[county_fips county state],
   likely_qda: %w[incident_description qda_declaration],
-  congressional_district: %w[state namelsad cdsessn],
-  mvw_gov_area_map: %w[state_fip county_fip tract_code date_approve]
+  congressional_district: %w[state namelsad cdsessn]
 }
 
 test_queries = {
