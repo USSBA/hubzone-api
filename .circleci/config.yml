@@ -10,7 +10,6 @@ workflows:
       # - rubocop
       - rspec
       - rspec-docker
-      - poirot
       - brakeman
 jobs:
   rubocop:
@@ -115,17 +114,7 @@ jobs:
         name: Run rspec in Docker container
         command: |
           docker-compose -f docker/docker-compose-test.yml run rspec
-  poirot:
-    docker:
-      # specify the version you desire here
-       - image: ussba/cc-python:3
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: run poirot
-          command: |
-            poirot --patterns https://raw.githubusercontent.com/USSBA/hubzone-api/develop/poirot-patterns.txt --revlist="develop^..HEAD" --verbose
+
   brakeman:
     docker:
       # specify the version you desire here
