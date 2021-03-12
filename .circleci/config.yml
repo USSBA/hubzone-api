@@ -2,104 +2,76 @@
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@1.1.2
+
+executors:
+  ruby:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+        environment:
+          RAILS_ENV: test
+  ruby-with-postgres:
+    docker:
+      - image: circleci/ruby:2.5.1-node-browsers
+        environment:
+          HUBZONE_API_DB_USER: postgres
+          HUBZONE_API_DB_PASSWORD: postgres
+          RAILS_ENV: test
+      - image: circleci/postgres:9.6-alpine-postgis
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+commands:
+  install-system-dependencies:
+    steps:
+      - run:
+          name: Install system dependencies
+          command: |
+            sudo apt update
+            sudo apt install -y \
+              postgresql-client-9.6
+  install-and-cache-gems:
+    steps:
+      - checkout
+      - ruby/install-deps:
+          key: gems-v1
+      #- run: sudo npm install -g istanbul
+  migrate-db:
+    steps:
+      - run:
+          name: migrate-db
+          command: |
+            bundle exec rake db:create db:migrate
 workflows:
   version: 2
   test:
     jobs:
-      # - rubocop
+      - rubocop
       - rspec
       - rspec-docker
       - brakeman
 jobs:
   rubocop:
-    docker:
-      # specify the version you desire here
-      - image: ussba/cc-ruby:2.5
-    working_directory: ~/repo
+    executor: ruby
     steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: run rubocop
-          command: |
-            bundle exec rubocop .
+      - install-system-dependencies
+      - install-and-cache-gems
+      - ruby/rubocop-check
   rspec:
-    docker:
-      # specify the version you desire here
-       - image: ussba/cc-ruby:2.5
-         environment:
-           HUBZONE_API_DB_USER: postgres
-           HUBZONE_API_DB_PASSWORD: postgres
-           RAILS_ENV: test
-           #MSG_API_DB_HOST=postgres
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-       - image: circleci/postgres:9.6-alpine-postgis
-         environment:
-           POSTGRES_USER: postgres
-           POSTGRES_PASSWORD: postgres
-
-    working_directory: ~/repo
-
+    executor: ruby-with-postgres
     steps:
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
+      - install-system-dependencies
+      - install-and-cache-gems
+      - migrate-db
       - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-
-      # run tests!
-      - run:
-          name: run tests
-          command: |
-            mkdir /tmp/test-results
-            #TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
-
-            bundle exec rake db:create db:migrate
-            bundle exec rspec --format progress \
-                              --out /tmp/test-results/rspec.xml \
-                              --format progress \
-                              spec
-
-      # collect reports
-
-      - store_test_results:
-          path: /tmp/test-results
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
+          name: Run rspec
+          command: bundle exec rspec --format progress
   rspec-docker:
-    docker:
-    - image: ussba/cc-docker-git-aws:latest
+    executor: ruby
     steps:
     - checkout
     - setup_remote_docker:
@@ -116,28 +88,12 @@ jobs:
           docker-compose -f docker/docker-compose-test.yml run rspec
 
   brakeman:
-    docker:
-      # specify the version you desire here
-      - image: ussba/cc-ruby:2.5
-    working_directory: ~/repo
+    executor: ruby
     steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+      - install-system-dependencies
+      - install-and-cache-gems
       - run:
-          name: install dependencies
-          command: |
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: run brakeman
+          name: brakeman
           parallel: true
           command: |
             gem install --no-document brakeman
