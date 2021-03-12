@@ -227,7 +227,6 @@ test_queries = {
 #  }
 #}
 
-
 # mocks for other information layers
 test_other_information_queries = {
   congressional_district: {
@@ -281,32 +280,32 @@ RSpec.describe HubzoneUtil do
   end
 
   # response in an area with likely qda has the correct other_information
-#  test_likely_qda_queries.map do |_likely, tquery|
-#    context 'Given a address in ' + tquery[:context] do
-#      let!(:params) { { q: tquery[:query] } }
-#      let(:response) { described_class.search params }
+  #  test_likely_qda_queries.map do |_likely, tquery|
+  #    context 'Given a address in ' + tquery[:context] do
+  #      let!(:params) { { q: tquery[:query] } }
+  #      let(:response) { described_class.search params }
 
-#      before do
-#        lat = tquery[:latlng].split(',')[0].to_f
-#        lng = tquery[:latlng].split(',')[1].to_f
-#        geocode_response = {"results" => [{"formatted_address" => tquery[:results_address], "geometry" => {"location" => {"lat" => lat, "lng" => lng}}}], "status" => "OK"}
+  #      before do
+  #        lat = tquery[:latlng].split(',')[0].to_f
+  #        lng = tquery[:latlng].split(',')[1].to_f
+  #        geocode_response = {"results" => [{"formatted_address" => tquery[:results_address], "geometry" => {"location" => {"lat" => lat, "lng" => lng}}}], "status" => "OK"}
 
-#        Excon.stub({}, status: 200, body: geocode_response.to_json)
-#      end
+  #        Excon.stub({}, status: 200, body: geocode_response.to_json)
+  #      end
 
-#      it 'will include the other_information content' do
-#        expect(response[:other_information][:alerts][:likely_qda_designations]).not_to be_nil
-#      end
+  #      it 'will include the other_information content' do
+  #        expect(response[:other_information][:alerts][:likely_qda_designations]).not_to be_nil
+  #      end
 
-#      it 'will contain the correct fields' do
-#        likely_qda_designations = response[:other_information][:alerts][:likely_qda_designations]
-#        likely_qda_designations.each do |qda|
-#          all_fields = required_fields[:likely_qda].map { |req| qda.keys.include?(req) }
-#          expect(all_fields.all?).to be(true)
-#        end
-#      end
-#    end
-#  end
+  #      it 'will contain the correct fields' do
+  #        likely_qda_designations = response[:other_information][:alerts][:likely_qda_designations]
+  #        likely_qda_designations.each do |qda|
+  #          all_fields = required_fields[:likely_qda].map { |req| qda.keys.include?(req) }
+  #          expect(all_fields.all?).to be(true)
+  #        end
+  #      end
+  #    end
+  #  end
 
   # test the response body of a congressional districts request
   test_other_information_queries.map do |other_type, tquery|
