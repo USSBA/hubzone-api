@@ -85,7 +85,7 @@ class HubzoneUtil
       location = results['geometry']['location']
 
       # maybe we need another word other than assertion
-      %w[Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands MvwGovAreaMap].each do |assertion_type|
+      %w[Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands MvwGovAreaMap MvwGovAreaMapCounty].each do |assertion_type|
         hz_assertion = "#{assertion_type}Assertion".constantize
         results[:hubzone] += hz_assertion.assertion location
       end
