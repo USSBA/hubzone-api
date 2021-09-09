@@ -21,6 +21,7 @@ WORKDIR $INSTALL_PATH
 RUN mkdir -p tmp/pids
 
 # Cache the bundle install
+RUN gem install 'bundler:~>2.0'
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
 RUN bundle install --quiet
