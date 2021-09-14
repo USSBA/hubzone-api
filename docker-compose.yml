@@ -2,7 +2,6 @@ version: '3.3'
 services:
 
   postgres:
-#    image: mdillon/postgis:9.6
     image: postgis/postgis:12-master
     environment:
       POSTGRES_USER: postgres
@@ -12,11 +11,10 @@ services:
   hubzone-api:
     build:
       context: .
-#      cache_from:
-#      - hubzone/hubzone-api:latest
+      #cache_from:
+      #- hubzone/hubzone-api:latest
     image: hubzone/hubzone-api:latest
     environment:
-#      PORT: 3001
       RAILS_ENV: developmentdocker
       HUBZONE_API_DB_USER: postgres
       HUBZONE_API_DB_PASSWORD: postgres
@@ -24,8 +22,11 @@ services:
       HUBZONE_API_DB_NAME: hzgeo
       SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
       HUBZONE_GOOGLE_API_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-#      RAILS_LOG_TO_STDOUT: "true"
-#      RAILS_MAX_THREADS: 5
+      # OVERRIDE VARS
+      # ---------------------------------------------
+      # PORT: 3001
+      # RAILS_LOG_TO_STDOUT: "true"
+      # RAILS_MAX_THREADS: 5
     ports:
       - 3001:3001
     command: >

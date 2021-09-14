@@ -94,20 +94,28 @@ commands:
     - deploy:
         name: docker image push
         command: |
-          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-          docker image tag \
-            "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}" \
-            "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
-          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
-          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}"
+          image-push() {
+            local tag=$1
+            local repo="$AWS_ECR_ENDPOINT/<< parameters.image_name >>:"
+            docker image push "${repo}${tag}"
+            echo "Successfully pushed image: ${repo}${tag}"
+          }
+          image-tag-and-push() {
+            local tag_a=$1
+            local tag_b=$2
+            local repo="${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:"
+            docker image tag "${repo}${tag_a}" "${repo}${tag_b}"
+            image-push $tag_b
+          }
+          image-push $CIRCLE_SHA1
+          image-tag-and-push $CIRCLE_SHA1 ${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}
 
-  build-containers:
+  build-image:
     steps:
     - ecr-image-build:
         image_name: hubzone/hubzone-api
 
-  push-containers:
+  push-image:
     steps:
     - ecr-image-push:
         image_name: hubzone/hubzone-api
@@ -138,6 +146,64 @@ commands:
         name: migrate-db
         command: |
           bundle exec rake db:create db:migrate
+
+  terraform-init:
+    parameters:
+      folder:
+        type: string
+        description: A relative path from the project root in which to perform terrafrom init
+    steps:
+    - deploy:
+        name: Terraform Init
+        command: |
+          throw_error() {
+            echo $1
+            return 1
+          }
+          cd << parameters.folder >> || throw_error  "FATAL: command 'cd << parameters.folder >>' has failed"
+          terraform -version || throw_error "FATAL: command 'terraform -version' has failed"
+          terraform init -input=false || throw_error "FATAL: command 'terraform init -input-false' has failed"
+          echo "image_tag = \"$CIRCLE_SHA1\"" >> ./build.auto.tfvars
+
+  terraform-plan:
+    parameters:
+      folder:
+        type: string
+        description: A relative path from the project root in which to perform terrafrom plan
+      workspace:
+        type: string
+        description: A workspace in which to perform terraform plan
+    steps:
+    - deploy:
+        name: Terraform Plan
+        command: |
+          throw_error() {
+            echo $1
+            return 1
+          }
+          cd << parameters.folder >> || throw_error "FATAL: command 'cd << parameters.folder >>' has failed"
+          terraform workspace select << parameters.workspace >> || throw_error "FATAL: command 'terraform workspace select << parameters.workspace >>' has failed"
+          terraform plan -out=<< parameters.workspace >>.tfplan -input=false || throw_error "FATAL: command 'terraform plan -out=<< parameters.workspace >>.tfplan -input=false' has failed"
+
+  terraform-apply:
+    parameters:
+      folder:
+        type: string
+        description: A relative path from the project root in which to perform terrafrom apply
+      workspace:
+        type: string
+        description: A workspace in which to perform terraform apply
+    steps:
+    - deploy:
+        name: Terraform Apply
+        command: |
+          throw_error() {
+            echo $1
+            return 1
+          }
+          cd << parameters.folder >> || ( echo "directory << parameters.folder >> does not exist"; exit 1 )
+          terraform workspace select << parameters.workspace >> || ( echo "terraform workspace select << parameters.workspace >> has failed"; exit 1 )
+          terraform apply -input=false << parameters.workspace >>.tfplan || ( echo "terraform apply has failed"; exit 1 )
 
 jobs:
 
@@ -190,28 +256,62 @@ jobs:
   #          gem install --no-document brakeman
   #          brakeman --exit-on-warn .
 
-  docker-build-and-push:
+  build-containers:
     executor: base
     steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - aws-init
+      - ecr-login
+      - build-image
+      - push-image
+
+  deploy-service:
+    executor: base
+    parameters:
+      workspace:
+        type: string
+        description: A terraform workspace name
+    steps:
     - checkout
-    - setup_remote_docker:
-        docker_layer_caching: true
     - aws-init
-    - ecr-login
-    - ecr-image-build:
-        image_name: hubzone/hubzone-api
-    - ecr-image-push:
-        image_name: hubzone/hubzone-api
+    - terraform/install:
+        terraform_version: 1.0.0
+    - terraform-init:
+        folder: terraform
+    - terraform-plan:
+        folder: terraform
+        workspace: << parameters.workspace >>
+    - terraform-apply:
+        folder: terraform
+        workspace: << parameters.workspace >>
 
 workflows:
   version: 2
-  activity:
+  test:
     jobs:
     - rubocop
     - rspec
     - rspec-docker
-    - docker-build-and-push:
+
+  publish:
+    jobs:
+    - build-containers:
         context: certify-lower
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only:
+            - build-lower
+            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+    - deploy-service:
+        name: deploy-demo
+        context: certify-lower
+        workspace: demo
+        requires:
+        - build-containers
         filters:
           branches:
             ignore: /.*/
