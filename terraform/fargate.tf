@@ -49,7 +49,7 @@ module "api" {
   # networking
   service_fqdn       = local.service_fqdn
   hosted_zone_id     = data.aws_route53_zone.selected.zone_id
-  public_subnet_ids  = data.aws_subnet_ids.public.ids
+  #public_subnet_ids  = data.aws_subnet_ids.public.ids
   private_subnet_ids = data.aws_subnet_ids.private.ids
   vpc_id             = data.aws_vpc.selected.id
   certificate_arn    = data.aws_acm_certificate.selected.arn
