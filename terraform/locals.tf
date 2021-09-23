@@ -9,8 +9,9 @@ locals {
   }
   all = {
     default = {
-      service_name      = "hubzone-api"
-      ecr_name          = "hubzone/hubzone-api"
+      service_name     = "hubzone-api"
+      ecr_name         = "hubzone/hubzone-api"
+      public_subdomain = "maps"
 
       rails_port        = 3001
       task_cpu_rails    = "256"
@@ -20,14 +21,15 @@ locals {
       desired_capacity_rails = 1
     }
     demo = {
-      domain_name = "demo.sba-one.net"
-      cert_domain = "sba-one.net"
+      fqdn_base        = "demo.sba-one.net"
+      cert_domain      = "sba-one.net"
+      public_subdomain = "hubzone"
     }
     stg = {
-      domain_name = "stg.certify.sba.gov"
+      fqdn_base = "stg.certify.sba.gov"
     }
     prod = {
-      domain_name = "certify.sba.gov"
+      fqdn_base = "certify.sba.gov"
       #TODO: Bigify this
       task_cpu    = "256"
       task_memory = "512"
@@ -36,9 +38,9 @@ locals {
   # Condense all config into a single `local.env.*`
   env = merge(local.all.default, try(local.all[terraform.workspace], {}))
 
-  #TODO: Swap FQDN to non-fg url
-  service_fqdn  = "${local.env.service_name}-fg.${local.env.domain_name}"
-  postgres_fqdn = "hubzone-db.${local.env.domain_name}"
+  service_fqdn  = "${local.env.service_name}.${local.env.fqdn_base}"
+  public_fqdn   = "${local.env.public_subdomain}.${local.env.fqdn_base}"
+  postgres_fqdn = "hubzone-db.${local.env.fqdn_base}"
 
   # Convenience prefixes for AWS Resources
   prefix_bucket          = "arn:aws:s3:::"

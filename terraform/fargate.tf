@@ -29,14 +29,17 @@ module "api" {
   family                 = "${terraform.workspace}-${local.env.service_name}-fg"
   task_cpu               = local.env.task_cpu_rails
   task_memory            = local.env.task_memory_rails
-  task_policy_json       = data.aws_iam_policy_document.fargate.json
   enable_execute_command = true
   #alb_idle_timeout      = 60
+
+  ## If the ecs task needs to access AWS API for any reason, grant
+  ## it permissions with this parameter and the policy resource below
+  #task_policy_json       = data.aws_iam_policy_document.fargate.json
 
   # Deployment
   enable_deployment_rollbacks        = true
   wait_for_steady_state              = true
-  deployment_maximum_percent         = 200
+  deployment_maximum_percent         = 400
   deployment_minimum_healthy_percent = 100
 
   # Scaling and health
@@ -49,7 +52,6 @@ module "api" {
   # networking
   service_fqdn       = local.service_fqdn
   hosted_zone_id     = data.aws_route53_zone.selected.zone_id
-  #public_subnet_ids  = data.aws_subnet_ids.public.ids
   private_subnet_ids = data.aws_subnet_ids.private.ids
   vpc_id             = data.aws_vpc.selected.id
   certificate_arn    = data.aws_acm_certificate.selected.arn
@@ -67,13 +69,15 @@ module "api" {
   ]
 }
 
-data "aws_iam_policy_document" "fargate" {
-  statement {
-    sid = "AllResources"
-    actions = [
-      "s3:ListAllMyBuckets",
-      "s3:GetBucketLocation",
-    ]
-    resources = ["*"]
-  }
-}
+## If the ecs task needs to access AWS API for any reason, grant it permissions with this
+#
+#data "aws_iam_policy_document" "fargate" {
+#  statement {
+#    sid = "AllResources"
+#    actions = [
+#      "s3:ListAllMyBuckets",
+#      "s3:GetBucketLocation",
+#    ]
+#    resources = ["*"]
+#  }
+#}

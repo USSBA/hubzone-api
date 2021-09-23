@@ -37,7 +37,7 @@ data "aws_subnet" "public" {
 
 ## hosted zone
 data "aws_route53_zone" "selected" {
-  name = "${local.env.domain_name}."
+  name = "${local.env.fqdn_base}."
 }
 
 ## acm
