@@ -7,6 +7,6 @@ class ApiConstraints
   end
 
   def matches?(req)
-    @default || req.headers['Accept'].include?("application/sba.hubzone-api.v#{@version}")
+    @default || req.headers.fetch('Accept', 'not-a-match').include?("application/sba.hubzone-api.v#{@version}")
   end
 end

@@ -2,7 +2,7 @@ require 'api_constraints'
 
 Rails.application.routes.draw do
   namespace 'api', defaults: {format: 'json'} do
-    scope module: :v2, constraints: ApiConstraints.new(version: 2) do
+    scope module: :v2, constraints: ApiConstraints.new(version: 2, default: false) do
       get 'search', to: 'geocode#search', as: 'v2_search'
     end
     scope module: :v1, constraints: ApiConstraints.new(version: 1, default: true) do

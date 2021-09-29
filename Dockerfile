@@ -7,7 +7,7 @@ RUN echo "Updating repos..." && apt-get update > /dev/null && \
     echo "Done" && rm -rf /var/lib/apt/lists/*
 
 # Configure/Install Postgres Repos/Deps
-ENV PG_PACKAGES postgresql-client
+ENV PG_PACKAGES postgresql-client postgresql-12-postgis-2.5
 RUN echo deb http://apt.postgresql.org/pub/repos/apt stretch-pgdg main > /etc/apt/sources.list.d/stretch-pgdg.list && \
     wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
 RUN echo "Updating repos..." && apt-get update > /dev/null && \
