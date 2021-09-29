@@ -28,3 +28,5 @@ REVISION
 # Jetbrains project config files
 .idea/*
 
+# Terraform
+**/.terraform*

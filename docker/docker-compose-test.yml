@@ -13,9 +13,17 @@ services:
     image: hubzone/hubzone-api:latest
     links:
       - postgres
-    env_file:
-      - hubzone-api.env
-      - hubzone-api-test.env
+    #env_file:
+    #  - hubzone-api.env
+    #  - hubzone-api-test.env
+    environment:
+      - RAILS_ENV=test
+      - RAILS_LOG_TO_STDOUT=true
+      - HUBZONE_API_DB_USER=postgres
+      - HUBZONE_API_DB_PASSWORD=postgres
+      - HUBZONE_API_DB_HOST=postgres
+      - SECRET_KEY_BASE=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      - HUBZONE_GOOGLE_API_KEY='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     entrypoint: ["/bin/bash"]
     command: >
       -c "
