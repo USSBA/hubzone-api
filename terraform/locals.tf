@@ -30,7 +30,8 @@ locals {
       public_subdomain = "hubzone"
     }
     stg = {
-      fqdn_base = "stg.certify.sba.gov"
+      fqdn_base   = "stg.certify.sba.gov"
+      cert_domain = "certify.sba.gov"
 
       desired_container_count_rails = 2
       min_container_count_rails     = 2
@@ -38,6 +39,7 @@ locals {
     }
     prod = {
       fqdn_base                     = "certify.sba.gov"
+      cert_domain                   = "certify.sba.gov"
       desired_container_count_rails = 2
       min_container_count_rails     = 2
       max_container_count_rails     = 4
