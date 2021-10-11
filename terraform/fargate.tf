@@ -4,7 +4,7 @@ variable "image_tag" {
 
 locals {
   container_environment = {
-    RAILS_ENV           = terraform.workspace
+    RAILS_ENV           = local.env.rails_env
     HUBZONE_API_DB_HOST = local.postgres_fqdn
     RAILS_LOG_TO_STDOUT = "true"
     HUBZONE_API_DB_NAME = "hzgeo_${terraform.workspace}"

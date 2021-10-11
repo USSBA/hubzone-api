@@ -28,10 +28,12 @@ locals {
       fqdn_base        = "demo.sba-one.net"
       cert_domain      = "sba-one.net"
       public_subdomain = "hubzone"
+      rails_env        = "demo"
     }
     stg = {
       fqdn_base   = "stg.certify.sba.gov"
       cert_domain = "certify.sba.gov"
+      rails_env   = "staging"
 
       desired_container_count_rails = 2
       min_container_count_rails     = 2
@@ -40,6 +42,7 @@ locals {
     prod = {
       fqdn_base                     = "certify.sba.gov"
       cert_domain                   = "certify.sba.gov"
+      rails_env                     = "production"
       desired_container_count_rails = 2
       min_container_count_rails     = 2
       max_container_count_rails     = 4
