@@ -17,8 +17,12 @@ locals {
       task_cpu_rails    = "256"
       task_memory_rails = "512"
 
-      # No scaling for the time being
-      desired_capacity_rails = 1
+      health_check_path             = "/api/aws-hc"
+      desired_container_count_rails = 1 # the starting number of containers
+      max_container_count_rails     = 1 # maximum number of containers
+      min_container_count_rails     = 1 # minimum number of containers
+      scaling_metric                = "memory"
+      scaling_threshold             = "75"
     }
     demo = {
       fqdn_base        = "demo.sba-one.net"
@@ -27,12 +31,16 @@ locals {
     }
     stg = {
       fqdn_base = "stg.certify.sba.gov"
+
+      desired_container_count_rails = 2
+      min_container_count_rails     = 2
+      max_container_count_rails     = 2
     }
     prod = {
-      fqdn_base = "certify.sba.gov"
-      #TODO: Bigify this
-      task_cpu    = "256"
-      task_memory = "512"
+      fqdn_base                     = "certify.sba.gov"
+      desired_container_count_rails = 2
+      min_container_count_rails     = 2
+      max_container_count_rails     = 4
     }
   }
   # Condense all config into a single `local.env.*`
