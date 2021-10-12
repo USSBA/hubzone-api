@@ -3,6 +3,7 @@ FROM ruby:2.5-slim-stretch
 # Install general packages
 ENV PACKAGES build-essential libpq-dev netcat git apt-utils wget unzip lftp ssh jq gnupg
 RUN echo "Updating repos..." && apt-get update > /dev/null && \
+    echo "Upgrading base packages..." && apt-get upgrade -y > /dev/null && \
     echo "Installing packages: ${PACKAGES}..." && apt-get install -y $PACKAGES --fix-missing --no-install-recommends > /dev/null && \
     echo "Done" && rm -rf /var/lib/apt/lists/*
 
