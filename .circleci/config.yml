@@ -7,9 +7,11 @@ orbs:
   terraform: circleci/terraform@2.0.1
 
 executors:
-  python:
-    docker:
-    - image: cimg/python:3.9
+  circle-machine:
+    # Required for multi-container docker-compose setups
+    machine:
+      image: ubuntu-2004:202107-02
+      docker_layer_caching: true
 
   base:
     docker:
@@ -17,13 +19,13 @@ executors:
 
   ruby:
     docker:
-    - image: circleci/ruby:2.5.3-node-browsers
+    - image: circleci/ruby:2.7.4-node-browsers
       environment:
         RAILS_ENV: test
 
   ruby-with-postgres:
     docker:
-    - image: circleci/ruby:2.5.3-node-browsers
+    - image: circleci/ruby:2.7.4-node-browsers
       environment:
         RAILS_ENV: test
         HUBZONE_API_DB_USER: postgres
@@ -125,6 +127,7 @@ commands:
     - run:
         name: Install system dependencies
         command: |
+          sudo apt install -y lsb-release
           sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
           wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
           sudo apt update
@@ -225,11 +228,9 @@ jobs:
         command: bundle exec rspec --format progress spec
 
   rspec-docker:
-    executor: python
+    executor: circle-machine
     steps:
     - checkout
-    - setup_remote_docker:
-        docker_layer_caching: true
     - run:
         name: Build rspec in Docker container
         command: |
