@@ -320,7 +320,7 @@ jobs:
           name: aws-env
           command: |
             echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
-      - build-containers
+      - build-image
   build-and-push-containers:
     executor: base
     steps:
