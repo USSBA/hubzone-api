@@ -15,9 +15,6 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Max: 30
 
-Rails:
-  Enabled: true
-
 Style/BlockComments:
   Enabled: false
 
@@ -43,4 +40,7 @@ Style/SingleLineMethods:
   Enabled: false
 
 Style/StringLiterals:
+  Enabled: false
+
+Style/AccessModifierDeclarations:
   Enabled: false

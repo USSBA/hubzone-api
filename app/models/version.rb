@@ -58,12 +58,13 @@ class Version
     desc = @git_description
     matches = desc_regex.match desc
     return version_components if matches.nil?
+
     tag = matches[1]
     delta = matches[2]
     commit_sha = matches[3]
-    { tag:         tag,
-      delta:       delta,
-      commit_sha:  commit_sha }.merge version_components(tag)
+    { tag: tag,
+      delta: delta,
+      commit_sha: commit_sha }.merge version_components(tag)
   end
 
   private def non_version_tag?(tag)
@@ -77,16 +78,16 @@ class Version
   end
 
   private def parsed_version(components)
-    { major:       components[1],
-      minor:       components[2],
-      patch:       components[3],
+    { major: components[1],
+      minor: components[2],
+      patch: components[3],
       pre_release: components[4] }
   end
 
   private def config_version
-    { major:       VERSION_CONFIG[:hubzone_api_version][:major],
-      minor:       VERSION_CONFIG[:hubzone_api_version][:minor],
-      patch:       VERSION_CONFIG[:hubzone_api_version][:patch],
+    { major: VERSION_CONFIG[:hubzone_api_version][:major],
+      minor: VERSION_CONFIG[:hubzone_api_version][:minor],
+      patch: VERSION_CONFIG[:hubzone_api_version][:patch],
       pre_release: VERSION_CONFIG[:hubzone_api_version][:pre_release] }
   end
 end
