@@ -335,7 +335,7 @@ test_queries = {
 RSpec.describe VerifiedHubzone, type: :model do
   test_queries.map do |query_context, query|
     context "Given a hubzone assertion with #{query_context}" do
-      let(:verified_hubzone) { (VerifiedHubzone.new query).hubzone_results }
+      let(:verified_hubzone) { (described_class.new query).hubzone_results }
 
       it "#{query[:show_likely_qda] ? '"WILL"' : '"WONT"'} show a likely_qda" do
         expect(verified_hubzone.dig(:other_information, :alerts, :likely_qda_designations).present?).to be(query[:show_likely_qda])

@@ -1,6 +1,7 @@
 # helper class for applying additional business logic rules to the hubzone API assertion response
 class VerifiedHubzone
   attr_accessor :hubzone_results
+
   def initialize(hubzone_results)
     @hubzone_results = hubzone_results
     verify_likely_qda

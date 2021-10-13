@@ -260,6 +260,7 @@ RSpec.describe HubzoneUtil do
       results = described_class.search params
       expect(results[:http_status]).to match(400)
     end
+
     it "will return an invalid request message" do
       results = described_class.search params
       expect(results[:status]).to match("INVALID_REQUEST")
@@ -273,6 +274,7 @@ RSpec.describe HubzoneUtil do
       results = described_class.search params
       expect(results[:http_status]).to match(400)
     end
+
     it "will return an invalid request message" do
       results = described_class.search params
       expect(results[:status]).to match("INVALID_REQUEST")
@@ -309,7 +311,7 @@ RSpec.describe HubzoneUtil do
 
   # test the response body of a congressional districts request
   test_other_information_queries.map do |other_type, tquery|
-    context 'Given a address in ' + tquery[:context] do
+    context "Given a address in #{tquery[:context]}" do
       let!(:params) { { q: tquery[:query] } }
       let(:response) { described_class.search params }
 
@@ -337,7 +339,7 @@ RSpec.describe HubzoneUtil do
 
   # map over each hash in test_queries and run this templated test
   test_queries.map do |hztype, tquery|
-    context 'Given an address ' + tquery[:context] do
+    context "Given an address #{tquery[:context]}" do
       let!(:params) { { q: tquery[:query] } }
       let(:response) { described_class.search params }
 
@@ -359,19 +361,24 @@ RSpec.describe HubzoneUtil do
       it 'will include a query search value' do
         expect(response[:search_q]).not_to be_empty
       end
+
       it 'will not include the latlng search value' do
         expect(response[:search_latlng]).to be_nil
       end
+
       it 'will contain the correct formatted address' do
         expect(response["formatted_address"]).to eql(tquery[:results_address])
       end
+
       it "will have #{tquery[:designations].size} designation(s)" do
         expect(response[:hubzone].size).to eql(tquery[:designations].size)
       end
+
       it "will have #{tquery[:designations].join(', ')} designation(s)" do
         hz_types = response[:hubzone].map { |hz| hz['hz_type'] }
         expect(hz_types.sort).to eql(tquery[:designations].sort)
       end
+
       it "will have a calculated expiration date" do
         response[:until_date] = response[:until_date].to_s unless response[:until_date].nil?
         expect(response[:until_date]).to eq(tquery[:until_date])
@@ -386,6 +393,7 @@ RSpec.describe HubzoneUtil do
     it 'will result in an error' do
       expect(response[:http_status]).to be(400)
     end
+
     it 'will return the status INVALID_REQUEST' do
       expect(response[:status]).to eq('INVALID_REQUEST')
     end
@@ -398,6 +406,7 @@ RSpec.describe HubzoneUtil do
     it 'will result in an error' do
       expect(response[:http_status]).to be(400)
     end
+
     it 'will return the status INVALID_REQUEST' do
       expect(response[:status]).to eq('INVALID_REQUEST')
     end
@@ -410,6 +419,7 @@ RSpec.describe HubzoneUtil do
     it 'will result in an error' do
       expect(response[:http_status]).to be(400)
     end
+
     it 'will return the status INVALID_REQUEST' do
       expect(response[:status]).to eq('INVALID_REQUEST')
     end
@@ -417,23 +427,27 @@ RSpec.describe HubzoneUtil do
 
   # map over each hash in test_queries and run this templated test
   test_queries.map do |_hztype, tquery|
-    context 'Given an lat,lng ' + tquery[:context] do
+    context "Given an lat,lng #{tquery[:context]}" do
       let!(:params) { { latlng: tquery[:latlng] } }
       let(:response) { described_class.search params }
 
       it 'will include the latlng search value' do
         expect(response[:search_latlng]).not_to be_empty
       end
+
       it 'will not include a query search value' do
         expect(response[:search_q]).to be_nil
       end
+
       it "will have #{tquery[:designations].size} designation(s)" do
         expect(response[:hubzone].size).to eql(tquery[:designations].size)
       end
+
       it "will have #{tquery[:designations].join(', ')} designation(s)" do
         hz_types = response[:hubzone].map { |hz| hz['hz_type'] }
         expect(hz_types.sort).to eql(tquery[:designations].sort)
       end
+
       it "will have a calculated expiration date" do
         response[:until_date] = response[:until_date].to_s unless response[:until_date].nil?
         expect(response[:until_date]).to eq(tquery[:until_date])

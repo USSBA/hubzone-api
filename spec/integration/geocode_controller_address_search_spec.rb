@@ -33,6 +33,7 @@ required_fields = {
   non_qnmc: %w[county_fips county state]
 }
 
+# rubocop:disable Naming/VariableNumber
 test_queries = {
   qct: {
     context: 'in a QCT in baltimore',
@@ -183,6 +184,7 @@ test_queries = {
     }
   }
 }
+# rubocop:enable Naming/VariableNumber
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe GeocodeController do
@@ -208,6 +210,7 @@ RSpec.describe GeocodeController do
         Excon.stub({host: "maps.googleapis.com"}, status: 200, body: geocode_response.to_json)
         get search_url, params: {q: test_queries[:qct][:query]}, headers: headers_arg(version)
       end
+
       it 'will include the API version in the response' do
         expect(version).to eq(json[:api_version])
       end
@@ -218,9 +221,11 @@ RSpec.describe GeocodeController do
     before do
       get search_url, params: {message: 'Search for what?'}
     end
+
     it 'will result in an error' do
       expect(response.status).to be_between(400, 500)
     end
+
     it 'will return the status INVALID_REQUEST' do
       expect(json[:status]).to eq('INVALID_REQUEST')
     end
@@ -232,9 +237,11 @@ RSpec.describe GeocodeController do
       before do
         get search_url, params: {q: ""}
       end
+
       it 'will result in an error' do
         expect(response.status).to be_between(400, 500)
       end
+
       it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
@@ -242,7 +249,7 @@ RSpec.describe GeocodeController do
 
     # map over each hash in test_queries and run this templated test
     test_queries.map do |hztype, tquery|
-      context 'Given an address ' + tquery[:context] do
+      context "Given an address #{tquery[:context]}" do
         before do
           # Excon.stub({}, body: tquery[:response].to_json)
           geocode_response = {
@@ -274,25 +281,32 @@ RSpec.describe GeocodeController do
         it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
+
         it 'will have a status code' do
           expect(json[:status]).to eql('OK')
         end
+
         it 'will include a query search value' do
           expect(json[:search_q]).not_to be_empty
         end
+
         it 'will not include the latlng search value' do
           expect(json[:search_latlng]).to be_nil
         end
+
         it 'will contain the correct formatted address' do
           expect(json[:formatted_address]).to eql(tquery[:results_address])
         end
+
         it "will have #{tquery[:designations].size} designation(s)" do
           expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
+
         it "will have #{tquery[:designations].join(', ')} designation(s)" do
           hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
+
         it "will have a calculated expiration date" do
           expect(json[:until_date]).to eq(tquery[:until_date])
         end
@@ -306,9 +320,11 @@ RSpec.describe GeocodeController do
       before do
         get search_url, params: {latlng: ""}
       end
+
       it 'will result in an error' do
         expect(response.status).to be(400)
       end
+
       it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
@@ -318,9 +334,11 @@ RSpec.describe GeocodeController do
       before do
         get search_url, params: {latlng: '123'}
       end
+
       it 'will result in an error' do
         expect(response.status).to be(400)
       end
+
       it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
@@ -330,9 +348,11 @@ RSpec.describe GeocodeController do
       before do
         get search_url, params: {latlng: 'abc.def,-ghi.jkl'}
       end
+
       it 'will result in an error' do
         expect(response.status).to be(400)
       end
+
       it 'will return the status INVALID_REQUEST' do
         expect(json[:status]).to eq('INVALID_REQUEST')
       end
@@ -340,28 +360,34 @@ RSpec.describe GeocodeController do
 
     # map over each hash in test_queries and run this templated test
     test_queries.map do |_hztype, tquery|
-      context 'Given an lat,lng ' + tquery[:context] do
+      context "Given an lat,lng #{tquery[:context]}" do
         before do
           latlng = "#{tquery[:lat]},#{tquery[:lng]}"
           Excon.stub({}, body: tquery[:response].to_json)
           get search_url, params: {latlng: latlng}
         end
+
         it 'will succeed' do
           expect(response.status).to eql(tquery[:http_status])
         end
+
         it 'will include the latlng search value' do
           expect(json[:search_latlng]).not_to be_empty
         end
+
         it 'will not include a query search value' do
           expect(json[:search_q]).to be_nil
         end
+
         it "will have #{tquery[:designations].size} designation(s)" do
           expect(json[:hubzone].size).to eql(tquery[:designations].size)
         end
+
         it "will have #{tquery[:designations].join(', ')} designation(s)" do
           hz_types = json[:hubzone].map { |hz| hz['hz_type'] }
           expect(hz_types.sort).to eql(tquery[:designations].sort)
         end
+
         it "will have a calculated expiration date" do
           expect(json[:until_date]).to eq(tquery[:until_date])
         end
@@ -387,6 +413,7 @@ RSpec.describe GeocodeController do
           expect(response.status).to eql(tquery[:http_status])
         end
       end
+
       context 'with q == ""' do
         let(:qquery) { "" }
 

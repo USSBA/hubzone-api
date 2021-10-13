@@ -7,7 +7,7 @@ gem 'ffi', '~> 1.9.24' # CVS-2018-1000201
 gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'newrelic_rpm', '~> 4.5' # NewRelic Application Performance Monitoring
 gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
-gem 'puma', '~> 3.0', '>= 3.12.6' # Use Puma as the app server
+gem 'puma', '~> 4.3' # Use Puma as the app server
 gem 'rails', '~> 5.2', '>= 5.2.4.3' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'strong_migrations', '~> 0.3' # Catch unsafe migrations at dev time
 # Use Redis adapter to run Action Cable in production
@@ -25,8 +25,9 @@ group :development, :test do
   gem 'byebug', platform: :mri # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rb-readline'
   gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '~> 0.52.0', require: false
-  gem 'rubocop-rspec'
+  gem 'rubocop', '~> 1.19.0' # Enforce ruby code style
+  gem 'rubocop-rails', '~> 2.12'
+  gem 'rubocop-rspec', '~> 2.5'
   gem 'simplecov', require: false # determine code coverage of tests
 end
 

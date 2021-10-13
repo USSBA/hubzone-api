@@ -34,6 +34,7 @@ class HubzoneUtil
 
     def search_by_latlng(loc)
       return build_response("INVALID_REQUEST") if loc.blank? || loc.empty?
+
       regex = /\A[-+]?[0-9]*\.?[0-9]+,[-+]?[0-9]*\.?[0-9]+\Z/
       return build_response("INVALID_REQUEST") if regex.match(loc).nil?
 
@@ -54,7 +55,7 @@ class HubzoneUtil
     def default_location_results(loc)
       lat, lng = loc.split(',')
       {
-        'formatted_address' => [format('%.6f', lat) + "\xC2\xB0", format('%.6f', lng) + "\xC2\xB0"].join(', '),
+        'formatted_address' => ["#{format('%.6f', lat)}°", "#{format('%.6f', lng)}°"].join(', '),
         'geometry' => {
           'location' => {
             'lat' => lat.to_f,
@@ -130,7 +131,7 @@ class HubzoneUtil
     def build_response(status)
       code = status.eql?('ZERO_RESULTS') ? 200 : 400
       { status: status,
-        message: 'api.error.' + status.downcase,
+        message: "api.error.#{status.downcase}",
         http_status: code }
     end
   end
