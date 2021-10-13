@@ -150,6 +150,42 @@ commands:
         command: |
           bundle exec rake db:create db:migrate
 
+  terraform-format:
+    parameters:
+      folder:
+        type: string
+        description: A relative path from the project root in which to perform terrafrom fmt
+    steps:
+      - deploy:
+          name: Terraform Format Check
+          command: |
+            throw_error() {
+              echo $1
+              return 1
+            }
+            cd << parameters.folder >> || throw_error "FATAL: command 'cd << parameters.folder >>' has failed"
+            terraform fmt -check -recursive
+
+  terraform-validate:
+    parameters:
+      folder:
+        type: string
+        description: A relative path from the project root in which to perform terrafrom validate
+      workspace:
+        type: string
+        description: A workspace in which to perform terraform validate
+    steps:
+      - deploy:
+          name: Terraform Validate Check
+          command: |
+            throw_error() {
+              echo $1
+              return 1
+            }
+            cd << parameters.folder >> || throw_error "FATAL: command 'cd << parameters.folder >>' has failed"
+            terraform workspace select << parameters.workspace >> || throw_error "FATAL: command 'terraform workspace select << parameters.workspace >>' has failed"
+            terraform validate || throw_error "FATAL: command 'terraform validate' has failed"
+
   terraform-init:
     parameters:
       folder:
@@ -209,14 +245,12 @@ commands:
           terraform apply -input=false << parameters.workspace >>.tfplan || ( echo "terraform apply has failed"; exit 1 )
 
 jobs:
-
   rubocop:
     executor: ruby
     steps:
     - install-system-dependencies
     - install-and-cache-gems
     - ruby/rubocop-check
-
   rspec:
     executor: ruby-with-postgres
     steps:
@@ -226,7 +260,6 @@ jobs:
     - run:
         name: Run rspec
         command: bundle exec rspec --format progress spec
-
   rspec-docker:
     executor: circle-machine
     steps:
@@ -241,7 +274,6 @@ jobs:
         name: Run rspec in Docker container
         command: |
           docker-compose -f docker/docker-compose-test.yml run rspec
-
   #brakeman:
   #  executor: ruby
   #  steps:
@@ -256,19 +288,48 @@ jobs:
   #        command: |
   #          gem install --no-document brakeman
   #          brakeman --exit-on-warn .
-
-  build-containers:
+  test-terraform-validate:
+    executor: base
+    parameters:
+      workspace:
+        type: string
+        description: A terraform workspace name
+    steps:
+      - checkout
+      - aws-init
+      - terraform/install:
+          terraform_version: 1.0.6
+      - terraform-init:
+          folder: terraform
+      - terraform-validate:
+          folder: terraform
+          workspace: << parameters.workspace >>
+  test-terraform-format:
     executor: base
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - terraform/install:
+          terraform_version: 1.0.6
+      - terraform-format:
+          folder: terraform
+  build-containers:
+    executor: circle-machine
+    steps:
+      - checkout
+      - run:
+          name: aws-env
+          command: |
+            echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
+      - build-image
+  build-and-push-containers:
+    executor: base
+    steps:
+      - checkout
       - aws-init
       - ecr-login
       - build-image
       - push-image
-
-  deploy:
+  deploy-service:
     executor: base
     parameters:
       workspace:
@@ -295,11 +356,15 @@ workflows:
     - rubocop
     - rspec
     - rspec-docker
-
-  publish:
+    - test-terraform-validate:
+        context: certify-lower
+        workspace: demo
+    - test-terraform-format
+    - build-containers
+  deploy:
     jobs:
-    - build-containers:
-        name: build-containers-lower
+    - build-and-push-containers:
+        name: build-and-push-containers-lower
         context: certify-lower
         filters:
           branches:
@@ -308,12 +373,12 @@ workflows:
             only:
             - build-lower
             - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
-    - deploy:
-        name: deploy-demo
+    - deploy-service:
+        name: deploy-service-demo
         context: certify-lower
         workspace: demo
         requires:
-        - build-containers-lower
+        - build-and-push-containers-lower
         filters:
           branches:
             ignore: /.*/
@@ -321,8 +386,8 @@ workflows:
             only:
             - build-lower
             - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
-    - build-containers:
-        name: build-containers-upper
+    - build-and-push-containers:
+        name: build-and-push-containers-upper
         context: certify-upper
         filters:
           branches:
@@ -331,12 +396,12 @@ workflows:
             only:
             - build-upper
             - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
-    - deploy:
-        name: deploy-stg
+    - deploy-service:
+        name: deploy-service-stg
         context: certify-upper
         workspace: stg
         requires:
-        - build-containers-upper
+        - build-and-push-containers-upper
         filters:
           branches:
             ignore: /.*/
