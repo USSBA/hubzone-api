@@ -267,7 +267,7 @@ jobs:
       - build-image
       - push-image
 
-  deploy-service:
+  deploy:
     executor: base
     parameters:
       workspace:
@@ -298,6 +298,7 @@ workflows:
   publish:
     jobs:
     - build-containers:
+        name: build-containers-lower
         context: certify-lower
         filters:
           branches:
@@ -306,18 +307,41 @@ workflows:
             only:
             - build-lower
             - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
-    - deploy-service:
+    - deploy:
         name: deploy-demo
         context: certify-lower
         workspace: demo
         requires:
-        - build-containers
+        - build-containers-lower
         filters:
           branches:
             ignore: /.*/
           tags:
             only:
             - build-lower
+            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+    - build-containers:
+        name: build-containers-upper
+        context: certify-upper
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only:
+            - build-upper
+            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+    - deploy:
+        name: deploy-stg
+        context: certify-upper
+        workspace: stg
+        requires:
+        - build-containers-upper
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only:
+            - build-upper
             - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
 
 ################################################################################
