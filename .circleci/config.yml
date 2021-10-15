@@ -312,6 +312,22 @@ jobs:
           terraform_version: 1.0.6
       - terraform-format:
           folder: terraform
+  test-terraform-plan:
+    executor: base
+    parameters:
+      workspace:
+        type: string
+        description: A terraform workspace name
+    steps:
+      - checkout
+      - aws-init
+      - terraform/install:
+          terraform_version: 1.0.6
+      - terraform-init:
+          folder: terraform
+      - terraform-plan:
+          folder: terraform
+          workspace: << parameters.workspace >>
   build-containers:
     executor: circle-machine
     steps:
@@ -322,7 +338,7 @@ jobs:
             echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
       - build-image
   build-and-push-containers:
-    executor: base
+    executor: circle-machine
     steps:
       - checkout
       - aws-init
@@ -330,7 +346,7 @@ jobs:
       - build-image
       - push-image
   deploy-service:
-    executor: base
+    executor: circle-machine
     parameters:
       workspace:
         type: string
@@ -372,7 +388,7 @@ workflows:
           tags:
             only:
             - build-lower
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+            - deploy-demo
     - deploy-service:
         name: deploy-service-demo
         context: certify-lower
@@ -384,18 +400,18 @@ workflows:
             ignore: /.*/
           tags:
             only:
-            - build-lower
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+            - deploy-demo
     - build-and-push-containers:
         name: build-and-push-containers-upper
         context: certify-upper
         filters:
           branches:
-            ignore: /.*/
+            only:
+            - master
           tags:
             only:
             - build-upper
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+            - deploy-stg
     - deploy-service:
         name: deploy-service-stg
         context: certify-upper
@@ -404,110 +420,37 @@ workflows:
         - build-and-push-containers-upper
         filters:
           branches:
-            ignore: /.*/
+            only:
+            - master
           tags:
             only:
-            - build-upper
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
-
-################################################################################
-# Ruby CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-ruby/ for more details
-#
-#version: 2.1
-#
-#orbs:
-#  ruby: circleci/ruby@1.1.2
-#
-#executors:
-#  ruby:
-#    docker:
-#      - image: circleci/ruby:2.5.1-node-browsers
-#        environment:
-#          RAILS_ENV: test
-#  ruby-with-postgres:
-#    docker:
-#      - image: circleci/ruby:2.5.1-node-browsers
-#        environment:
-#          HUBZONE_API_DB_USER: postgres
-#          HUBZONE_API_DB_PASSWORD: postgres
-#          RAILS_ENV: test
-#      - image: circleci/postgres:9.6-alpine-postgis
-#        environment:
-#          POSTGRES_USER: postgres
-#          POSTGRES_PASSWORD: postgres
-#
-#commands:
-#  install-system-dependencies:
-#    steps:
-#      - run:
-#          name: Install system dependencies
-#          command: |
-#            sudo apt update
-#            sudo apt install -y \
-#              postgresql-client-9.6
-#  install-and-cache-gems:
-#    steps:
-#      - checkout
-#      - ruby/install-deps:
-#          key: gems-v1
-#      #- run: sudo npm install -g istanbul
-#  migrate-db:
-#    steps:
-#      - run:
-#          name: migrate-db
-#          command: |
-#            bundle exec rake db:create db:migrate
-#workflows:
-#  version: 2
-#  test:
-#    jobs:
-#      - rubocop
-#      - rspec
-#      - rspec-docker
-#      - brakeman
-#jobs:
-#  rubocop:
-#    executor: ruby
-#    steps:
-#      - install-system-dependencies
-#      - install-and-cache-gems
-#      - ruby/rubocop-check
-#  rspec:
-#    executor: ruby-with-postgres
-#    steps:
-#      - install-system-dependencies
-#      - install-and-cache-gems
-#      - migrate-db
-#      - run:
-#          name: Run rspec
-#          command: bundle exec rspec --format progress
-#  rspec-docker:
-#    executor: ruby
-#    steps:
-#    - checkout
-#    - setup_remote_docker:
-#        docker_layer_caching: true
-#    - run:
-#        name: Build rspec in Docker container
-#        command: |
-#          git describe --long > REVISION || touch REVISION
-#          cat REVISION
-#          docker-compose -f docker/docker-compose-test.yml build rspec
-#    - run:
-#        name: Run rspec in Docker container
-#        command: |
-#          docker-compose -f docker/docker-compose-test.yml run rspec
-#
-#  brakeman:
-#    executor: ruby
-#    steps:
-#      - install-system-dependencies
-#      - install-and-cache-gems
-#      - run:
-#          name: brakeman
-#          parallel: true
-#          command: |
-#            gem install --no-document brakeman
-#            brakeman --exit-on-warn .
+            - deploy-stg
+    - test-terraform-plan:
+        name: test-terraform-plan-prod
+        context: certify-upper
+        workspace: prod
+        requires:
+        - build-and-push-containers-upper
+        filters:
+          branches:
+            only:
+            - master
+    - hold-for-approval:
+        type: approval
+        context: certify-upper
+        requires:
+          - test-terraform-plan-prod
+        filters:
+          branches:
+            only:
+            - master
+    - deploy-service:
+        name: deploy-service-prod
+        context: certify-upper
+        workspace: prod
+        requires:
+        - hold-for-approval
+        filters:
+          branches:
+            only:
+            - master
