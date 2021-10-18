@@ -15,33 +15,32 @@ executors:
 
   base:
     docker:
-    - image: cimg/base:2020.12
+      - image: cimg/base:2020.12
 
   ruby:
     docker:
-    - image: circleci/ruby:2.7.4-node-browsers
-      environment:
-        RAILS_ENV: test
+      - image: circleci/ruby:2.7.4-node-browsers
+        environment:
+          RAILS_ENV: test
 
   ruby-with-postgres:
     docker:
-    - image: circleci/ruby:2.7.4-node-browsers
-      environment:
-        RAILS_ENV: test
-        HUBZONE_API_DB_USER: postgres
-        HUBZONE_API_DB_PASSWORD: postgres
-        HUBZONE_API_DB_HOST: localhost
-        HUBZONE_API_DB_NAME: hzgeo
-        SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        HUBZONE_GOOGLE_API_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    - image: circleci/postgres:12-alpine-postgis
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: hzgeo
+      - image: circleci/ruby:2.7.4-node-browsers
+        environment:
+          RAILS_ENV: test
+          HUBZONE_API_DB_USER: postgres
+          HUBZONE_API_DB_PASSWORD: postgres
+          HUBZONE_API_DB_HOST: localhost
+          HUBZONE_API_DB_NAME: hzgeo
+          SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          HUBZONE_GOOGLE_API_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      - image: circleci/postgres:12-alpine-postgis
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: hzgeo
 
 commands:
-
   aws-init:
     parameters:
       region:
@@ -49,32 +48,30 @@ commands:
         description: A default AWS region name
         default: us-east-1
     steps:
-    - aws-cli/setup
-    - run:
-        name: aws-init
-        command: |
-          echo 'AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-<< parameters.region >>}' >> $BASH_ENV
-          echo 'AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)' >> $BASH_ENV
-          echo 'AWS_ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"' >> $BASH_ENV
-          source $BASH_ENV
-
+      - aws-cli/setup
+      - run:
+          name: aws-init
+          command: |
+            echo 'AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-<< parameters.region >>}' >> $BASH_ENV
+            echo 'AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)' >> $BASH_ENV
+            echo 'AWS_ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"' >> $BASH_ENV
+            source $BASH_ENV
   ecr-login:
     steps:
-    - run:
-        name: ecr docker login
-        command: |
-          aws_version=`aws --version 2>&1`
-          if echo $aws_version | grep 'aws-cli/1' > /dev/null; then
-            echo "aws-cli v1 detected. Logging in to ecr docker..."
-            `aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION}`
-          elif echo $aws_version | grep 'aws-cli/2' > /dev/null; then
-            echo "aws-cli v2 detected. Logging in to ecr docker..."
-            aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "${AWS_ECR_ENDPOINT}"
-          else
-            echo "Can't detect the version of awscli being used..."
-            exit 1
-          fi
-
+      - run:
+          name: ecr docker login
+          command: |
+            aws_version=`aws --version 2>&1`
+            if echo $aws_version | grep 'aws-cli/1' > /dev/null; then
+              echo "aws-cli v1 detected. Logging in to ecr docker..."
+              `aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION}`
+            elif echo $aws_version | grep 'aws-cli/2' > /dev/null; then
+              echo "aws-cli v2 detected. Logging in to ecr docker..."
+              aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "${AWS_ECR_ENDPOINT}"
+            else
+              echo "Can't detect the version of awscli being used..."
+              exit 1
+            fi
   ecr-image-build:
     parameters:
       dockerfile:
@@ -83,11 +80,10 @@ commands:
       image_name:
         type: string
     steps:
-    - run:
-        name: Build << parameters.dockerfile >> docker image
-        command: |
-          docker image build . -f "<< parameters.dockerfile >>" --tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-
+      - run:
+          name: Build << parameters.dockerfile >> docker image
+          command: |
+            docker image build . -f "<< parameters.dockerfile >>" --tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
   ecr-image-push:
     parameters:
       image_name:
@@ -96,21 +92,12 @@ commands:
     - deploy:
         name: docker image push
         command: |
-          image-push() {
-            local tag=$1
-            local repo="$AWS_ECR_ENDPOINT/<< parameters.image_name >>:"
-            docker image push "${repo}${tag}"
-            echo "Successfully pushed image: ${repo}${tag}"
-          }
-          image-tag-and-push() {
-            local tag_a=$1
-            local tag_b=$2
-            local repo="${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:"
-            docker image tag "${repo}${tag_a}" "${repo}${tag_b}"
-            image-push $tag_b
-          }
-          image-push $CIRCLE_SHA1
-          image-tag-and-push $CIRCLE_SHA1 ${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}
+          docker image tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}" \
+                           "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
+          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
+          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
+          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
+          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
 
   build-image:
     steps:
@@ -150,6 +137,10 @@ commands:
         command: |
           bundle exec rake db:create db:migrate
 
+  terraform-install:
+    steps:
+      - terraform/install:
+          terraform_version: 1.0.9
   terraform-format:
     parameters:
       folder:
@@ -297,8 +288,7 @@ jobs:
     steps:
       - checkout
       - aws-init
-      - terraform/install:
-          terraform_version: 1.0.6
+      - terraform-install
       - terraform-init:
           folder: terraform
       - terraform-validate:
@@ -308,10 +298,24 @@ jobs:
     executor: base
     steps:
       - checkout
-      - terraform/install:
-          terraform_version: 1.0.6
+      - terraform-install
       - terraform-format:
           folder: terraform
+  test-terraform-plan:
+    executor: base
+    parameters:
+      workspace:
+        type: string
+        description: A terraform workspace name
+    steps:
+      - checkout
+      - aws-init
+      - terraform-install
+      - terraform-init:
+          folder: terraform
+      - terraform-plan:
+          folder: terraform
+          workspace: << parameters.workspace >>
   build-containers:
     executor: circle-machine
     steps:
@@ -322,7 +326,7 @@ jobs:
             echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
       - build-image
   build-and-push-containers:
-    executor: base
+    executor: circle-machine
     steps:
       - checkout
       - aws-init
@@ -330,24 +334,23 @@ jobs:
       - build-image
       - push-image
   deploy-service:
-    executor: base
+    executor: circle-machine
     parameters:
       workspace:
         type: string
         description: A terraform workspace name
     steps:
-    - checkout
-    - aws-init
-    - terraform/install:
-        terraform_version: 1.0.0
-    - terraform-init:
-        folder: terraform
-    - terraform-plan:
-        folder: terraform
-        workspace: << parameters.workspace >>
-    - terraform-apply:
-        folder: terraform
-        workspace: << parameters.workspace >>
+      - checkout
+      - aws-init
+      - terraform-install
+      - terraform-init:
+          folder: terraform
+      - terraform-plan:
+          folder: terraform
+          workspace: << parameters.workspace >>
+      - terraform-apply:
+          folder: terraform
+          workspace: << parameters.workspace >>
 
 workflows:
   version: 2
@@ -372,7 +375,7 @@ workflows:
           tags:
             only:
             - build-lower
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+            - deploy-demo
     - deploy-service:
         name: deploy-service-demo
         context: certify-lower
@@ -384,18 +387,18 @@ workflows:
             ignore: /.*/
           tags:
             only:
-            - build-lower
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+            - deploy-demo
     - build-and-push-containers:
         name: build-and-push-containers-upper
         context: certify-upper
         filters:
           branches:
-            ignore: /.*/
+            only:
+            - master
           tags:
             only:
             - build-upper
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
+            - deploy-stg
     - deploy-service:
         name: deploy-service-stg
         context: certify-upper
@@ -404,110 +407,37 @@ workflows:
         - build-and-push-containers-upper
         filters:
           branches:
-            ignore: /.*/
+            only:
+            - master
           tags:
             only:
-            - build-upper
-            - /^v[0-9]+(\.[0-9]+)(\.[0-9]+)*/
-
-################################################################################
-# Ruby CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-ruby/ for more details
-#
-#version: 2.1
-#
-#orbs:
-#  ruby: circleci/ruby@1.1.2
-#
-#executors:
-#  ruby:
-#    docker:
-#      - image: circleci/ruby:2.5.1-node-browsers
-#        environment:
-#          RAILS_ENV: test
-#  ruby-with-postgres:
-#    docker:
-#      - image: circleci/ruby:2.5.1-node-browsers
-#        environment:
-#          HUBZONE_API_DB_USER: postgres
-#          HUBZONE_API_DB_PASSWORD: postgres
-#          RAILS_ENV: test
-#      - image: circleci/postgres:9.6-alpine-postgis
-#        environment:
-#          POSTGRES_USER: postgres
-#          POSTGRES_PASSWORD: postgres
-#
-#commands:
-#  install-system-dependencies:
-#    steps:
-#      - run:
-#          name: Install system dependencies
-#          command: |
-#            sudo apt update
-#            sudo apt install -y \
-#              postgresql-client-9.6
-#  install-and-cache-gems:
-#    steps:
-#      - checkout
-#      - ruby/install-deps:
-#          key: gems-v1
-#      #- run: sudo npm install -g istanbul
-#  migrate-db:
-#    steps:
-#      - run:
-#          name: migrate-db
-#          command: |
-#            bundle exec rake db:create db:migrate
-#workflows:
-#  version: 2
-#  test:
-#    jobs:
-#      - rubocop
-#      - rspec
-#      - rspec-docker
-#      - brakeman
-#jobs:
-#  rubocop:
-#    executor: ruby
-#    steps:
-#      - install-system-dependencies
-#      - install-and-cache-gems
-#      - ruby/rubocop-check
-#  rspec:
-#    executor: ruby-with-postgres
-#    steps:
-#      - install-system-dependencies
-#      - install-and-cache-gems
-#      - migrate-db
-#      - run:
-#          name: Run rspec
-#          command: bundle exec rspec --format progress
-#  rspec-docker:
-#    executor: ruby
-#    steps:
-#    - checkout
-#    - setup_remote_docker:
-#        docker_layer_caching: true
-#    - run:
-#        name: Build rspec in Docker container
-#        command: |
-#          git describe --long > REVISION || touch REVISION
-#          cat REVISION
-#          docker-compose -f docker/docker-compose-test.yml build rspec
-#    - run:
-#        name: Run rspec in Docker container
-#        command: |
-#          docker-compose -f docker/docker-compose-test.yml run rspec
-#
-#  brakeman:
-#    executor: ruby
-#    steps:
-#      - install-system-dependencies
-#      - install-and-cache-gems
-#      - run:
-#          name: brakeman
-#          parallel: true
-#          command: |
-#            gem install --no-document brakeman
-#            brakeman --exit-on-warn .
+            - deploy-stg
+    - test-terraform-plan:
+        name: test-terraform-plan-prod
+        context: certify-upper
+        workspace: prod
+        requires:
+        - build-and-push-containers-upper
+        filters:
+          branches:
+            only:
+            - master
+    - hold-for-approval:
+        type: approval
+        context: certify-upper
+        requires:
+          - test-terraform-plan-prod
+        filters:
+          branches:
+            only:
+            - master
+    - deploy-service:
+        name: deploy-service-prod
+        context: certify-upper
+        workspace: prod
+        requires:
+        - hold-for-approval
+        filters:
+          branches:
+            only:
+            - master
