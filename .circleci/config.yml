@@ -15,33 +15,32 @@ executors:
 
   base:
     docker:
-    - image: cimg/base:2020.12
+      - image: cimg/base:2020.12
 
   ruby:
     docker:
-    - image: circleci/ruby:2.7.4-node-browsers
-      environment:
-        RAILS_ENV: test
+      - image: circleci/ruby:2.7.4-node-browsers
+        environment:
+          RAILS_ENV: test
 
   ruby-with-postgres:
     docker:
-    - image: circleci/ruby:2.7.4-node-browsers
-      environment:
-        RAILS_ENV: test
-        HUBZONE_API_DB_USER: postgres
-        HUBZONE_API_DB_PASSWORD: postgres
-        HUBZONE_API_DB_HOST: localhost
-        HUBZONE_API_DB_NAME: hzgeo
-        SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        HUBZONE_GOOGLE_API_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    - image: circleci/postgres:12-alpine-postgis
-      environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_DB: hzgeo
+      - image: circleci/ruby:2.7.4-node-browsers
+        environment:
+          RAILS_ENV: test
+          HUBZONE_API_DB_USER: postgres
+          HUBZONE_API_DB_PASSWORD: postgres
+          HUBZONE_API_DB_HOST: localhost
+          HUBZONE_API_DB_NAME: hzgeo
+          SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+          HUBZONE_GOOGLE_API_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      - image: circleci/postgres:12-alpine-postgis
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: hzgeo
 
 commands:
-
   aws-init:
     parameters:
       region:
@@ -49,32 +48,30 @@ commands:
         description: A default AWS region name
         default: us-east-1
     steps:
-    - aws-cli/setup
-    - run:
-        name: aws-init
-        command: |
-          echo 'AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-<< parameters.region >>}' >> $BASH_ENV
-          echo 'AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)' >> $BASH_ENV
-          echo 'AWS_ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"' >> $BASH_ENV
-          source $BASH_ENV
-
+      - aws-cli/setup
+      - run:
+          name: aws-init
+          command: |
+            echo 'AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-<< parameters.region >>}' >> $BASH_ENV
+            echo 'AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)' >> $BASH_ENV
+            echo 'AWS_ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"' >> $BASH_ENV
+            source $BASH_ENV
   ecr-login:
     steps:
-    - run:
-        name: ecr docker login
-        command: |
-          aws_version=`aws --version 2>&1`
-          if echo $aws_version | grep 'aws-cli/1' > /dev/null; then
-            echo "aws-cli v1 detected. Logging in to ecr docker..."
-            `aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION}`
-          elif echo $aws_version | grep 'aws-cli/2' > /dev/null; then
-            echo "aws-cli v2 detected. Logging in to ecr docker..."
-            aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "${AWS_ECR_ENDPOINT}"
-          else
-            echo "Can't detect the version of awscli being used..."
-            exit 1
-          fi
-
+      - run:
+          name: ecr docker login
+          command: |
+            aws_version=`aws --version 2>&1`
+            if echo $aws_version | grep 'aws-cli/1' > /dev/null; then
+              echo "aws-cli v1 detected. Logging in to ecr docker..."
+              `aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION}`
+            elif echo $aws_version | grep 'aws-cli/2' > /dev/null; then
+              echo "aws-cli v2 detected. Logging in to ecr docker..."
+              aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "${AWS_ECR_ENDPOINT}"
+            else
+              echo "Can't detect the version of awscli being used..."
+              exit 1
+            fi
   ecr-image-build:
     parameters:
       dockerfile:
@@ -83,11 +80,10 @@ commands:
       image_name:
         type: string
     steps:
-    - run:
-        name: Build << parameters.dockerfile >> docker image
-        command: |
-          docker image build . -f "<< parameters.dockerfile >>" --tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-
+      - run:
+          name: Build << parameters.dockerfile >> docker image
+          command: |
+            docker image build . -f "<< parameters.dockerfile >>" --tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
   ecr-image-push:
     parameters:
       image_name:
@@ -96,21 +92,12 @@ commands:
     - deploy:
         name: docker image push
         command: |
-          image-push() {
-            local tag=$1
-            local repo="$AWS_ECR_ENDPOINT/<< parameters.image_name >>:"
-            docker image push "${repo}${tag}"
-            echo "Successfully pushed image: ${repo}${tag}"
-          }
-          image-tag-and-push() {
-            local tag_a=$1
-            local tag_b=$2
-            local repo="${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:"
-            docker image tag "${repo}${tag_a}" "${repo}${tag_b}"
-            image-push $tag_b
-          }
-          image-push $CIRCLE_SHA1
-          image-tag-and-push $CIRCLE_SHA1 ${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}
+          docker image tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}" \
+                           "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
+          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
+          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
+          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
+          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
 
   build-image:
     steps:
@@ -150,6 +137,10 @@ commands:
         command: |
           bundle exec rake db:create db:migrate
 
+  terraform-install:
+    steps:
+      - terraform/install:
+          terraform_version: 1.0.9
   terraform-format:
     parameters:
       folder:
@@ -297,8 +288,7 @@ jobs:
     steps:
       - checkout
       - aws-init
-      - terraform/install:
-          terraform_version: 1.0.6
+      - terraform-install
       - terraform-init:
           folder: terraform
       - terraform-validate:
@@ -308,8 +298,7 @@ jobs:
     executor: base
     steps:
       - checkout
-      - terraform/install:
-          terraform_version: 1.0.6
+      - terraform-install
       - terraform-format:
           folder: terraform
   test-terraform-plan:
@@ -321,8 +310,7 @@ jobs:
     steps:
       - checkout
       - aws-init
-      - terraform/install:
-          terraform_version: 1.0.6
+      - terraform-install
       - terraform-init:
           folder: terraform
       - terraform-plan:
@@ -352,18 +340,17 @@ jobs:
         type: string
         description: A terraform workspace name
     steps:
-    - checkout
-    - aws-init
-    - terraform/install:
-        terraform_version: 1.0.0
-    - terraform-init:
-        folder: terraform
-    - terraform-plan:
-        folder: terraform
-        workspace: << parameters.workspace >>
-    - terraform-apply:
-        folder: terraform
-        workspace: << parameters.workspace >>
+      - checkout
+      - aws-init
+      - terraform-install
+      - terraform-init:
+          folder: terraform
+      - terraform-plan:
+          folder: terraform
+          workspace: << parameters.workspace >>
+      - terraform-apply:
+          folder: terraform
+          workspace: << parameters.workspace >>
 
 workflows:
   version: 2
