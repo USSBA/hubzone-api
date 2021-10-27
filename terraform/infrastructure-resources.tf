@@ -67,3 +67,10 @@ data "aws_db_instance" "rds" {
 #data "aws_rds_cluster" "rds" {
 #  cluster_identifier = "${terraform.workspace}-hubzone-aurora"
 #}
+
+## WAF Regional
+data "aws_wafv2_web_acl" "regional" {
+  name  = "basic-waf-regional"
+  scope = "REGIONAL"
+}
+
