@@ -12,6 +12,7 @@ locals {
       service_name     = "hubzone-api"
       ecr_name         = "hubzone/hubzone-api"
       public_subdomain = "maps"
+      geo_db_name      = "hzgeo_${terraform.workspace}"
 
       rails_port        = 3001
       task_cpu_rails    = "256"
@@ -44,6 +45,7 @@ locals {
       fqdn_base                     = "certify.sba.gov"
       cert_domain                   = "certify.sba.gov"
       rails_env                     = "production"
+      geo_db_name                   = "hzgeo_prd"
       desired_container_count_rails = 2
       min_container_count_rails     = 2
       max_container_count_rails     = 4
