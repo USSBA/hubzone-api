@@ -25,6 +25,8 @@ locals {
       min_container_count_rails     = 1 # minimum number of containers
       scaling_metric                = "memory"
       scaling_threshold             = "75"
+
+      fargate_alarm_targets = [local.sns_yellow]
     }
     demo = {
       fqdn_base        = "demo.sba-one.net"
@@ -49,6 +51,7 @@ locals {
       desired_container_count_rails = 2
       min_container_count_rails     = 2
       max_container_count_rails     = 4
+      fargate_alarm_targets         = [local.sns_red]
     }
   }
   # Condense all config into a single `local.env.*`
