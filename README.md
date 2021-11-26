@@ -3,20 +3,23 @@
 This application houses the custom HUBZone Geo API for the Small Business Administration.
 
 ### Table of Contents
-- [Installation](#installation)
-  - [Requirements](#requirements)
+- [Local Development](#local-development)
+  - [Software](#software)
   - [Building](#building)
-  - [Deploying](#deploying)
+  - [Launch Locally](#launch-locally)
 - [API Specification](#api-specification)
 - [Testing](#testing)
 - [External Services](#external-services)
+- [CircleCI Deployment](#circleci-deployment)
+- [Directories](#directories)
 - [Changelog](#changelog)
 - [License](#license)
 - [Contributing](#contributing)
 - [Security Issues](#security-issues)
 
-## Installation
-### Requirements:
+## Local Development
+
+### Software:
 * RVM
   - http://rvm.io/
 * Ruby 2.5.1
@@ -39,13 +42,13 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
     * Configure:
       * `echo 'export PGSQL_HOME=/usr/pgsql-9.5' >> ~/.bashrc`
       * `echo 'export PATH=${PATH}:${PGSQL_HOME}/bin' >> ~/.bashrc`
-  * Poirot
-    - Install [Poirot](https://github.com/emanuelfeld/poirot) python utility, typically `pip install poirot` and make sure that poirot is available in PATH by confirming that your PYTHON/bin folder is in PATH.
-    - Refer to [Poirot Secrets Testing](#poirot-secrets-testing) for information on running this tool.
-    - For local development, run the rake task to copy the `pre-commit-poirot` script to your local `.git/hooks/pre-commit` hook.
-      ```
-        rake hz:poirot_hooks
-      ```
+  * Docker
+    * [docker docs](https://docs.docker.com/get-docker/)
+      - [centos/redhat installation](https://docs.docker.com/engine/install/centos/)
+      - [ubuntu installation](https://docs.docker.com/engine/install/ubuntu/)
+      - [debian installation](https://docs.docker.com/engine/install/debian/)
+  * Docker Compose
+    * [docker-compose](https://docs.docker.com/compose/install/)
 
 ### Building
 After cloning the repo, checkout out the `develop` branch and set up your environment:
@@ -64,7 +67,7 @@ If the `bundle install` fails due to the pg gem, make sure you have the ENV vars
 
 Note that we run on  port 3001 for local development.  Also, the database is shared between this repo and the hubzone-data-etl repo, with the etl repo creating and populating the database.
 
-### Deploying
+### Launch Locally
 To launch the api:
 ``` bash
 rails server
@@ -144,23 +147,92 @@ coverage/index.html
 rubocop -D
 ```
 
-#### Poirot Secrets Testing
-A secrets pattern file `hubzone-poiroit-patterns.txt` is included with the app to assist with running [Poirot](https://github.com/emanuelfeld/poirot) to scan commit history for secrets.  It is recommended to run this only the current branch only:
-```
-  poirot --patterns hubzone-poirot-patterns.txt --revlist="develop^..HEAD"
-```
-Poirot will return an error status if it finds any secrets in the commit history between `HEAD` and develop.  You can correct these by: removing the secrets and squashing commits or by using something like BFG.
-
-Note that Poirot is hardcoded to run in case-insensitive mode and uses two different regex engines (`git log --grep` and a 3rd-party Python regex library https://pypi.python.org/pypi/regex/ ). Refer to Lines 121 and 195 in `<python_path>/site-packages/poirot/poirot.py`. The result is that the 'ssn' matcher will flag on: 'ssn', 'SSN', or 'ssN', etc., which also finds 'className', producing false positive errors in the full rev history.  Initially we included the `(?c)` flag in the SSN matchers: `.*(ssn)(?c).*[:=]\s*[0-9-]{9,11}` however this is not compatible with all regex engines and causes an error in some cases.  During the `--revlist="all"` full history Poirot runs, this pattern failed silently with the `git --grep` engine and therefore did not actually run.  During the `--staged` Poirot runs, this pattern fails with a stack trace with the `pypi/regex` engine. The `(?c)` pattern has been removed entirely and so the `ssn` patterns can still flag on false positives like 'className'.
-
-##### Poirot Git Hooks
-A rake task was included to copy a template `pre-commit-poirot` shell script to the local users `.git/hooks/pre-commit` hook.  This will run Poirot using the patterns file mentioned above on any staged files.  The pre-commit script was copied from https://raw.githubusercontent.com/DCgov/poirot/master/pre-commit-poirot.
-```
-  rake hz:poirot_hooks
-```
-
 ## External services
 - Connect to [Google Map API](https://developers.google.com/maps/) by putting your key in the .env file
+
+## CircleCI Deployment
+
+Code deployment is handled by CircleCI. The project can be viewed on [USSBA's CircleCI dashboard](https://circleci.com/gh/USSBA/hubzone-api).
+
+The CircleCI config file is located at .circleci/config.yml. For more on CircleCI configuration see their configuration reference.
+
+### Pre-requisites
+
+CircleCI utilizes GitHub permissions per repo. In order to trigger a CircleCI build your GitHub user will need the correct permissions.
+
+Knowledge of CircleCI is supremely helpful. See the [CircleCI documentation](https://circleci.com/docs/) for help.
+
+### Deployment workflows
+
+Builds for this project are triggered by commits to branches or by creating git tags. This will trigger a CircleCI workflow that runs a series of jobs which are defined in the project's CircleCI config file. To see the different workflows and jobs look at the respective codeblocks in `.circleci/config.yml`.
+
+For more on workflows and jobs, see the [CircleCI workflow documentation](https://circleci.com/docs/2.0/workflows/).
+
+![workflow](./attachments/certify-deployment.png)
+
+### Actions on all branches
+
+A commit on any branch will trigger the `test` workflow:
+
+* rubocop: Used for linting (code analyzer and formatter).
+* rspec / rspec-docker: Used for behavior driven development.
+* build-containers: Builds the containers but does not push them. This is a test to confirm containers build properly.
+* test-terraform-validate: Runs a `terraform validate` to ensure the configuration files in a directory are valid.
+* test-terraform-format: Runs a `terraform fmt` to ensure the configuration files are in a canonical format and style.
+
+### Actions on the `master` branch
+
+Triggers the `deploy` workflow for `stg` and `prod`:
+
+* build-and-push-containers - A new Hubzone API container is built, tagged with a git sha and pushed to the `hubzone/hubzone-api` ECR.
+* deploy-service-stg - The containers built in the ```build-and-push-containers``` job are deployed to AWS Fargate in `stg`.
+* test-terraform-plan - Runs a test terraform plan
+* hold-for-approval - Waits for human approval before deploying to `prod`.
+* deploy-service-prod - The containers built in the ```build-and-push-containers``` job are deployed to AWS Fargate automatically. If the deployment fails, it will automatically rollback.
+
+### Tag based build
+
+To trigger a build workflow for a specific commit outside of `master`/`develop`, the following git tags can be used. This can come in hand if you want to make sure the container can still be built after changes that were made without also performing a deploy.
+
+* `build-lower`
+* `build-upper`
+
+These tags must be force tagged/pushed to overwrite previous tags.
+
+Example: 
+```sh
+git tag build-lower --force && git push origin build-lower --force
+```
+
+### Tag based deployment
+
+To trigger a build/deploy workflow for a specific commit outside of `master`/`develop`, the following git tags can be used for their respective environments:
+
+* `deploy-demo`
+* `deploy-stg`
+
+These tags must be force tagged/pushed to overwrite previous tags.
+
+Example: 
+```sh
+git tag deploy-demo --force && git push origin deploy-demo --force
+```
+
+## Directories
+
+Information regarding directories and files.
+
+Root(./): Root directory of this repository contains Docker files needed for HUBZone API along with docker-compose for local development.
+
+terraform: Infrastructure code to deploy HUBZone API.
+  - alarms.tf: Contains alarms for fargate service.
+  - fargate.tf: Contains code that is used to deploy the container to AWS Fargate.
+  - infrastructure-resources.tf: Contains data calls that gets AWS resources which are used by `fargate.tf`.
+  - locals.tf: Contains local environment variables that can be commonly shared between all Terraform files.
+  - main.tf: Contains Terraform backend provider resources.
+  - security-group-rules.tf: Contains a security group rule that creates a rule on the HUBZone rds database.
+
+.circleci: Contains CircleCI pipeline yml.
 
 ## Changelog
 Refer to the changelog for details on changes to API. [CHANGELOG](CHANGELOG.md)
