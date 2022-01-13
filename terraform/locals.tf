@@ -36,7 +36,7 @@ locals {
     }
     stg = {
       fqdn_base   = "stg.certify.sba.gov"
-      cert_domain = "certify.sba.gov"
+      cert_domain = "stg.certify.sba.gov"
       rails_env   = "staging"
 
       desired_container_count_rails = 2
