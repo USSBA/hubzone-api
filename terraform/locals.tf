@@ -27,6 +27,9 @@ locals {
       scaling_threshold             = "75"
 
       fargate_alarm_targets = [local.sns_yellow]
+
+      scheduled_actions          = []
+      scheduled_actions_timezone = "America/New_York"
     }
     demo = {
       fqdn_base        = "demo.sba-one.net"
