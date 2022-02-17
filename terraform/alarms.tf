@@ -38,3 +38,49 @@ resource "aws_cloudwatch_metric_alarm" "memory" {
   }
 }
 
+resource "aws_cloudwatch_metric_alarm" "rate5xx" {
+  count                     = terraform.workspace == "prod" ? 1 : 0
+  alarm_name                = "${terraform.workspace}-${local.env.service_name}-5xx-error-rate"
+  comparison_operator       = "GreaterThanOrEqualToThreshold"
+  evaluation_periods        = "5"
+  threshold                 = "1"
+  alarm_description         = "Request error rate has exceeded 1% over 25 minutes"
+  alarm_actions             = local.env.fargate_alarm_targets
+  ok_actions                = local.env.fargate_alarm_targets
+  insufficient_data_actions = []
+
+  metric_query {
+    id          = "e1"
+    expression  = "m2/m1*100"
+    label       = "Error Rate"
+    return_data = "true"
+  }
+
+  metric_query {
+    id = "m1"
+    metric {
+      metric_name = "RequestCount"
+      namespace   = "AWS/ApplicationELB"
+      period      = "300"
+      stat        = "Sum"
+      unit        = "Count"
+      dimensions = {
+        LoadBalancer = module.api.alb.arn_suffix
+      }
+    }
+  }
+
+  metric_query {
+    id = "m2"
+    metric {
+      metric_name = "HTTPCode_ELB_5XX_Count"
+      namespace   = "AWS/ApplicationELB"
+      period      = "300"
+      stat        = "Sum"
+      unit        = "Count"
+      dimensions = {
+        LoadBalancer = module.api.alb.arn_suffix
+      }
+    }
+  }
+}
