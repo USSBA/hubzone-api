@@ -1,10 +1,10 @@
 version: 2.1
 
 orbs:
-  ruby: circleci/ruby@1.1.2
-  node: circleci/node@4.2.0
-  aws-cli: circleci/aws-cli@1.4.0
-  terraform: circleci/terraform@2.0.1
+  ruby: circleci/ruby@1
+  node: circleci/node@5
+  aws-cli: circleci/aws-cli@1
+  terraform: circleci/terraform@2
 
 executors:
   circle-machine:
@@ -19,13 +19,13 @@ executors:
 
   ruby:
     docker:
-      - image: circleci/ruby:2.7.4-node-browsers
+      - image: cimg/ruby:2.7.4-browsers
         environment:
           RAILS_ENV: test
 
   ruby-with-postgres:
     docker:
-      - image: circleci/ruby:2.7.4-node-browsers
+      - image: cimg/ruby:2.7.4-browsers
         environment:
           RAILS_ENV: test
           HUBZONE_API_DB_USER: postgres
@@ -34,7 +34,7 @@ executors:
           HUBZONE_API_DB_NAME: hzgeo
           SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
           HUBZONE_GOOGLE_API_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-      - image: circleci/postgres:12-alpine-postgis
+      - image: cimg/postgres:12.9-postgis
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
