@@ -180,42 +180,41 @@ A commit on any branch will trigger the `test` workflow:
 * test-terraform-validate: Runs a `terraform validate` to ensure the configuration files in a directory are valid.
 * test-terraform-format: Runs a `terraform fmt` to ensure the configuration files are in a canonical format and style.
 
-### Actions on the `master` branch
-
-Triggers the `deploy` workflow for `stg` and `prod`:
-
-* build-and-push-containers - A new Hubzone API container is built, tagged with a git sha and pushed to the `hubzone/hubzone-api` ECR.
-* deploy-service-stg - The containers built in the ```build-and-push-containers``` job are deployed to AWS Fargate in `stg`.
-* test-terraform-plan - Runs a test terraform plan
-* hold-for-approval - Waits for human approval before deploying to `prod`.
-* deploy-service-prod - The containers built in the ```build-and-push-containers``` job are deployed to AWS Fargate automatically. If the deployment fails, it will automatically rollback.
-
 ### Tag based build
 
-To trigger a build workflow for a specific commit outside of `master`/`develop`, the following git tags can be used. This can come in hand if you want to make sure the container can still be built after changes that were made without also performing a deploy.
+To trigger a build workflow for testing the docker build process, the following git tags can be used. This can come in hand if you want to make sure the container can still be built after changes that were made without also performing a deploy.
 
 * `build-lower`
 * `build-upper`
 
 These tags must be force tagged/pushed to overwrite previous tags.
 
-Example: 
+Example:
 ```sh
 git tag build-lower --force && git push origin build-lower --force
 ```
 
 ### Tag based deployment
 
-To trigger a build/deploy workflow for a specific commit outside of `master`/`develop`, the following git tags can be used for their respective environments:
+To trigger a build/deploy workflow for a specific environment, the following git tags can be used for their respective environments:
 
-* `deploy-demo`
-* `deploy-stg`
+* Demo -> `deploy-demo`
+* Stg -> `rc-vX.X.X`
+* Prod -> `vX.X.X`
 
-These tags must be force tagged/pushed to overwrite previous tags.
-
-Example: 
+Demo Example:
 ```sh
 git tag deploy-demo --force && git push origin deploy-demo --force
+```
+
+Stg Example:
+```sh
+git tag rc-v1.0.0 && git push origin rc-v1.0.0
+```
+
+Prod Example:
+```sh
+git tag v1.0.0 && git push origin v1.0.0
 ```
 
 ## Directories
