@@ -6,8 +6,11 @@ data "aws_vpc" "selected" {
 }
 
 # subnet ids
-data "aws_subnet_ids" "private" {
-  vpc_id = data.aws_vpc.selected.id
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.selected.id]
+  }
   filter {
     name = "tag:Name"
     values = [
@@ -15,24 +18,17 @@ data "aws_subnet_ids" "private" {
     ]
   }
 }
-data "aws_subnet_ids" "public" {
-  vpc_id = data.aws_vpc.selected.id
+data "aws_subnets" "public" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.selected.id]
+  }
   filter {
     name = "tag:Name"
     values = [
       "${terraform.workspace}-public-subnet-*"
     ]
   }
-}
-
-## subnet resources
-data "aws_subnet" "private" {
-  for_each = data.aws_subnet_ids.private.ids
-  id       = each.value
-}
-data "aws_subnet" "public" {
-  for_each = data.aws_subnet_ids.public.ids
-  id       = each.value
 }
 
 ## hosted zone
