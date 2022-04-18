@@ -5,9 +5,7 @@ variable "image_tag" {
 locals {
   container_environment = {
     RAILS_ENV           = local.env.rails_env
-    HUBZONE_API_DB_HOST = local.postgres_fqdn
     RAILS_LOG_TO_STDOUT = "true"
-    HUBZONE_API_DB_NAME = "${local.env.geo_db_name}"
     RAILS_MAX_THREADS   = "5"
   }
   container_secrets_parameterstore = {
