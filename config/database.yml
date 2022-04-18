@@ -34,25 +34,10 @@ staging:
   host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'hubzone-db.stg.certify.sba.gov' } %>
   database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_stg' } %>
 
-training:
-  <<: *default
-  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'hubzone-db.training.certify.sba.gov' } %>
-  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_trn' } %>
-
-qa:
-  <<: *default
-  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'hubzone-db.qa.sba-one.net' } %>
-  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_qa' } %>
-
 demo:
   <<: *default
   host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'hubzone-db.demo.sba-one.net' } %>
   database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_demo' } %>
-
-dev:
-  <<: *default
-  host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'db.map.dev.sba-one.net' } %>
-  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
 
 development:
   <<: *default
