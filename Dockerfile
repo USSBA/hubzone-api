@@ -29,9 +29,12 @@ RUN bundle install --quiet
 COPY . .
 
 # Setup Entrypoint
-RUN cp ./docker/entrypoint.sh ./docker/start-rails.sh /usr/bin/ && chmod 555 /usr/bin/entrypoint.sh && chmod 555 /usr/bin/start-rails.sh
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["start-rails.sh"]
+
+COPY docker/entrypoint.sh /usr/bin/entrypoint.sh
+COPY docker/start-rails.sh /usr/bin/start-rails.sh
+RUN chmod +x /usr/bin/entrypoint.sh /usr/bin/start-rails.sh
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+CMD ["/usr/bin/start-rails.sh"]
 
 ENV RAILS_LOG_TO_STDOUT true
 EXPOSE 3001

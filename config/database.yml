@@ -41,11 +41,11 @@ demo:
 
 development:
   <<: *default
-  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_stg' } %>
 
 developmentdocker:
   <<: *default
-  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_dev' } %>
+  database: <%= ENV.fetch('HUBZONE_API_DB_NAME') { 'hzgeo_stg' } %>
   host: <%= ENV.fetch('HUBZONE_API_DB_HOST') { 'postgres' } %>
   username: <%= ENV.fetch('HUBZONE_API_DB_USER') { 'dockeruser' } %>
   password: <%= ENV.fetch('HUBZONE_API_DB_PASSWORD') { 'dockerpass' } %>

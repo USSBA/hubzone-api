@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: hzgeo
+      POSTGRES_DB: hzgeo_stg
 
   hubzone-api:
     build:
@@ -18,10 +18,10 @@ services:
       RAILS_ENV: developmentdocker
       HUBZONE_API_DB_USER: postgres
       HUBZONE_API_DB_PASSWORD: postgres
-      HUBZONE_API_DB_HOST: postgres
-      HUBZONE_API_DB_NAME: hzgeo
+      HUBZONE_API_DB_HOST: 172.21.0.1
+      HUBZONE_API_DB_NAME: hzgeo_stg
       SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-      HUBZONE_GOOGLE_API_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      HUBZONE_GOOGLE_API_KEY: AIzaSyBDvs9uQs8SQp_ral3oYa-0lP25dGUries
       # OVERRIDE VARS
       # ---------------------------------------------
       # PORT: 3001
@@ -43,3 +43,4 @@ services:
         start-rails.sh;
         echo rails process exited, stopping container.;
       "
+
