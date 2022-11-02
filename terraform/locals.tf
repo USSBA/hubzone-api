@@ -7,6 +7,12 @@ locals {
     stg  = "222484291001"
     prod = "222484291001"
   }
+  sns_alarms = {
+    green    = "arn:aws:sns:us-east-1:502235151991:alarm-green"
+    yellow   = "arn:aws:sns:us-east-1:502235151991:alarm-yellow"
+    red      = "arn:aws:sns:us-east-1:502235151991:alarm-red"
+    security = "arn:aws:sns:us-east-1:502235151991:alarm-security"
+  }
   all = {
     default = {
       service_name     = "hubzone-api"
@@ -26,7 +32,6 @@ locals {
       scaling_metric                = "memory"
       scaling_threshold             = "75"
 
-      fargate_alarm_targets = [local.sns_yellow]
 
       scheduled_actions          = []
       scheduled_actions_timezone = "America/New_York"
@@ -59,7 +64,6 @@ locals {
       desired_container_count_rails = 2
       min_container_count_rails     = 2
       max_container_count_rails     = 4
-      fargate_alarm_targets         = [local.sns_red]
     }
   }
   # Condense all config into a single `local.env.*`
