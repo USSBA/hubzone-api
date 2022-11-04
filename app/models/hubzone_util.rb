@@ -47,6 +47,7 @@ class HubzoneUtil
     def add_assertions(results)
       results[:other_information] = {alerts: {}}
       append_assertions(results)
+      append_boundaries(results)
       latest_expiration(results)
       append_other_information(results)
       VerifiedHubzone.new results
@@ -81,15 +82,38 @@ class HubzoneUtil
       results
     end
 
+
+    def append_boundaries(results)
+      results[:boundaries] = []
+      location = results['geometry']['location']
+
+      # maybe we need another word other than assertion
+    
+      %w[UsTaract UsCounty].each do |assertion_type|
+        hz_assertion = "#{assertion_type}Assertion".constantize
+        puts "\n== Query Print=="
+        puts hz_assertion
+        results[:boundaries] += hz_assertion.assertion location
+      end
+      puts "\n==TotalResult="
+      puts results
+    end
+
+
     def append_assertions(results)
       results[:hubzone] = []
       location = results['geometry']['location']
 
       # maybe we need another word other than assertion
+    
       %w[Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands MvwGovAreaMap MvwGovAreaMapCounty].each do |assertion_type|
         hz_assertion = "#{assertion_type}Assertion".constantize
+        puts "\n== Query Print=="
+        puts hz_assertion
         results[:hubzone] += hz_assertion.assertion location
       end
+      puts "\n==TotalResult="
+      puts results
     end
 
     # add other information to response
