@@ -13,6 +13,7 @@ locals {
     HUBZONE_API_DB_PASSWORD = "${terraform.workspace}/hubzone/rds/password"
     HUBZONE_GOOGLE_API_KEY  = "${terraform.workspace}/hubzone/api/google_api_key"
     SECRET_KEY_BASE         = "${terraform.workspace}/hubzone/api/secret_key_base"
+    HUBZONE_API_DB_HOST     = "preview-hubzone-db.demo.sba-one.net"
   }
 }
 
