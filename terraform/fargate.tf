@@ -7,13 +7,13 @@ locals {
     RAILS_ENV           = local.env.rails_env
     RAILS_LOG_TO_STDOUT = "true"
     RAILS_MAX_THREADS   = "5"
+    HUBZONE_API_DB_HOST     = "preview-hubzone-db.demo.sba-one.net"
   }
   container_secrets_parameterstore = {
     HUBZONE_API_DB_USER     = "${terraform.workspace}/hubzone/rds/username"
     HUBZONE_API_DB_PASSWORD = "${terraform.workspace}/hubzone/rds/password"
     HUBZONE_GOOGLE_API_KEY  = "${terraform.workspace}/hubzone/api/google_api_key"
     SECRET_KEY_BASE         = "${terraform.workspace}/hubzone/api/secret_key_base"
-    HUBZONE_API_DB_HOST     = "preview-hubzone-db.demo.sba-one.net"
   }
 }
 
