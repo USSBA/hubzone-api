@@ -47,6 +47,7 @@ class HubzoneUtil
     def add_assertions(results)
       results[:other_information] = {alerts: {}}
       append_assertions(results)
+      append_boundaries(results)
       latest_expiration(results)
       append_other_information(results)
       VerifiedHubzone.new results
@@ -81,27 +82,64 @@ class HubzoneUtil
       results
     end
 
+
+    def append_boundaries(results)
+      results[:boundaries] = []
+      location = results['geometry']['location']
+
+      # maybe we need another word other than assertion
+    
+      %w[UsTaract UsCounty].each do |assertion_type|
+        hz_assertion = "#{assertion_type}Assertion".constantize
+        puts "\n== Query Print=="
+        puts hz_assertion
+        results[:boundaries] += hz_assertion.assertion location
+      end
+      puts "\n==TotalResult="
+      puts results
+    end
+
+
     def append_assertions(results)
       results[:hubzone] = []
       location = results['geometry']['location']
 
       # maybe we need another word other than assertion
+    
       %w[Brac Qct QctBrac Qnmc QnmcBrac QnmcQda QctQda IndianLands MvwGovAreaMap MvwGovAreaMapCounty].each do |assertion_type|
         hz_assertion = "#{assertion_type}Assertion".constantize
+        puts "\n== Query Print=="
+        puts hz_assertion
         results[:hubzone] += hz_assertion.assertion location
       end
+      puts "\n==TotalResult="
+      puts results
     end
 
     # add other information to response
     def append_other_information(results)
       location = results['geometry']['location']
-
       # get likely designations
       likely_qda_designations = likely_qda_assertion location
       results[:other_information][:alerts][:likely_qda_designations] = likely_qda_designations if likely_qda_designations.present?
 
       # get congressional district
-      results[:other_information][:congressional_district] = congressional_district_assertion location || nil
+      #results[:other_information][:congressional_district] = congressional_district_assertion location || nil
+
+        congressional_district = {}
+        %w[CensusCounty CensusTaract CongressionalDistrict].each do |assertion_type|
+          hz_assertion = "#{assertion_type}Assertion".constantize
+          hz_v = hz_assertion.assertion location
+          puts "\n==congressional_district=1"
+          puts hz_v
+          #results[:other_information][:congressional_district] += hz_assertion.assertion location
+          congressional_district = congressional_district.merge(hz_v[0])
+        end
+        puts "\n==congressional_district="
+        puts congressional_district
+        results[:other_information][:congressional_district] = [congressional_district]
+
+
     end
 
     # query the likley_qda view and append results

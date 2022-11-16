@@ -27,7 +27,13 @@ module AssertionHelper
   def make_query(type, location)
     res = []
     begin
+      puts "\n==location ="
+      puts location
+      puts "\n==Query ="
+      puts assertion_query(location, type)
       res = ActiveRecord::Base.connection.execute(assertion_query(location, type))
+      puts "\n==QueryResult ="
+      puts res
     rescue ActiveRecord::StatementInvalid => e
       Rails.logger.warn { "Invalid Statement generated for type assertion:\n#{e}" }
     end
