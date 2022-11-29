@@ -103,7 +103,7 @@ commands:
     steps:
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> }
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         steps:
         - ecr-image-build:
             image_name: hubzone/hubzone-api
@@ -117,7 +117,7 @@ commands:
     steps:
       - when:
         condition:
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> }
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         steps:
           - ecr-image-push:
               image_name: hubzone/hubzone-api
@@ -308,7 +308,7 @@ jobs:
       - terraform-install
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> }
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         - terraform-init:
             folder: terraform
       - unless:
@@ -317,7 +317,7 @@ jobs:
           folder: terraform/preview
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> }
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         - terraform-validate:
             folder: terraform
             workspace: << parameters.workspace >>
@@ -333,7 +333,7 @@ jobs:
       - terraform-install
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> }
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
           - terraform-format:
             folder: terraform
       - unless:
@@ -352,7 +352,7 @@ jobs:
       - terraform-install
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> }
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         - terraform-init:
             folder: terraform
       - unless:
@@ -361,7 +361,7 @@ jobs:
           folder: terraform/preview
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> }    
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }    
         - terraform-plan:
             folder: terraform
             workspace: << parameters.workspace >>
@@ -399,7 +399,7 @@ jobs:
       - terraform-install
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> } 
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> } 
         - terraform-init:
             folder: terraform
       - unless:
@@ -408,7 +408,7 @@ jobs:
           folder: terraform/preview
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> } 
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> } 
         - terraform-plan:
             folder: terraform
             workspace: << parameters.workspace >>
@@ -419,7 +419,7 @@ jobs:
           workspace: << parameters.workspace >>
       - when:
         condition: 
-          - matches: { pattern: "deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+", value: << pipeline.git.tag >> } 
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> } 
         - terraform-apply:
             folder: terraform
             workspace: << parameters.workspace >>
