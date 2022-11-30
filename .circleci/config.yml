@@ -302,30 +302,40 @@ jobs:
       workspace:
         type: string
         description: A terraform workspace name
-    steps:
-      - checkout
-      - aws-init
-      - terraform-install
-      when:
-        condition: 
-          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
-        - terraform-init:
-            folder: terraform
-      unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+    when:
+      condition: 
+        - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+        steps:
+          - checkout
+          - aws-init
+          - terraform-install
+          - terraform-init:
+              folder: terraform
+    unless:
+      - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+      steps:
+        - checkout
+        - aws-init
+        - terraform-install
         - terraform-init:
           folder: terraform/preview
-      when:
-        condition: 
-          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+    when:
+      condition: 
+        - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+        steps:
+          - checkout
+          - aws-init
+          - terraform-install
+          - terraform-validate:
+              folder: terraform
+    unless:
+      - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+      steps:
+        - checkout
+        - aws-init
+        - terraform-install
         - terraform-validate:
-            folder: terraform
-            workspace: << parameters.workspace >>
-      unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        - terraform-validate:
-            folder: terraform/preview
-            workspace: << parameters.workspace >>
+          folder: terraform/preview
   test-terraform-format:
     executor: base
     steps:
