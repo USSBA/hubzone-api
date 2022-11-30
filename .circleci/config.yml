@@ -302,7 +302,7 @@ jobs:
       workspace:
         type: string
         description: A terraform workspace name
-    when:
+    - when:
       condition: 
         - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         steps:
@@ -311,7 +311,7 @@ jobs:
           - terraform-install
           - terraform-init:
               folder: terraform
-    unless:
+    - unless:
       - equals: [ "deploy-preview", << pipeline.git.tag >> ]
       steps:
         - checkout
@@ -319,7 +319,7 @@ jobs:
         - terraform-install
         - terraform-init:
           folder: terraform/preview
-    when:
+    - when:
       condition: 
         - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         steps:
@@ -328,7 +328,7 @@ jobs:
           - terraform-install
           - terraform-validate:
               folder: terraform
-    unless:
+    - unless:
       - equals: [ "deploy-preview", << pipeline.git.tag >> ]
       steps:
         - checkout
