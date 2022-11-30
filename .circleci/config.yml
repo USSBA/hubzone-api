@@ -311,37 +311,39 @@ jobs:
               - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
             steps:
               - terraform-init:
-                  folder: terraform
+                folder: terraform
           - unless:
             - equals: [ "deploy-preview", << pipeline.git.tag >> ]
             steps:
               - terraform-init:
-                  folder: terraform/preview
+                folder: terraform/preview
           - when:
             condition: 
               - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
             steps:
               - terraform-validate:
-                  folder: terraform
+                folder: terraform
           - unless:
             - equals: [ "deploy-preview", << pipeline.git.tag >> ]
             steps:
               - terraform-validate:
-                  folder: terraform/preview
+                folder: terraform/preview
   test-terraform-format:
     executor: base
     steps:
       - checkout
       - terraform-install
       - when:
-        condition: 
-          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
-          - terraform-format:
-            folder: terraform
+          condition: 
+            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+          steps:
+            - terraform-format:
+              folder: terraform
       - unless:
         - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        - terraform-format:
-          folder: terraform/preview
+        steps:
+          - terraform-format:
+            folder: terraform/preview
   test-terraform-plan:
     executor: base
     parameters:
@@ -353,25 +355,29 @@ jobs:
       - aws-init
       - terraform-install
       - when:
-        condition: 
-          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
-        - terraform-init:
-            folder: terraform
+          condition: 
+            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+          steps:
+            - terraform-init:
+              folder: terraform
       - unless:
         - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        - terraform-init:
-          folder: terraform/preview
+        steps:
+          - terraform-init:
+            folder: terraform/preview
       - when:
         condition: 
-          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }    
-        - terraform-plan:
+          - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+        steps:  
+          - terraform-plan:
             folder: terraform
-            workspace: << parameters.workspace >>
+          workspace: << parameters.workspace >>
       - unless:
         - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        - terraform-plan:
-          folder: terraform/preview
-          workspace: << parameters.workspace >>
+        steps:
+          - terraform-plan:
+            folder: terraform/preview
+            workspace: << parameters.workspace >>
   build-containers:
     executor: circle-machine
     steps:
