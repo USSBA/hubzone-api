@@ -105,14 +105,13 @@ commands:
         condition: 
           - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         steps:
-        - ecr-image-build:
+          - ecr-image-build:
             image_name: hubzone/hubzone-api
       - unless:
-        condition:
-          - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
         steps:
           - ecr-image-build:
-              image_name: hubzone-api-preview
+            image_name: hubzone-api-preview
   push-image:
     steps:
       - when:
@@ -120,12 +119,12 @@ commands:
           - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
         steps:
           - ecr-image-push:
-              image_name: hubzone/hubzone-api
+            image_name: hubzone/hubzone-api
       - unless:
-        condition: << pipeline.git.tag >>
+        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
         steps:
           - ecr-image-push:
-              image_name: hubzone-api-preview
+            image_name: hubzone-api-preview
   install-system-dependencies:
     steps:
     - run:
