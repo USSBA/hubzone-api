@@ -101,30 +101,32 @@ commands:
 
   build-image:
     steps:
-      - when:
+      when:
           condition: 
             - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
           steps:
             - ecr-image-build:
                 image_name: hubzone/hubzone-api
-      - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - ecr-image-build:
-              image_name: hubzone-api-preview
+      unless:
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - ecr-image-build:
+                image_name: hubzone-api-preview
   push-image:
     steps:
-      - when:
+      when:
           condition:
             - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
           steps:
             - ecr-image-push:
               image_name: hubzone/hubzone-api
-      - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - ecr-image-push:
-              image_name: hubzone-api-preview
+      unless:
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - ecr-image-push:
+                image_name: hubzone-api-preview
   install-system-dependencies:
     steps:
     - run:
@@ -312,10 +314,11 @@ jobs:
                 - terraform-init:
                     folder: terraform
           - unless:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-            steps:
-              - terraform-init:
-                  folder: terraform/preview
+              condition:
+                - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+              steps:
+                - terraform-init:
+                    folder: terraform/preview
           - when:
               condition: 
                 - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
@@ -323,10 +326,11 @@ jobs:
                 - terraform-validate:
                     folder: terraform
           - unless:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-            steps:
-              - terraform-validate:
-                  folder: terraform/preview
+              condition:
+                - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+              steps:
+                - terraform-validate:
+                    folder: terraform/preview
   test-terraform-format:
     executor: base
     steps:
@@ -339,10 +343,11 @@ jobs:
             - terraform-format:
                 folder: terraform
       - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - terraform-format:
-              folder: terraform/preview
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - terraform-format:
+                folder: terraform/preview
   test-terraform-plan:
     executor: base
     parameters:
@@ -360,10 +365,11 @@ jobs:
             - terraform-init:
                 folder: terraform
       - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - terraform-init:
-              folder: terraform/preview
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - terraform-init:
+                folder: terraform/preview
       - when:
           condition: 
             - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
@@ -372,11 +378,12 @@ jobs:
                 folder: terraform
                 workspace: << parameters.workspace >>
       - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - terraform-plan:
-              folder: terraform/preview
-              workspace: << parameters.workspace >>
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - terraform-plan:
+                folder: terraform/preview
+                workspace: << parameters.workspace >>
   build-containers:
     executor: circle-machine
     steps:
@@ -411,10 +418,11 @@ jobs:
             - terraform-init:
                 folder: terraform
       - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - terraform-init:
-              folder: terraform/preview
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - terraform-init:
+                folder: terraform/preview
       - when:
           condition: 
             - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
@@ -423,11 +431,12 @@ jobs:
                 folder: terraform
                 workspace: << parameters.workspace >>
       - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - terraform-plan:
-              folder: terraform/preview
-              workspace: << parameters.workspace >>
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - terraform-plan:
+                folder: terraform/preview
+                workspace: << parameters.workspace >>
       - when:
           condition: 
             - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
@@ -436,11 +445,12 @@ jobs:
                 folder: terraform
                 workspace: << parameters.workspace >>
       - unless:
-        - equals: [ "deploy-preview", << pipeline.git.tag >> ]
-        steps:
-          - terraform-apply:
-              folder: terraform/preview
-              workspace: << parameters.workspace >>
+          condition:
+            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+          steps:
+            - terraform-apply:
+                folder: terraform/preview
+                workspace: << parameters.workspace >>
   deploy-preview-service:
     executor: circle-machine
     parameters:
