@@ -103,7 +103,7 @@ commands:
     steps:
       - when:
           condition: 
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                 value: << pipeline.git.tag >>
           steps:
@@ -111,7 +111,7 @@ commands:
                 image_name: hubzone/hubzone-api
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - ecr-image-build:
                 image_name: hubzone-api-preview
@@ -119,15 +119,15 @@ commands:
     steps:
       - when:
           condition:
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-                value: << pipeline.git.tag >> }
+                value: << pipeline.git.tag >>
           steps:
             - ecr-image-push:
               image_name: hubzone/hubzone-api
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - ecr-image-push:
                 image_name: hubzone-api-preview
@@ -313,7 +313,7 @@ jobs:
           - terraform-install
           - when:
               condition: 
-                - matches:
+                matches:
                     pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                     value: << pipeline.git.tag >> }
               steps:
@@ -321,13 +321,13 @@ jobs:
                     folder: terraform
           - unless:
               condition:
-                - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+                equal: [ "deploy-preview", << pipeline.git.tag >> ]
               steps:
                 - terraform-init:
                     folder: terraform/preview
           - when:
               condition: 
-                - matches:
+                matches:
                     pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                     value: << pipeline.git.tag >> }
               steps:
@@ -335,7 +335,7 @@ jobs:
                     folder: terraform
           - unless:
               condition:
-                - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+                equal: [ "deploy-preview", << pipeline.git.tag >> ]
               steps:
                 - terraform-validate:
                     folder: terraform/preview
@@ -346,7 +346,7 @@ jobs:
       - terraform-install
       - when:
           condition: 
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                 value: << pipeline.git.tag >> }
           steps:
@@ -354,7 +354,7 @@ jobs:
                 folder: terraform
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - terraform-format:
                 folder: terraform/preview
@@ -370,7 +370,7 @@ jobs:
       - terraform-install
       - when:
           condition: 
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                 value: << pipeline.git.tag >> }
           steps:
@@ -378,13 +378,13 @@ jobs:
                 folder: terraform
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - terraform-init:
                 folder: terraform/preview
       - when:
           condition: 
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                 value: << pipeline.git.tag >> }
           steps:  
@@ -393,7 +393,7 @@ jobs:
                 workspace: << parameters.workspace >>
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - terraform-plan:
                 folder: terraform/preview
@@ -427,7 +427,7 @@ jobs:
       - terraform-install
       - when:
           condition: 
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                 value: << pipeline.git.tag >> }
           steps:
@@ -435,13 +435,13 @@ jobs:
                 folder: terraform
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - terraform-init:
                 folder: terraform/preview
       - when:
           condition: 
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                 value: << pipeline.git.tag >> }
           steps:
@@ -450,14 +450,14 @@ jobs:
                 workspace: << parameters.workspace >>
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - terraform-plan:
                 folder: terraform/preview
                 workspace: << parameters.workspace >>
       - when:
           condition: 
-            - matches:
+            matches:
                 pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
                 value: << pipeline.git.tag >> }
           steps:
@@ -466,7 +466,7 @@ jobs:
                 workspace: << parameters.workspace >>
       - unless:
           condition:
-            - equals: [ "deploy-preview", << pipeline.git.tag >> ]
+            equal: [ "deploy-preview", << pipeline.git.tag >> ]
           steps:
             - terraform-apply:
                 folder: terraform/preview
