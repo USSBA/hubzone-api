@@ -311,7 +311,7 @@ jobs:
           - checkout
           - aws-init
           - terraform-install
-          when:
+          - when:
               condition: 
                 matches:
                   pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
@@ -319,13 +319,13 @@ jobs:
               steps:
                 - terraform-init:
                     folder: terraform
-          unless:
+          - unless:
               condition:
                 equal: [ "deploy-preview", << pipeline.git.tag >> ]
               steps:
                 - terraform-init:
                     folder: terraform/preview
-          when:
+          - when:
               condition: 
                 matches:
                   pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
@@ -333,7 +333,7 @@ jobs:
               steps:
                 - terraform-validate:
                     folder: terraform
-          unless:
+          - unless:
               condition:
                 equal: [ "deploy-preview", << pipeline.git.tag >> ]
               steps:
