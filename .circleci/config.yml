@@ -103,7 +103,9 @@ commands:
     steps:
       - when:
           condition: 
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >>
           steps:
             - ecr-image-build:
                 image_name: hubzone/hubzone-api
@@ -117,7 +119,9 @@ commands:
     steps:
       - when:
           condition:
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >> }
           steps:
             - ecr-image-push:
               image_name: hubzone/hubzone-api
@@ -309,7 +313,9 @@ jobs:
           - terraform-install
           - when:
               condition: 
-                - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+                - matches:
+                    pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                    value: << pipeline.git.tag >> }
               steps:
                 - terraform-init:
                     folder: terraform
@@ -321,7 +327,9 @@ jobs:
                     folder: terraform/preview
           - when:
               condition: 
-                - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+                - matches:
+                    pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                    value: << pipeline.git.tag >> }
               steps:
                 - terraform-validate:
                     folder: terraform
@@ -338,7 +346,9 @@ jobs:
       - terraform-install
       - when:
           condition: 
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >> }
           steps:
             - terraform-format:
                 folder: terraform
@@ -360,7 +370,9 @@ jobs:
       - terraform-install
       - when:
           condition: 
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >> }
           steps:
             - terraform-init:
                 folder: terraform
@@ -372,7 +384,9 @@ jobs:
                 folder: terraform/preview
       - when:
           condition: 
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >> }
           steps:  
             - terraform-plan:
                 folder: terraform
@@ -413,7 +427,9 @@ jobs:
       - terraform-install
       - when:
           condition: 
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >> }
           steps:
             - terraform-init:
                 folder: terraform
@@ -425,7 +441,9 @@ jobs:
                 folder: terraform/preview
       - when:
           condition: 
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >> }
           steps:
             - terraform-plan:
                 folder: terraform
@@ -439,7 +457,9 @@ jobs:
                 workspace: << parameters.workspace >>
       - when:
           condition: 
-            - matches: { pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+', value: << pipeline.git.tag >> }
+            - matches:
+                pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
+                value: << pipeline.git.tag >> }
           steps:
             - terraform-apply:
                 folder: terraform
