@@ -21,7 +21,7 @@ services:
       HUBZONE_API_DB_HOST: 172.30.240.1
       HUBZONE_API_DB_NAME: hzgeo_stg
       SECRET_KEY_BASE: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-      HUBZONE_GOOGLE_API_KEY: AIzaSyBDvs9uQs8SQp_ral3oYa-0lP25dGUries
+      HUBZONE_GOOGLE_API_KEY: 
       # OVERRIDE VARS
       # ---------------------------------------------
       # PORT: 3001
