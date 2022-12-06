@@ -101,36 +101,20 @@ commands:
 
   build-image:
     steps:
-      - when:
-          condition: 
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:
-            - ecr-image-build:
-                image_name: hubzone/hubzone-api
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - ecr-image-build:
-                image_name: hubzone-api-preview
+      - ecr-image-build:
+          image_name: hubzone/hubzone-api
   push-image:
     steps:
-      - when:
-          condition:
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:
-            - ecr-image-push:
-                image_name: hubzone/hubzone-api
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - ecr-image-push:
-                image_name: hubzone-api-preview
+      - ecr-image-push:
+          image_name: hubzone/hubzone-api
+  build-preview-image:
+    steps:
+      - ecr-image-build:
+          image_name: hubzone-api-preview
+  push-preview-image:
+    steps:
+      - ecr-image-push:
+          image_name: hubzone-api-preview
   install-system-dependencies:
     steps:
     - run:
@@ -311,53 +295,38 @@ jobs:
           - checkout
           - aws-init
           - terraform-install
-          - when:
-              condition: 
-                matches:
-                  pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-                  value: << pipeline.git.tag >>
-              steps:
-                - terraform-init:
-                    folder: terraform
-          - unless:
-              condition:
-                equal: [ "deploy-preview", << pipeline.git.tag >> ]
-              steps:
-                - terraform-init:
-                    folder: terraform/preview
-          - when:
-              condition: 
-                matches:
-                  pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-                  value: << pipeline.git.tag >>
-              steps:
-                - terraform-validate:
-                    folder: terraform
-          - unless:
-              condition:
-                equal: [ "deploy-preview", << pipeline.git.tag >> ]
-              steps:
-                - terraform-validate:
-                    folder: terraform/preview
+          - terraform-init:
+              folder: terraform
+          - terraform-validate:
+              folder: terraform
+  test-terraform-validate-preview:
+    executor: base
+    parameters:
+      workspace:
+        type: string
+        description: A terraform workspace name
+        steps:
+          - checkout
+          - aws-init
+          - terraform-install
+          - terraform-init:
+              folder: terraform/preview
+          - terraform-validate:
+              folder: terraform/preview
   test-terraform-format:
     executor: base
     steps:
       - checkout
       - terraform-install
-      - when:
-          condition: 
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:
-            - terraform-format:
-                folder: terraform
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - terraform-format:
-                folder: terraform/preview
+      - terraform-format:
+          folder: terraform
+  test-terraform-format-preview:
+    executor: base
+    steps:
+      - checkout
+      - terraform-install
+      - terraform-format:
+          folder: terraform/preview
   test-terraform-plan:
     executor: base
     parameters:
@@ -368,36 +337,26 @@ jobs:
       - checkout
       - aws-init
       - terraform-install
-      - when:
-          condition: 
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:
-            - terraform-init:
-                folder: terraform
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - terraform-init:
-                folder: terraform/preview
-      - when:
-          condition: 
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:  
-            - terraform-plan:
-                folder: terraform
-                workspace: << parameters.workspace >>
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - terraform-plan:
-                folder: terraform/preview
-                workspace: << parameters.workspace >>
+      - terraform-init:
+          folder: terraform
+      - terraform-plan:
+          folder: terraform
+          workspace: << parameters.workspace >>
+  test-terraform-plan-preview:
+    executor: base
+    parameters:
+      workspace:
+        type: string
+        description: A terraform workspace name
+    steps:
+      - checkout
+      - aws-init
+      - terraform-install
+      - terraform-init:
+          folder: terraform/preview
+      - terraform-plan:
+          folder: terraform/preview
+          workspace: << parameters.workspace >>
   build-containers:
     executor: circle-machine
     steps:
@@ -407,6 +366,15 @@ jobs:
           command: |
             echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
       - build-image
+  build-preview-containers:
+    executor: circle-machine
+    steps:
+      - checkout
+      - run:
+          name: aws-env
+          command: |
+            echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
+      - build-preview-image
   build-and-push-containers:
     executor: circle-machine
     steps:
@@ -415,6 +383,14 @@ jobs:
       - ecr-login
       - build-image
       - push-image
+  build-and-push-preview-containers:
+    executor: circle-machine
+    steps:
+      - checkout
+      - aws-init
+      - ecr-login
+      - build-preview-image
+      - push-preview-image
   deploy-service:
     executor: circle-machine
     parameters:
@@ -425,52 +401,14 @@ jobs:
       - checkout
       - aws-init
       - terraform-install
-      - when:
-          condition: 
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:
-            - terraform-init:
-                folder: terraform
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - terraform-init:
-                folder: terraform/preview
-      - when:
-          condition: 
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:
-            - terraform-plan:
-                folder: terraform
-                workspace: << parameters.workspace >>
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - terraform-plan:
-                folder: terraform/preview
-                workspace: << parameters.workspace >>
-      - when:
-          condition: 
-            matches:
-              pattern: 'deploy\-demo|rc\-v[0-9\.]+|v[0-9\.]+'
-              value: << pipeline.git.tag >>
-          steps:
-            - terraform-apply:
-                folder: terraform
-                workspace: << parameters.workspace >>
-      - unless:
-          condition:
-            equal: [ "deploy-preview", << pipeline.git.tag >> ]
-          steps:
-            - terraform-apply:
-                folder: terraform/preview
-                workspace: << parameters.workspace >>
+      - terraform-init:
+          folder: terraform
+      - terraform-plan:
+          folder: terraform
+          workspace: << parameters.workspace >>
+      - terraform-apply:
+          folder: terraform
+          workspace: << parameters.workspace >>
   deploy-preview-service:
     executor: circle-machine
     parameters:
@@ -500,8 +438,13 @@ workflows:
     - test-terraform-validate:
         context: certify-lower
         workspace: demo
+    - test-terraform-validate-preview:
+        context: certify-lower
+        workspace: demo
     - test-terraform-format
+    - test-terraform-format-preview
     - build-containers
+    - build-preview-containers
   deploy:
     jobs:
     - build-and-push-containers:
@@ -514,6 +457,14 @@ workflows:
             only:
             - build-lower
             - deploy-demo
+    - build-and-push-preview-containers:
+        name: build-and-push-containers-preview
+        context: certify-lower
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only:
             - deploy-preview
     - deploy-service:
         name: deploy-service-demo
@@ -532,7 +483,7 @@ workflows:
         context: certify-lower
         workspace: demo
         requires:
-        - build-and-push-containers-lower
+        - build-and-push-containers-preview
         filters:
           branches:
             ignore: /.*/
