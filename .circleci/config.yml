@@ -291,28 +291,30 @@ jobs:
       workspace:
         type: string
         description: A terraform workspace name
-        steps:
-          - checkout
-          - aws-init
-          - terraform-install
-          - terraform-init:
-              folder: terraform
-          - terraform-validate:
-              folder: terraform
+    steps:
+      - checkout
+      - aws-init
+      - terraform-install
+      - terraform-init:
+          folder: terraform
+      - terraform-validate:
+          folder: terraform
+          workspace: << parameters.workspace >>
   test-terraform-validate-preview:
     executor: base
     parameters:
       workspace:
         type: string
         description: A terraform workspace name
-        steps:
-          - checkout
-          - aws-init
-          - terraform-install
-          - terraform-init:
-              folder: terraform/preview
-          - terraform-validate:
-              folder: terraform/preview
+    steps:
+      - checkout
+      - aws-init
+      - terraform-install
+      - terraform-init:
+          folder: terraform/preview
+      - terraform-validate:
+          folder: terraform/preview
+          workspace: << parameters.workspace >>
   test-terraform-format:
     executor: base
     steps:
