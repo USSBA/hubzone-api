@@ -4,7 +4,7 @@ resource "aws_security_group_rule" "api_to_rds" {
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  source_security_group_id = module.api.security_group_id
+  source_security_group_id = module.preview_api.security_group_id
   security_group_id        = data.aws_db_instance.rds.vpc_security_groups[0]
 }
 
