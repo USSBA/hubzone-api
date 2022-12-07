@@ -7,6 +7,8 @@ locals {
     RAILS_ENV           = local.env.rails_env
     RAILS_LOG_TO_STDOUT = "true"
     RAILS_MAX_THREADS   = "5"
+    # Adding map db host url
+    HUBZONE_API_DB_HOST  ="preview-hubzone-db.demo.sba-one.net"
   }
   preview_container_secrets_parameterstore = {
     HUBZONE_API_DB_USER     = "${terraform.workspace}/hubzone/rds/username"
