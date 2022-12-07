@@ -70,7 +70,7 @@ locals {
   env = merge(local.all.default, try(local.all[terraform.workspace], {}))
 
   service_fqdn  = "${local.env.service_name}.${local.env.fqdn_base}"
-  public_fqdn   = "preview-maps.${local.env.public_subdomain}.${local.env.fqdn_base}"
+  public_fqdn   = "preview-api.${local.env.public_subdomain}.${local.env.fqdn_base}"
   postgres_fqdn = "preview-hubzone-db.${local.env.fqdn_base}"
 
   # Convenience prefixes for AWS Resources

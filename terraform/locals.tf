@@ -71,7 +71,7 @@ locals {
 
   service_fqdn  = "${local.env.service_name}.${local.env.fqdn_base}"
   public_fqdn   = "${local.env.public_subdomain}.${local.env.fqdn_base}"
-  postgres_fqdn = "preview-hubzone-db.${local.env.fqdn_base}"
+  postgres_fqdn = "hubzone-db.${local.env.fqdn_base}"
 
   # Convenience prefixes for AWS Resources
   prefix_bucket          = "arn:aws:s3:::"
