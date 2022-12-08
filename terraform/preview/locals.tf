@@ -7,12 +7,6 @@ locals {
     stg  = "222484291001"
     prod = "222484291001"
   }
-  sns_alarms = {
-    green    = "arn:aws:sns:us-east-1:502235151991:alarm-green"
-    yellow   = "arn:aws:sns:us-east-1:502235151991:alarm-yellow"
-    red      = "arn:aws:sns:us-east-1:502235151991:alarm-red"
-    security = "arn:aws:sns:us-east-1:502235151991:alarm-security"
-  }
   all = {
     default = {
       service_name     = "preview-hubzone-api"
