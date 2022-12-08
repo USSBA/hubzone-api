@@ -17,7 +17,7 @@ locals {
     default = {
       service_name     = "preview-hubzone-api"
       ecr_name         = "hubzone-api-preview"
-      public_subdomain = "maps"
+      public_subdomain = "preview-hubzone-webmap"
       geo_db_name      = "hzgeo_${terraform.workspace}"
 
       rails_port        = 3001
@@ -39,7 +39,7 @@ locals {
     demo = {
       fqdn_base        = "demo.sba-one.net"
       cert_domain      = "sba-one.net"
-      public_subdomain = "hubzone"
+      public_subdomain = "preview-hubzone"
       rails_env        = "demo"
     }
     stg = {
