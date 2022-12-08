@@ -17,7 +17,7 @@ locals {
     default = {
       service_name     = "preview-hubzone-api"
       ecr_name         = "hubzone-api-preview"
-      public_subdomain = "preview-hubzone-webmap"
+      public_subdomain = "preview-maps"
       geo_db_name      = "hzgeo_${terraform.workspace}"
 
       rails_port        = 3001
@@ -39,7 +39,7 @@ locals {
     demo = {
       fqdn_base        = "demo.sba-one.net"
       cert_domain      = "sba-one.net"
-      public_subdomain = "preview-hubzone"
+      public_subdomain = "hubzone"
       rails_env        = "demo"
     }
     stg = {
@@ -70,7 +70,7 @@ locals {
   env = merge(local.all.default, try(local.all[terraform.workspace], {}))
 
   service_fqdn  = "${local.env.service_name}.${local.env.fqdn_base}"
-  public_fqdn   = "preview-api.${local.env.public_subdomain}.${local.env.fqdn_base}"
+  public_fqdn   = "${local.env.public_subdomain}.${local.env.fqdn_base}"
   postgres_fqdn = "preview-hubzone-db.${local.env.fqdn_base}"
 
   # Convenience prefixes for AWS Resources
