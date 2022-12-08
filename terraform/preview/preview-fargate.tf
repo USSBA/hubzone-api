@@ -23,8 +23,8 @@ module "preview_api" {
   version = "~> 7.0"
 
   # cloudwatch logging
-  log_group_name              = "/ecs/${terraform.workspace}/${local.env.service_name}"
-  log_group_retention_in_days = 90
+  #log_group_name              = "/ecs/${terraform.workspace}/${local.env.service_name}"
+  #log_group_retention_in_days = 90
 
   # access logs
   # note: bucket permission may need to be adjusted
