@@ -404,12 +404,12 @@ jobs:
       - aws-init
       - terraform-install
       - terraform-init:
-          folder: terraform
+          folder: terraform/preview
       - terraform-plan:
-          folder: terraform
+          folder: terraform/preview
           workspace: << parameters.workspace >>
       - terraform-apply:
-          folder: terraform
+          folder: terraform/preview
           workspace: << parameters.workspace >>
   deploy-preview-service:
     executor: circle-machine
