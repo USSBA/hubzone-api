@@ -404,12 +404,12 @@ jobs:
       - aws-init
       - terraform-install
       - terraform-init:
-          folder: terraform/preview
+          folder: terraform
       - terraform-plan:
-          folder: terraform/preview
+          folder: terraform
           workspace: << parameters.workspace >>
       - terraform-apply:
-          folder: terraform/preview
+          folder: terraform
           workspace: << parameters.workspace >>
   deploy-preview-service:
     executor: circle-machine
@@ -551,7 +551,7 @@ workflows:
           tags:
             only:
             - /v[0-9]+(\.[0-9]+)*$/
-    - test-terraform-plan:
+    - test-terraform-plan-preview:
         name: test-terraform-plan-preview-prod
         context: certify-upper
         workspace: prod
