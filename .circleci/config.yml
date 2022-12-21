@@ -525,18 +525,6 @@ workflows:
           tags:
             only:
             - deploy-preview-stg
-    - deploy-preview-service:
-        name: deploy-service-preview
-        context: certify-upper
-        workspace: prod
-        requires:
-        - build-and-push-containers-preview-upper
-        filters:
-          branches:
-            ignore: /.*/
-          tags:
-            only:
-            - deploy-preview-prod
     - deploy-service:
         name: deploy-service-stg
         context: certify-upper
@@ -563,6 +551,19 @@ workflows:
           tags:
             only:
             - /v[0-9]+(\.[0-9]+)*$/
+    - test-terraform-plan:
+        name: test-terraform-plan-preview-prod
+        context: certify-upper
+        workspace: prod
+        requires:
+        - build-and-push-containers-preview-upper
+        filters:
+          branches:
+            ignore:
+            - /.*/
+          tags:
+            only:
+            - deploy-preview-prod
     - hold-for-approval:
         type: approval
         context: certify-upper
@@ -575,6 +576,18 @@ workflows:
           tags:
             only:
             - /v[0-9]+(\.[0-9]+)*$/
+    - hold-for-approval-preview:
+        type: approval
+        context: certify-upper
+        requires:
+          - test-terraform-plan-preview-prod
+        filters:
+          branches:
+            ignore:
+            - /.*/
+          tags:
+            only:
+            - deploy-preview-prod
     - deploy-service:
         name: deploy-service-prod
         context: certify-upper
@@ -588,3 +601,15 @@ workflows:
           tags:
             only:
             - /v[0-9]+(\.[0-9]+)*$/
+    - deploy-preview-service:
+        name: deploy-service-preview
+        context: certify-upper
+        workspace: prod
+        requires:
+        - hold-for-approval-preview
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only:
+            - deploy-preview-prod
