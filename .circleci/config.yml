@@ -460,7 +460,7 @@ workflows:
             - build-lower
             - deploy-demo
     - build-and-push-preview-containers:
-        name: build-and-push-containers-preview
+        name: build-and-push-containers-preview-lower
         context: certify-lower
         filters:
           branches:
@@ -485,7 +485,7 @@ workflows:
         context: certify-lower
         workspace: demo
         requires:
-        - build-and-push-containers-preview
+        - build-and-push-containers-preview-lower
         filters:
           branches:
             ignore: /.*/
@@ -504,8 +504,21 @@ workflows:
             - /rc-v[0-9]+(\.[0-9]+)*$/
             - /v[0-9]+(\.[0-9]+)*$/
     - build-and-push-preview-containers:
-        name: build-and-push-containers-preview-stg
+        name: build-and-push-containers-preview-upper
         context: certify-upper
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only:
+            - deploy-preview-stg
+            - deploy-preview-prod
+    - deploy-preview-service:
+        name: deploy-service-preview
+        context: certify-upper
+        workspace: stg
+        requires:
+        - build-and-push-containers-preview-upper
         filters:
           branches:
             ignore: /.*/
@@ -515,15 +528,15 @@ workflows:
     - deploy-preview-service:
         name: deploy-service-preview
         context: certify-upper
-        workspace: stg
+        workspace: prod
         requires:
-        - build-and-push-containers-preview-stg
+        - build-and-push-containers-preview-upper
         filters:
           branches:
             ignore: /.*/
           tags:
             only:
-            - deploy-preview-stg
+            - deploy-preview-prod
     - deploy-service:
         name: deploy-service-stg
         context: certify-upper

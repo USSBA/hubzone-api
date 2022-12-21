@@ -58,8 +58,8 @@ data "aws_ecs_cluster" "selected" {
 
 ## RDS Postgres Instance
 data "aws_db_instance" "rds" {
-  db_instance_identifier = "${terraform.workspace}-preview-hubzone-aurora"
+  db_instance_identifier = "${terraform.workspace}-preview-hubzone"
 }
 #data "aws_rds_cluster" "rds" {
-#  cluster_identifier = "${terraform.workspace}-hubzone-aurora"
+#  cluster_identifier = "${terraform.workspace}-hubzone"
 #}
