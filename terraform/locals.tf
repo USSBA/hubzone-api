@@ -60,7 +60,7 @@ locals {
       fqdn_base                     = "certify.sba.gov"
       cert_domain                   = "certify.sba.gov"
       rails_env                     = "production"
-      geo_db_name                   = "hzgeo_prd"
+      geo_db_name                   = "hzgeo_prod"
       desired_container_count_rails = 2
       min_container_count_rails     = 2
       max_container_count_rails     = 4
