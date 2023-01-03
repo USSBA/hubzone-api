@@ -1,10 +1,10 @@
 version: 2.1
 
 orbs:
-  ruby: circleci/ruby@1
+  ruby: circleci/ruby@2.0
   node: circleci/node@5
-  aws-cli: circleci/aws-cli@1
-  terraform: circleci/terraform@2
+  aws-cli: circleci/aws-cli@3.1
+  terraform: circleci/terraform@2.0.1
 
 executors:
   circle-machine:
@@ -40,395 +40,164 @@ executors:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: hzgeo
 
-commands:
-  aws-init:
-    parameters:
-      region:
-        type: string
-        description: A default AWS region name
-        default: us-east-1
-    steps:
-      - aws-cli/setup
+  commands:
+    configure-ecr-environment:
+      parameters:
+        image-name:
+          type: string
+          default: hubzone/hubzone-api
+      steps:
+        - run:
+            name: Configure ECR Build Environment
+            command: |
+              echo 'AWS_ACCOUNT_ID="`aws sts get-caller-identity --query Account --output text`"' >> $BASH_ENV
+              echo 'AWS_ECR_REGISTRY_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"' >> $BASH_ENV
+              echo 'AWS_ECR_IMAGE_NAME="${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>"' >> $BASH_ENV
+              source $BASH_ENV
+
+  jobs:
+    rubocop:
+      executor: ruby
+      steps:
+      - ruby/install-deps
+      - ruby/rubocop-check
+    rspec:
+      executor: ruby-with-postgres
+      steps:
+      - ruby/install-deps
       - run:
-          name: aws-init
+          name: rake db:migrate
           command: |
-            echo 'AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-<< parameters.region >>}' >> $BASH_ENV
-            echo 'AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)' >> $BASH_ENV
-            echo 'AWS_ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"' >> $BASH_ENV
-            source $BASH_ENV
-  ecr-login:
-    steps:
+            bundle exec rake db:create db:migrate
       - run:
-          name: ecr docker login
-          command: |
-            aws_version=`aws --version 2>&1`
-            if echo $aws_version | grep 'aws-cli/1' > /dev/null; then
-              echo "aws-cli v1 detected. Logging in to ecr docker..."
-              `aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION}`
-            elif echo $aws_version | grep 'aws-cli/2' > /dev/null; then
-              echo "aws-cli v2 detected. Logging in to ecr docker..."
-              aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "${AWS_ECR_ENDPOINT}"
-            else
-              echo "Can't detect the version of awscli being used..."
-              exit 1
-            fi
-  ecr-image-build:
-    parameters:
-      dockerfile:
-        type: string
-        default: Dockerfile
-      image_name:
-        type: string
-    steps:
-      - run:
-          name: Build << parameters.dockerfile >> docker image
-          command: |
-            docker image build . -f "<< parameters.dockerfile >>" --tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-  ecr-image-push:
-    parameters:
-      image_name:
-        type: string
-    steps:
-    - deploy:
-        name: docker image push
-        command: |
-          docker image tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}" \
-                           "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
-          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
-          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
-
-  build-image:
-    steps:
-      - ecr-image-build:
-          image_name: hubzone/hubzone-api
-  push-image:
-    steps:
-      - ecr-image-push:
-          image_name: hubzone/hubzone-api
-  build-preview-image:
-    steps:
-      - ecr-image-build:
-          image_name: hubzone-api-preview
-  push-preview-image:
-    steps:
-      - ecr-image-push:
-          image_name: hubzone-api-preview
-  install-system-dependencies:
-    steps:
-    - run:
-        name: Install system dependencies
-        command: |
-          sudo apt install -y lsb-release
-          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-          sudo apt update
-          sudo apt install -y postgresql-client-12
-
-  install-and-cache-gems:
-    steps:
-    - checkout
-    - run:
-        name: configure gem sources
-        command: |
-          bundle config geminabox.sba-one.net ${BUNDLE_GEMINABOX__SBA__ONE__NET}
-    - ruby/install-deps:
-        key: gems-v1
-
-  migrate-db:
-    steps:
-    - run:
-        name: migrate-db
-        command: |
-          bundle exec rake db:create db:migrate
-
-  terraform-install:
-    steps:
-      - terraform/install:
-          terraform_version: 1.0.9
-  terraform-format:
-    parameters:
-      folder:
-        type: string
-        description: A relative path from the project root in which to perform terrafrom fmt
-    steps:
-      - deploy:
-          name: Terraform Format Check
-          command: |
-            throw_error() {
-              echo $1
-              return 1
-            }
-            cd << parameters.folder >> || throw_error "FATAL: command 'cd << parameters.folder >>' has failed"
-            terraform fmt -check -recursive
-
-  terraform-validate:
-    parameters:
-      folder:
-        type: string
-        description: A relative path from the project root in which to perform terrafrom validate
-      workspace:
-        type: string
-        description: A workspace in which to perform terraform validate
-    steps:
-      - deploy:
-          name: Terraform Validate Check
-          command: |
-            throw_error() {
-              echo $1
-              return 1
-            }
-            cd << parameters.folder >> || throw_error "FATAL: command 'cd << parameters.folder >>' has failed"
-            terraform workspace select << parameters.workspace >> || throw_error "FATAL: command 'terraform workspace select << parameters.workspace >>' has failed"
-            terraform validate || throw_error "FATAL: command 'terraform validate' has failed"
-
-  terraform-init:
-    parameters:
-      folder:
-        type: string
-        description: A relative path from the project root in which to perform terrafrom init
-    steps:
-    - deploy:
-        name: Terraform Init
-        command: |
-          throw_error() {
-            echo $1
-            return 1
-          }
-          cd << parameters.folder >> || throw_error  "FATAL: command 'cd << parameters.folder >>' has failed"
-          terraform -version || throw_error "FATAL: command 'terraform -version' has failed"
-          terraform init -input=false || throw_error "FATAL: command 'terraform init -input-false' has failed"
-          echo "image_tag = \"$CIRCLE_SHA1\"" >> ./build.auto.tfvars
-
-  terraform-plan:
-    parameters:
-      folder:
-        type: string
-        description: A relative path from the project root in which to perform terrafrom plan
-      workspace:
-        type: string
-        description: A workspace in which to perform terraform plan
-    steps:
-    - deploy:
-        name: Terraform Plan
-        command: |
-          throw_error() {
-            echo $1
-            return 1
-          }
-          cd << parameters.folder >> || throw_error "FATAL: command 'cd << parameters.folder >>' has failed"
-          terraform workspace select << parameters.workspace >> || throw_error "FATAL: command 'terraform workspace select << parameters.workspace >>' has failed"
-          terraform plan -out=<< parameters.workspace >>.tfplan -input=false || throw_error "FATAL: command 'terraform plan -out=<< parameters.workspace >>.tfplan -input=false' has failed"
-
-  terraform-apply:
-    parameters:
-      folder:
-        type: string
-        description: A relative path from the project root in which to perform terrafrom apply
-      workspace:
-        type: string
-        description: A workspace in which to perform terraform apply
-    steps:
-    - deploy:
-        name: Terraform Apply
-        command: |
-          throw_error() {
-            echo $1
-            return 1
-          }
-          cd << parameters.folder >> || ( echo "directory << parameters.folder >> does not exist"; exit 1 )
-          terraform workspace select << parameters.workspace >> || ( echo "terraform workspace select << parameters.workspace >> has failed"; exit 1 )
-          terraform apply -input=false << parameters.workspace >>.tfplan || ( echo "terraform apply has failed"; exit 1 )
-
-jobs:
-  rubocop:
-    executor: ruby
-    steps:
-    - install-system-dependencies
-    - install-and-cache-gems
-    - ruby/rubocop-check
-  rspec:
-    executor: ruby-with-postgres
-    steps:
-    - install-system-dependencies
-    - install-and-cache-gems
-    - migrate-db
-    - run:
-        name: Run rspec
-        command: bundle exec rspec --format progress spec
-  rspec-docker:
-    executor: circle-machine
-    steps:
-    - checkout
-    - run:
-        name: Build rspec in Docker container
-        command: |
-          git describe --long > REVISION || touch REVISION
-          cat REVISION
-          docker-compose -f docker/docker-compose-test.yml build rspec
-    - run:
-        name: Run rspec in Docker container
-        command: |
-          docker-compose -f docker/docker-compose-test.yml run rspec
-  #brakeman:
-  #  executor: ruby
-  #  steps:
-  #    - checkout
-  #    - restore_cache:
-  #        keys:
-  #        - v1-dependencies-{{ checksum "Gemfile.lock" }}
-  #        - v1-dependencies-
-  #    - run:
-  #        name: brakeman
-  #        parallel: true
-  #        command: |
-  #          gem install --no-document brakeman
-  #          brakeman --exit-on-warn .
-  test-terraform-validate:
-    executor: base
-    parameters:
-      workspace:
-        type: string
-        description: A terraform workspace name
-    steps:
-      - checkout
-      - aws-init
-      - terraform-install
-      - terraform-init:
-          folder: terraform
-      - terraform-validate:
-          folder: terraform
-          workspace: << parameters.workspace >>
-  test-terraform-validate-preview:
-    executor: base
-    parameters:
-      workspace:
-        type: string
-        description: A terraform workspace name
-    steps:
-      - checkout
-      - aws-init
-      - terraform-install
-      - terraform-init:
-          folder: terraform/preview
-      - terraform-validate:
-          folder: terraform/preview
-          workspace: << parameters.workspace >>
-  test-terraform-format:
-    executor: base
-    steps:
-      - checkout
-      - terraform-install
-      - terraform-format:
-          folder: terraform
-  test-terraform-format-preview:
-    executor: base
-    steps:
-      - checkout
-      - terraform-install
-      - terraform-format:
-          folder: terraform/preview
-  test-terraform-plan:
-    executor: base
-    parameters:
-      workspace:
-        type: string
-        description: A terraform workspace name
-    steps:
-      - checkout
-      - aws-init
-      - terraform-install
-      - terraform-init:
-          folder: terraform
-      - terraform-plan:
-          folder: terraform
-          workspace: << parameters.workspace >>
-  test-terraform-plan-preview:
-    executor: base
-    parameters:
-      workspace:
-        type: string
-        description: A terraform workspace name
-    steps:
-      - checkout
-      - aws-init
-      - terraform-install
-      - terraform-init:
-          folder: terraform/preview
-      - terraform-plan:
-          folder: terraform/preview
-          workspace: << parameters.workspace >>
-  build-containers:
-    executor: circle-machine
-    steps:
+          name: Run rspec
+          command: bundle exec rspec --format progress spec
+    rspec-docker:
+      executor: circle-machine
+      steps:
       - checkout
       - run:
-          name: aws-env
+          name: Build rspec in Docker container
           command: |
-            echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
-      - build-image
-  build-preview-containers:
-    executor: circle-machine
-    steps:
-      - checkout
+            git describe --long > REVISION || touch REVISION
+            cat REVISION
+            docker-compose -f docker/docker-compose-test.yml build rspec
       - run:
-          name: aws-env
+          name: Run rspec in Docker container
           command: |
-            echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
-      - build-preview-image
-  build-and-push-containers:
-    executor: circle-machine
-    steps:
-      - checkout
-      - aws-init
-      - ecr-login
-      - build-image
-      - push-image
-  build-and-push-preview-containers:
-    executor: circle-machine
-    steps:
-      - checkout
-      - aws-init
-      - ecr-login
-      - build-preview-image
-      - push-preview-image
-  deploy-service:
-    executor: circle-machine
-    parameters:
-      workspace:
-        type: string
-        description: A terraform workspace name
-    steps:
-      - checkout
-      - aws-init
-      - terraform-install
-      - terraform-init:
-          folder: terraform
-      - terraform-plan:
-          folder: terraform
-          workspace: << parameters.workspace >>
-      - terraform-apply:
-          folder: terraform
-          workspace: << parameters.workspace >>
-  deploy-preview-service:
-    executor: circle-machine
-    parameters:
-      workspace:
-        type: string
-        description: A terraform workspace name
-    steps:
-      - checkout
-      - aws-init
-      - terraform-install
-      - terraform-init:
-          folder: terraform/preview
-      - terraform-plan:
-          folder: terraform/preview
-          workspace: << parameters.workspace >>
-      - terraform-apply:
-          folder: terraform/preview
-          workspace: << parameters.workspace >>
+            docker-compose -f docker/docker-compose-test.yml run rspec
+    #brakeman:
+    #  executor: ruby
+    #  steps:
+    #    - checkout
+    #    - restore_cache:
+    #        keys:
+    #        - v1-dependencies-{{ checksum "Gemfile.lock" }}
+    #        - v1-dependencies-
+    #    - run:
+    #        name: brakeman
+    #        parallel: true
+    #        command: |
+    #          gem install --no-document brakeman
+    #          brakeman --exit-on-warn .
+    terraform-validate:
+      executor: base
+      parameters:
+        workspace:
+          type: string
+          default: demo
+        directory:
+          type: string
+          default: terraform/
+      environment:
+        AWS_REGION: us-east-1
+        AWS_DEFAULT_REGION: us-east-1
+      steps:
+        - checkout
+        - aws-cli/setup:
+            role-arn: $OIDC_ROLE_ARN
+            role-session-name: oidc-hubzone-api #verify this
+        - terraform/install:
+            terraform_version: 1.3.4
+        - run:
+            name: terraform validate
+            command: |
+              cd << parameters.directory >>
+              terraform init -input=false
+              terraform workspace select << parameters.workspace >>
+              terraform validate
+
+    terraform-format:
+      executor: base
+      parameters:
+        directory:
+          type: string
+          default: terraform/
+      steps:
+        - checkout
+        - terraform/install:
+            terraform_version: 1.3.4
+        - run:
+            name: terraform fmt
+            command: |
+              cd << parameters.directory >>
+              terraform fmt -recursive -check
+
+    deploy-service:
+      executor: circle-machine
+      environment:
+        AWS_REGION: us-east-1
+        AWS_DEFAULT_REGION: us-east-1
+      parameters:
+        image-tag:
+          type: string
+        workspace:
+          type: string
+          description: A terraform workspace name
+        directory:
+          type: string
+        image-name:
+          type: string
+          default: hubzone/hubzone-api
+      steps:
+        - checkout
+        - aws-cli/steup:
+            role-arn: $OIDC_ROLE_ARN
+            role-session-name: oidc-hubzone-webmap
+        - configure-ecr-environment:
+            image-name: << parameters.image-name >>
+        - run:
+            name: Login to ECR registry
+            command: |
+              aws ecr get-login-password --region $AWS_REGION | \
+                docker login --username AWS --password-stdin $AWS_ECR_REGISTRY_ENDPOINT
+        - run:
+            name: Build and Push Container
+            command: |
+              docker image build -t webmap:latest .
+              echo "Pushing Image: ${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
+              docker image tag webmap:latest "${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
+              docker image push "${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
+              echo "Push complete!"
+              echo "Pushing Image: ${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
+              docker image tag webmap:latest "${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
+              docker image push "${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
+              echo "Push complete!"
+        - run:
+            name: Logout of ECR registry
+            command: |
+              docker logout $AWS_ECR_REGISTRY_ENDPOINT
+        - terraform/install:
+            terraform_version: 1.3.4
+        - run:
+            name: terraform apply
+            command: |
+              cd << parameters.directory >>
+              terraform init -input=false
+              echo "image_tag = \"${CIRCLE_SHA1}\"" >> ./build.auto.tfvars
+              terraform workspace select << parameters.workspace >>
+              terraform plan -out=<< parameters.workspace >>.tfplan -input=false
+              terraform apply -input=false << parameters.workspace >>.tfplan
 
 workflows:
   version: 2
@@ -437,78 +206,79 @@ workflows:
     - rubocop
     - rspec
     - rspec-docker
-    - test-terraform-validate:
+    - terraform-validate:
         context: certify-lower
         workspace: demo
-    - test-terraform-validate-preview:
-        context: certify-lower
-        workspace: demo
-    - test-terraform-format
-    - test-terraform-format-preview
-    - build-containers
-    - build-preview-containers
+    - terraform-format
+
   deploy:
     jobs:
-    - build-and-push-containers:
-        name: build-and-push-containers-lower
-        context: certify-lower
-        filters:
-          branches:
-            ignore: /.*/
+     - hold-for-approval:
+          type: approval
+          context: oidc-certify-upper
+          filters:
+            branches:
+              ignore:
+              - /.*/
+            tags:
+              only:
+              - /v[0-9]+(\.[0-9]+)*$/
+
+      - hold-for-approval-preview:
+          type: approval
+          context: oidc-certify-upper
+          filters:
+            branches:
+              ignore: /.*/
           tags:
             only:
-            - build-lower
-            - deploy-demo
-    - build-and-push-preview-containers:
-        name: build-and-push-containers-preview
-        context: certify-lower
-        filters:
-          branches:
-            ignore: /.*/
-          tags:
-            only:
-            - deploy-preview
+            - deploy-preview-prod
+
     - deploy-service:
         name: deploy-service-demo
-        context: certify-lower
+        context: oidc-certify-lower
         workspace: demo
-        requires:
-        - build-and-push-containers-lower
+        image-tag: $CIRCLE_TAG
         filters:
           branches:
             ignore: /.*/
           tags:
             only:
             - deploy-demo
-    - deploy-preview-service:
+
+  - deploy-service:
         name: deploy-service-preview
-        context: certify-lower
+        context: oidc-certify-lower
         workspace: demo
-        requires:
-        - build-and-push-containers-preview
+        image-tag: latest
+        image-name: hubzone-api-preivew
+        directory: terraform/preview
         filters:
           branches:
             ignore: /.*/
           tags:
             only:
-            - deploy-preview
-    - build-and-push-containers:
-        name: build-and-push-containers-upper
-        context: certify-upper
+            - deploy-preview-demo
+
+  - deploy-service:
+        name: deploy-service-preview
+        context: oidc-certify-upper
+        workspace: stg
+        image-tag: latest
+        image-name: hubzone-api-preview
+        directory: terraform/preview
         filters:
           branches:
-            ignore:
-            - /.*/
+            ignore: /.*/
           tags:
             only:
-            - /rc-v[0-9]+(\.[0-9]+)*$/
-            - /v[0-9]+(\.[0-9]+)*$/
+            - deploy-preview-stg
+
     - deploy-service:
         name: deploy-service-stg
-        context: certify-upper
+        context: oidc-certify-upper
         workspace: stg
-        requires:
-        - build-and-push-containers-upper
+        image-tag: $CIRCLE_TAG
         filters:
           branches:
             ignore:
@@ -516,34 +286,26 @@ workflows:
           tags:
             only:
             - /rc-v[0-9]+(\.[0-9]+)*$/
-    - test-terraform-plan:
-        name: test-terraform-plan-prod
-        context: certify-upper
+
+    - deploy-service:
+        name: deploy-service-preview
+        context: oidc-certify-upper
         workspace: prod
         requires:
-        - build-and-push-containers-upper
+        - hold-for-approval-preview
+        image-tag: latest
+        image-name: hubzone-api-preview
+        directory: terraform/preview
         filters:
           branches:
-            ignore:
-            - /.*/
+            ignore: /.*/
           tags:
             only:
-            - /v[0-9]+(\.[0-9]+)*$/
-    - hold-for-approval:
-        type: approval
-        context: certify-upper
-        requires:
-          - test-terraform-plan-prod
-        filters:
-          branches:
-            ignore:
-            - /.*/
-          tags:
-            only:
-            - /v[0-9]+(\.[0-9]+)*$/
+            - deploy-preview-prod
+
     - deploy-service:
         name: deploy-service-prod
-        context: certify-upper
+        context: oidc-certify-upper
         workspace: prod
         requires:
         - hold-for-approval
