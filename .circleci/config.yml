@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@1
   node: circleci/node@5
-  aws-cli: circleci/aws-cli@1
+  aws-cli: circleci/aws-cli@3.1
   terraform: circleci/terraform@2
 
 executors:
@@ -48,7 +48,9 @@ commands:
         description: A default AWS region name
         default: us-east-1
     steps:
-      - aws-cli/setup
+      - aws-cli/setup:
+          role-arn: $OIDC_ROLE_ARN
+          role-session-name: oidc-certify-hubzone-api
       - run:
           name: aws-init
           command: |
@@ -285,6 +287,9 @@ jobs:
       workspace:
         type: string
         description: A terraform workspace name
+    environment:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
       - aws-init
@@ -307,6 +312,9 @@ jobs:
       workspace:
         type: string
         description: A terraform workspace name
+    environment:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
       - aws-init
@@ -327,6 +335,9 @@ jobs:
       - build-image
   build-and-push-containers:
     executor: circle-machine
+    environment:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
       - aws-init
@@ -339,6 +350,9 @@ jobs:
       workspace:
         type: string
         description: A terraform workspace name
+    environment:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
     steps:
       - checkout
       - aws-init
@@ -360,7 +374,7 @@ workflows:
     - rspec
     - rspec-docker
     - test-terraform-validate:
-        context: certify-lower
+        context: oidc-certify-lower
         workspace: demo
     - test-terraform-format
     - build-containers
@@ -368,7 +382,7 @@ workflows:
     jobs:
     - build-and-push-containers:
         name: build-and-push-containers-lower
-        context: certify-lower
+        context: oidc-certify-lower
         filters:
           branches:
             ignore: /.*/
@@ -378,7 +392,7 @@ workflows:
             - deploy-demo
     - deploy-service:
         name: deploy-service-demo
-        context: certify-lower
+        context: oidc-certify-lower
         workspace: demo
         requires:
         - build-and-push-containers-lower
@@ -390,7 +404,7 @@ workflows:
             - deploy-demo
     - build-and-push-containers:
         name: build-and-push-containers-upper
-        context: certify-upper
+        context: oidc-certify-upper
         filters:
           branches:
             ignore:
@@ -401,7 +415,7 @@ workflows:
             - /v[0-9]+(\.[0-9]+)*$/
     - deploy-service:
         name: deploy-service-stg
-        context: certify-upper
+        context: oidc-certify-upper
         workspace: stg
         requires:
         - build-and-push-containers-upper
@@ -414,7 +428,7 @@ workflows:
             - /rc-v[0-9]+(\.[0-9]+)*$/
     - test-terraform-plan:
         name: test-terraform-plan-prod
-        context: certify-upper
+        context: oidc-certify-upper
         workspace: prod
         requires:
         - build-and-push-containers-upper
@@ -427,7 +441,7 @@ workflows:
             - /v[0-9]+(\.[0-9]+)*$/
     - hold-for-approval:
         type: approval
-        context: certify-upper
+        context: oidc-certify-upper
         requires:
           - test-terraform-plan-prod
         filters:
@@ -439,7 +453,7 @@ workflows:
             - /v[0-9]+(\.[0-9]+)*$/
     - deploy-service:
         name: deploy-service-prod
-        context: certify-upper
+        context: oidc-certify-upper
         workspace: prod
         requires:
         - hold-for-approval
