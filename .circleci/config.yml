@@ -104,12 +104,12 @@ commands:
   build-image:
     steps:
     - ecr-image-build:
-        image_name: hubzone/hubzone-api
+        image_name: hubzone-api
 
   push-image:
     steps:
     - ecr-image-push:
-        image_name: hubzone/hubzone-api
+        image_name: hubzone-api
 
   install-system-dependencies:
     steps:
