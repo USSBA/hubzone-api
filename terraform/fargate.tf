@@ -73,7 +73,7 @@ module "api" {
   container_definitions = [
     {
       name        = "api"
-      image       = "${local.prefix_ecr}/${local.env.ecr_name}:${var.image_tag}"
+      image       = "222484291001.dkr.ecr.${local.region}.amazonaws.com/hubzone-api:${var.image_tag}"
       environment = [for k, v in local.container_environment : { name = k, value = v }]
       secrets     = [for k, v in local.container_secrets_parameterstore : { name = k, valueFrom = "${local.prefix_parameter_store}/${v}" }]
     },

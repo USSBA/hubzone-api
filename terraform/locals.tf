@@ -16,7 +16,6 @@ locals {
   all = {
     default = {
       service_name     = "hubzone-api"
-      ecr_name         = "hubzone/hubzone-api"
       public_subdomain = "maps"
       geo_db_name      = "hzgeo_${terraform.workspace}"
 
@@ -75,6 +74,5 @@ locals {
 
   # Convenience prefixes for AWS Resources
   prefix_bucket          = "arn:aws:s3:::"
-  prefix_ecr             = "${local.account_id}.dkr.ecr.${local.region}.amazonaws.com"
   prefix_parameter_store = "arn:aws:ssm:${local.region}:${local.account_id}:parameter"
 }
