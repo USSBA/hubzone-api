@@ -7,8 +7,8 @@ resource "aws_cloudwatch_metric_alarm" "cpu" {
   period              = 30 #seconds per period
   datapoints_to_alarm = 5
 
-  statistic           = "Average"
-  threshold           = 80 #% cpu usage limit for failing
+  statistic = "Average"
+  threshold = 80 #% cpu usage limit for failing
 
   alarm_description = "${terraform.workspace} ${local.env.service_name} CPU utilization over 80% for the last 25 minutes"
   alarm_actions     = [local.sns_alarms.red]
@@ -29,8 +29,8 @@ resource "aws_cloudwatch_metric_alarm" "memory" {
   period              = 300 #seconds per period
   datapoints_to_alarm = 5
 
-  statistic           = "Average"
-  threshold           = 80 #% cpu usage limit for failing
+  statistic = "Average"
+  threshold = 80 #% cpu usage limit for failing
 
   alarm_description = "${terraform.workspace} ${local.env.service_name} Memory utilization over 80% for the last 25 minutes"
   alarm_actions     = [local.sns_alarms.red]
