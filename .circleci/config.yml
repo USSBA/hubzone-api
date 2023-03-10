@@ -43,6 +43,12 @@ executors:
 commands:
   aws-init:
     parameters:
+      registry-id:
+        type: string
+        default: '222484291001'
+      image-name:
+        type: string
+        default: 'hubzone-api'
       region:
         type: string
         description: A default AWS region name
@@ -54,10 +60,12 @@ commands:
       - run:
           name: aws-init
           command: |
-            echo 'AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-<< parameters.region >>}' >> $BASH_ENV
-            echo 'AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)' >> $BASH_ENV
-            echo 'AWS_ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"' >> $BASH_ENV
+            echo 'AWS_ECR_REGISTRY_ENDPOINT="<< parameters.registry-id >>.dkr.ecr.<< parameters.region >>.amazonaws.com"' >> $BASH_ENV
+            echo 'AWS_ECR_IMAGE_NAME="${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>"' >> $BASH_ENV
             source $BASH_ENV
+#            echo 'AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-<< parameters.region >>}' >> $BASH_ENV
+#            echo 'AWS_ECR_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"' >> $BASH_ENV
+#            source $BASH_ENV
   ecr-login:
     steps:
       - run:
@@ -69,7 +77,7 @@ commands:
               `aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION}`
             elif echo $aws_version | grep 'aws-cli/2' > /dev/null; then
               echo "aws-cli v2 detected. Logging in to ecr docker..."
-              aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "${AWS_ECR_ENDPOINT}"
+              aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin "${AWS_ECR_REGISTRY_ENDPOINT}"
             else
               echo "Can't detect the version of awscli being used..."
               exit 1
@@ -79,37 +87,38 @@ commands:
       dockerfile:
         type: string
         default: Dockerfile
-      image_name:
+      image-name:
         type: string
+        default: 'hubzone-api'
     steps:
       - run:
           name: Build << parameters.dockerfile >> docker image
           command: |
-            docker image build . -f "<< parameters.dockerfile >>" --tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
+            docker image build . -f "<< parameters.dockerfile >>" --tag "${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_SHA1}"
   ecr-image-push:
     parameters:
-      image_name:
+      image-name:
         type: string
     steps:
     - deploy:
         name: docker image push
         command: |
-          docker image tag "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}" \
-                           "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
-          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_SHA1}"
-          docker image push "${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
-          echo "Successfully pushed image: ${AWS_ECR_ENDPOINT}/<< parameters.image_name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
+          docker image tag "${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_SHA1}" \
+                           "${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
+          docker image push "${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_SHA1}"
+          echo "Successfully pushed image: ${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_SHA1}"
+          docker image push "${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
+          echo "Successfully pushed image: ${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
 
   build-image:
     steps:
     - ecr-image-build:
-        image_name: hubzone/hubzone-api
+        image-name: hubzone-api
 
   push-image:
     steps:
     - ecr-image-push:
-        image_name: hubzone/hubzone-api
+        image-name: hubzone-api
 
   install-system-dependencies:
     steps:
@@ -331,7 +340,7 @@ jobs:
       - run:
           name: aws-env
           command: |
-            echo 'AWS_ECR_ENDPOINT="ecr-temp"' >> $BASH_ENV
+            echo 'AWS_ECR_REGISTRY_ENDPOINT="ecr-temp"' >> $BASH_ENV
       - build-image
   build-and-push-containers:
     executor: circle-machine
