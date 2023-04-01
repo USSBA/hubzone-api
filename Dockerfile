@@ -1,4 +1,4 @@
-FROM ruby:2.7.4-slim-bullseye
+FROM ruby:2.7.7-slim-bullseye
 
 # Install general packages
 ENV PACKAGES build-essential libpq-dev netcat git apt-utils wget unzip lftp ssh jq gnupg lsb-release
