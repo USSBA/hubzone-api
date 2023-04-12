@@ -5,10 +5,10 @@ gem 'excon-rails'
 gem 'faraday', '~> 0.9.2' # simple http requests
 gem 'ffi', '~> 1.9.24' # CVS-2018-1000201
 gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'newrelic_rpm', '~> 4.5' # NewRelic Application Performance Monitoring
-gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
+gem 'newrelic_rpm', '~> 9.1' # NewRelic Application Performance Monitoring
+gem 'pg', '~> 1.4.6' # Use postgresql as the database for Active Record
 gem 'puma', '~> 4.3' # Use Puma as the app server
-gem 'rails', '~> 5.2', '>= 5.2.4.3' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 6.1.7.3', '>= 5.2.4.3' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'strong_migrations', '~> 0.3' # Catch unsafe migrations at dev time
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
