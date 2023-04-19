@@ -213,7 +213,7 @@ workflows:
 
   deploy:
     jobs:
-     - hold-for-approval:
+      - hold-for-approval:
           type: approval
           context: oidc-certify-upper
           filters:
