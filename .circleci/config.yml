@@ -40,164 +40,162 @@ executors:
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: hzgeo
 
-  commands:
-    configure-ecr-environment:
-      parameters:
-        image-name:
-          type: string
-          default: hubzone/hubzone-api
-      steps:
-        - run:
-            name: Configure ECR Build Environment
-            command: |
-              echo 'AWS_ACCOUNT_ID="`aws sts get-caller-identity --query Account --output text`"' >> $BASH_ENV
-              echo 'AWS_ECR_REGISTRY_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"' >> $BASH_ENV
-              echo 'AWS_ECR_IMAGE_NAME="${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>"' >> $BASH_ENV
-              source $BASH_ENV
-
-  jobs:
-    rubocop:
-      executor: ruby
-      steps:
-      - ruby/install-deps
-      - ruby/rubocop-check
-    rspec:
-      executor: ruby-with-postgres
-      steps:
-      - ruby/install-deps
+commands:
+  configure-ecr-environment:
+    parameters:
+      image-name:
+        type: string
+        default: hubzone/hubzone-api
+    steps:
       - run:
-          name: rake db:migrate
+          name: Configure ECR Build Environment
           command: |
-            bundle exec rake db:create db:migrate
-      - run:
-          name: Run rspec
-          command: bundle exec rspec --format progress spec
-    rspec-docker:
-      executor: circle-machine
-      steps:
+            echo 'AWS_ACCOUNT_ID="`aws sts get-caller-identity --query Account --output text`"' >> $BASH_ENV
+            echo 'AWS_ECR_REGISTRY_ENDPOINT="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"' >> $BASH_ENV
+            echo 'AWS_ECR_IMAGE_NAME="${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>"' >> $BASH_ENV
+            source $BASH_ENV
+
+jobs:
+  rubocop:
+    executor: ruby
+    steps:
+    - ruby/install-deps
+    - ruby/rubocop-check
+  rspec:
+    executor: ruby-with-postgres
+    steps:
+    - ruby/install-deps
+    - run:
+        name: rake db:migrate
+        command: |
+          bundle exec rake db:create db:migrate
+    - run:
+        name: Run rspec
+        command: bundle exec rspec --format progress spec
+  rspec-docker:
+    executor: circle-machine
+    steps:
+    - checkout
+    - run:
+        name: Build rspec in Docker container
+        command: |
+          git describe --long > REVISION || touch REVISION
+          cat REVISION
+          docker-compose -f docker/docker-compose-test.yml build rspec
+    - run:
+        name: Run rspec in Docker container
+        command: |
+          docker-compose -f docker/docker-compose-test.yml run rspec
+  #brakeman:
+  #  executor: ruby
+  #  steps:
+  #    - checkout
+  #    - restore_cache:
+  #        keys:
+  #        - v1-dependencies-{{ checksum "Gemfile.lock" }}
+  #        - v1-dependencies-
+  #    - run:
+  #        name: brakeman
+  #        parallel: true
+  #        command: |
+  #          gem install --no-document brakeman
+  #          brakeman --exit-on-warn .
+  terraform-validate:
+    executor: base
+    parameters:
+      workspace:
+        type: string
+        default: demo
+      directory:
+        type: string
+        default: terraform/
+    environment:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
       - checkout
+      - aws-cli/setup:
+          role-arn: $OIDC_ROLE_ARN
+          role-session-name: oidc-hubzone-api #verify this
+      - terraform/install:
+          terraform_version: 1.3.4
       - run:
-          name: Build rspec in Docker container
+          name: terraform validate
           command: |
-            git describe --long > REVISION || touch REVISION
-            cat REVISION
-            docker-compose -f docker/docker-compose-test.yml build rspec
+            cd << parameters.directory >>
+            terraform init -input=false
+            terraform workspace select << parameters.workspace >>
+            terraform validate
+  terraform-format:
+    executor: base
+    parameters:
+      directory:
+        type: string
+        default: terraform/
+    steps:
+      - checkout
+      - terraform/install:
+          terraform_version: 1.3.4
       - run:
-          name: Run rspec in Docker container
+          name: terraform fmt
           command: |
-            docker-compose -f docker/docker-compose-test.yml run rspec
-    #brakeman:
-    #  executor: ruby
-    #  steps:
-    #    - checkout
-    #    - restore_cache:
-    #        keys:
-    #        - v1-dependencies-{{ checksum "Gemfile.lock" }}
-    #        - v1-dependencies-
-    #    - run:
-    #        name: brakeman
-    #        parallel: true
-    #        command: |
-    #          gem install --no-document brakeman
-    #          brakeman --exit-on-warn .
-    terraform-validate:
-      executor: base
-      parameters:
-        workspace:
-          type: string
-          default: demo
-        directory:
-          type: string
-          default: terraform/
-      environment:
-        AWS_REGION: us-east-1
-        AWS_DEFAULT_REGION: us-east-1
-      steps:
-        - checkout
-        - aws-cli/setup:
-            role-arn: $OIDC_ROLE_ARN
-            role-session-name: oidc-hubzone-api #verify this
-        - terraform/install:
-            terraform_version: 1.3.4
-        - run:
-            name: terraform validate
-            command: |
-              cd << parameters.directory >>
-              terraform init -input=false
-              terraform workspace select << parameters.workspace >>
-              terraform validate
-
-    terraform-format:
-      executor: base
-      parameters:
-        directory:
-          type: string
-          default: terraform/
-      steps:
-        - checkout
-        - terraform/install:
-            terraform_version: 1.3.4
-        - run:
-            name: terraform fmt
-            command: |
-              cd << parameters.directory >>
-              terraform fmt -recursive -check
-
-    deploy-service:
-      executor: circle-machine
-      environment:
-        AWS_REGION: us-east-1
-        AWS_DEFAULT_REGION: us-east-1
-      parameters:
-        image-tag:
-          type: string
-        workspace:
-          type: string
-          description: A terraform workspace name
-        directory:
-          type: string
-        image-name:
-          type: string
-          default: hubzone/hubzone-api
-      steps:
-        - checkout
-        - aws-cli/steup:
-            role-arn: $OIDC_ROLE_ARN
-            role-session-name: oidc-hubzone-webmap
-        - configure-ecr-environment:
-            image-name: << parameters.image-name >>
-        - run:
-            name: Login to ECR registry
-            command: |
-              aws ecr get-login-password --region $AWS_REGION | \
-                docker login --username AWS --password-stdin $AWS_ECR_REGISTRY_ENDPOINT
-        - run:
-            name: Build and Push Container
-            command: |
-              docker image build -t webmap:latest .
-              echo "Pushing Image: ${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
-              docker image tag webmap:latest "${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
-              docker image push "${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
-              echo "Push complete!"
-              echo "Pushing Image: ${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
-              docker image tag webmap:latest "${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
-              docker image push "${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
-              echo "Push complete!"
-        - run:
-            name: Logout of ECR registry
-            command: |
-              docker logout $AWS_ECR_REGISTRY_ENDPOINT
-        - terraform/install:
-            terraform_version: 1.3.4
-        - run:
-            name: terraform apply
-            command: |
-              cd << parameters.directory >>
-              terraform init -input=false
-              echo "image_tag = \"${CIRCLE_SHA1}\"" >> ./build.auto.tfvars
-              terraform workspace select << parameters.workspace >>
-              terraform plan -out=<< parameters.workspace >>.tfplan -input=false
-              terraform apply -input=false << parameters.workspace >>.tfplan
+            cd << parameters.directory >>
+            terraform fmt -recursive -check
+  deploy-service:
+    executor: circle-machine
+    environment:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+    parameters:
+      image-tag:
+        type: string
+      workspace:
+        type: string
+        description: A terraform workspace name
+      directory:
+        type: string
+      image-name:
+        type: string
+        default: hubzone/hubzone-api
+    steps:
+      - checkout
+      - aws-cli/steup:
+          role-arn: $OIDC_ROLE_ARN
+          role-session-name: oidc-hubzone-webmap
+      - configure-ecr-environment:
+          image-name: << parameters.image-name >>
+      - run:
+          name: Login to ECR registry
+          command: |
+            aws ecr get-login-password --region $AWS_REGION | \
+              docker login --username AWS --password-stdin $AWS_ECR_REGISTRY_ENDPOINT
+      - run:
+          name: Build and Push Container
+          command: |
+            docker image build -t webmap:latest .
+            echo "Pushing Image: ${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
+            docker image tag webmap:latest "${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
+            docker image push "${AWS_ECR_IMAGE_NAME}:<< parameters.image-tag >>"
+            echo "Push complete!"
+            echo "Pushing Image: ${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
+            docker image tag webmap:latest "${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
+            docker image push "${AWS_ECR_IMAGE_NAME}:${CIRCLE_SHA1}"
+            echo "Push complete!"
+      - run:
+          name: Logout of ECR registry
+          command: |
+            docker logout $AWS_ECR_REGISTRY_ENDPOINT
+      - terraform/install:
+          terraform_version: 1.3.4
+      - run:
+          name: terraform apply
+          command: |
+            cd << parameters.directory >>
+            terraform init -input=false
+            echo "image_tag = \"${CIRCLE_SHA1}\"" >> ./build.auto.tfvars
+            terraform workspace select << parameters.workspace >>
+            terraform plan -out=<< parameters.workspace >>.tfplan -input=false
+            terraform apply -input=false << parameters.workspace >>.tfplan
 
 workflows:
   version: 2
