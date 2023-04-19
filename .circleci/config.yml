@@ -160,7 +160,7 @@ jobs:
         default: hubzone/hubzone-api
     steps:
       - checkout
-      - aws-cli/steup:
+      - aws-cli/setup:
           role-arn: $OIDC_ROLE_ARN
           role-session-name: oidc-hubzone-webmap
       - configure-ecr-environment:
