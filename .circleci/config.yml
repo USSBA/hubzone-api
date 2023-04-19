@@ -306,6 +306,7 @@ workflows:
           name: deploy-service-prod
           context: oidc-certify-upper
           workspace: prod
+          image-tag: latest
           requires:
             - hold-for-approval
           filters:
