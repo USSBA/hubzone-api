@@ -109,9 +109,13 @@ commands:
           docker image push "${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
           echo "Successfully pushed image: ${AWS_ECR_REGISTRY_ENDPOINT}/<< parameters.image-name >>:${CIRCLE_BRANCH:-${CIRCLE_TAG:-NO_BRANCH_OR_TAG_CONFIGURED_BY_CIRCLE}}"
   build-image:
+    parameters:
+      image-name:
+        type: string
+        default: hubzone-api
     steps:
     - ecr-image-build:
-        image-name: hubzone-api
+        image-name: << parameters.image-name >> 
 
   push-image:
     steps:
@@ -234,12 +238,13 @@ jobs:
         default: terraform
       image-name:
         type: string
-        default: hubzone/hubzone-api
+        default: hubzone-api
     steps:
       - checkout
       - aws-init
       - ecr-login
-      - build-image
+      - build-image:
+          image-name: << parameters.image-name >>
       - push-image
       # - configure-ecr-environment:
       #     image-name: << parameters.image-name >>

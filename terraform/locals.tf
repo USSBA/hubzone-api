@@ -16,7 +16,7 @@ locals {
   all = {
     default = {
       service_name     = "hubzone-api"
-      ecr_name         = "hubzone/hubzone-api"
+      ecr_name         = "hubzone-api"
       public_subdomain = "maps"
       geo_db_name      = "hzgeo_${terraform.workspace}"
 
