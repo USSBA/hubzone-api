@@ -98,6 +98,7 @@ commands:
     parameters:
       image-name:
         type: string
+        default: 'hubzone-api'
     steps:
     - deploy:
         name: docker image push
@@ -118,9 +119,13 @@ commands:
         image-name: << parameters.image-name >> 
 
   push-image:
+    parameters:
+      image-name:
+        type: string
+        default: hubzone-api
     steps:
     - ecr-image-push:
-        image-name: hubzone-api
+        image-name: << parameters.image-name >>
 
   # configure-ecr-environment:
   #   parameters:
@@ -245,7 +250,8 @@ jobs:
       - ecr-login
       - build-image:
           image-name: << parameters.image-name >>
-      - push-image
+      - push-image:
+          image-name: << parameters.image-name >>
       # - configure-ecr-environment:
       #     image-name: << parameters.image-name >>
       # - run:
