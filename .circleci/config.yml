@@ -227,6 +227,32 @@ jobs:
           command: |
             cd << parameters.directory >>
             terraform fmt -recursive -check
+  build-containers:
+    executor: circle-machine
+    steps:
+      - checkout
+      - run:
+          name: aws-env
+          command: |
+            echo 'AWS_ECR_REGISTRY_ENDPOINT="ecr-temp"' >> $BASH_ENV
+      - build-image
+  build-and-push-containers:
+    executor: circle-machine
+    environment:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+    parameters:
+      image-name:
+        type: string
+        default: hubzone-api
+    steps:
+      - checkout
+      - aws-init
+      - ecr-login
+      - build-image:
+          image-name: << parameters.image-name >>
+      - push-image:
+          image-name: << parameters.image-name >>
   deploy-service:
     executor: circle-machine
     environment:
@@ -241,17 +267,10 @@ jobs:
       directory:
         type: string
         default: terraform
-      image-name:
-        type: string
-        default: hubzone-api
     steps:
       - checkout
       - aws-init
       - ecr-login
-      - build-image:
-          image-name: << parameters.image-name >>
-      - push-image:
-          image-name: << parameters.image-name >>
       # - configure-ecr-environment:
       #     image-name: << parameters.image-name >>
       # - run:
@@ -301,6 +320,29 @@ workflows:
 
   deploy:
     jobs:
+      - build-and-push-containers:
+          name: build-and-push-containers-lower
+          context: oidc-certify-lower
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+              - build-lower
+              - deploy-demo
+
+      - build-and-push-containers:
+          name: build-and-push-containers-preview-lower
+          context: oidc-certify-lower
+          image-name: hubzone-api-preview
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+              - build-lower
+              - deploy-preview-demo
+
       - hold-for-approval:
           type: approval
           context: oidc-certify-upper
@@ -315,6 +357,8 @@ workflows:
       - hold-for-approval-preview:
           type: approval
           context: oidc-certify-upper
+          require:
+            - build-and-push-containers-preview-lower
           filters:
             branches:
               ignore: /.*/
@@ -339,7 +383,6 @@ workflows:
           context: oidc-certify-lower
           workspace: demo
           image-tag: latest
-          image-name: hubzone-api-preivew
           directory: terraform/preview
           filters:
             branches:
@@ -348,13 +391,39 @@ workflows:
               only:
               - deploy-preview-demo
 
+      - build-and-push-containers:
+          name: build-and-push-containers-upper
+          context: oidc-certify-upper
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+              - build-upper
+              - /rc-v[0-9]+(\.[0-9]+)*$/
+              - /v[0-9]+(\.[0-9]+)*$/
+              
+      - build-and-push-containers:
+          name: build-and-push-containers-preview-upper
+          context: oidc-certify-upper
+          image-name: hubzone-api-preview
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+              - build-upper
+              - deploy-preview-stg
+              - deploy-preview-prod
+
       - deploy-service:
           name: deploy-service-preview
           context: oidc-certify-upper
           workspace: stg
           image-tag: latest
-          image-name: hubzone-api-preview
           directory: terraform/preview
+          requires:
+            - build-and-push-containers-preview-upper
           filters:
             branches:
               ignore: /.*/
@@ -367,6 +436,8 @@ workflows:
           context: oidc-certify-upper
           workspace: stg
           image-tag: $CIRCLE_TAG
+          requires:
+            - build-and-push-containers-upper
           filters:
             branches:
               ignore:
@@ -381,8 +452,8 @@ workflows:
           workspace: prod
           requires:
             - hold-for-approval-preview
+            - build-and-push-containers-preview-upper
           image-tag: latest
-          image-name: hubzone-api-preview
           directory: terraform/preview
           filters:
             branches:
@@ -398,6 +469,7 @@ workflows:
           image-tag: latest
           requires:
             - hold-for-approval
+            - build-and-push-containers-upper
           filters:
             branches:
               ignore:
