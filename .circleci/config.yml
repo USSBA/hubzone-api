@@ -285,7 +285,7 @@ jobs:
             echo "image_tag = \"${CIRCLE_SHA1}\"" >> ./build.auto.tfvars
             terraform workspace select << parameters.workspace >>
             terraform plan -out=<< parameters.workspace >>.tfplan -input=false
-            terraform apply -input=false << parameters.workspace >>.tfplan
+            #terraform apply -input=false << parameters.workspace >>.tfplan
 
 workflows:
   version: 2
