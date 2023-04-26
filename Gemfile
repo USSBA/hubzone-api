@@ -10,7 +10,7 @@ gem 'pg', '~> 1.4.6' # Use postgresql as the database for Active Record
 gem 'puma', '~> 4.3' # Use Puma as the app server
 gem 'rails', '~> 6.1.7.3' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'strong_migrations', '~> 0.3' # Catch unsafe migrations at dev time
-gem 'secure_headers'
+#gem 'secure_headers'
 #gem 'sprockets', '>=3.7.2','<4'
 #gem 'sprockets-rails', :require => 'sprockets/railtie'
 #gem 'sprockets-es6'
