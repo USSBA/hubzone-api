@@ -1,6 +1,6 @@
 
 # Allows for assertion of a location against the likely_qda HubZone layer
-class CensusTaractAssertion
+class CensusTractAssertion
   extend AssertionHelper
 
   class << self

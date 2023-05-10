@@ -41,7 +41,7 @@ function bundle-exec-rake {
 [ "$RAKE_DB_SEED" = "true" ]           && bundle-exec-rake db:seed
 
 echo "Starting rails server..."
-bundle exec rails server
+bundle exec rails server -b 0.0.0.0
 if [[ $? -eq 0 ]]; then
   echo "Rails server exited without error code, but it probably shouldn't have. Container will now stop."
 else
