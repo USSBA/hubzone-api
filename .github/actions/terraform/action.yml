@@ -1,0 +1,40 @@
+name: 'Terraform'
+description: 'Terraform Plan & Apply.'
+
+inputs:
+  lock_timeout:
+    default: '900'
+    description: 'Length of time in seconds to wait for a lock to be acquired.'
+    required: false
+
+  workspace:
+    description: 'A terraform workspace.'
+    required: true
+
+  plan_only:
+    description: 'A boolean value used to determine if the infrastructure will be applied once the plan is generated.'
+    required: false
+    default: false
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: 'bash'
+      run: |
+        cd terraform/
+        echo "image_tag = \"${GITHUB_SHA}\"" > ./build.auto.tfvars
+    - shell: 'bash'
+      run: |
+        cd terraform/
+        terraform init -input=false
+        terraform workspace select ${{ inputs.workspace }}
+        terraform validate
+    - shell: 'bash'
+      run: |
+        cd terraform/
+        terraform init -input=false
+        terraform workspace select ${{ inputs.workspace }}
+        terraform plan -input=false -out=${{ inputs.workspace }}.tfplan
+        if [[ '${{ inputs.plan_only }}' == 'false' ]]; then
+          terraform apply -input=false ${{ inputs.workspace }}.tfplan
+        fi
