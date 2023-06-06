@@ -1,0 +1,129 @@
+name: 'Integration Tests'
+on:
+  push:
+    branches: # run test against all branches
+      - '**'
+    tags-ignore: # ignore all tags, manager should know if the commit being tagged is stable
+      - '**'
+
+defaults:
+  run:
+    shell: 'bash'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  rubocop:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+      # https://github.com/ruby/setup-ruby
+      - name: 'Configure Ruby'
+        uses: 'ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1'
+        with:
+          bundler-cache: true
+
+      # https://docs.rubocop.org/rubocop/usage/basic_usage.html
+      - name: 'RuboCop'
+        run: |
+          bundle exec rubocop --color
+
+  rspec:
+    runs-on: 'ubuntu-latest'
+    env:
+      RAILS_ENV: 'test'
+      HUBZONE_API_DB_USER: 'postgres'
+      HUBZONE_API_DB_PASSWORD: 'postgres'
+      HUBZONE_API_DB_HOST: 'localhost'
+      HUBZONE_API_DB_NAME: 'hzgeo'
+      SECRET_KEY_BASE: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+      HUBZONE_GOOGLE_API_KEY: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    services:
+      postgres:
+        image: 'postgis/postgis:12-3.3'
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: 'postgres'
+          POSTGRES_PASSWORD: 'postgres'
+        options: >-
+          --mount type=tmpfs,destination=/var/lib/postgresql/data
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+      # https://github.com/ruby/setup-ruby
+      - name: 'Configure Ruby'
+        uses: 'ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1'
+        with:
+          bundler-cache: true
+
+      - name: 'Create & Migrate'
+        run: |
+          bundle exec rake db:create db:migrate
+
+      - name: 'RSpec'
+        run: |
+          bundle exec rspec --format progress spec
+
+  rspec_docker:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+      - name: 'RSpec Docker Compose'
+        run: |
+          git describe --long > REVISION || touch REVISION
+          cat REVISION
+          docker-compose -f docker/docker-compose-test.yml build rspec
+          docker-compose -f docker/docker-compose-test.yml run --rm rspec
+
+  terraform:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+      - name: 'Install Terraform 1.0.9'
+        uses: 'hashicorp/setup-terraform@v2'
+        with:
+          terraform_version: '1.0.9'
+
+      - name: 'Terraform Format'
+        run: |
+          cd terraform/
+          terraform fmt -check -recursive
+
+      # To run a terrafrom validate the project must be initialized, but we cannot use AWS credentials for integraton tests.
+      # Remove the s3_backend.tf so that the project state will be initialized on the local container.
+      - name: 'Terraform Validate'
+        run: |
+          cd terraform/
+          rm s3_backend.tf
+          terraform init -input=false
+          terraform workspace new demo
+          terraform validate
+          terraform workspace new stg
+          terraform validate
+          terraform workspace new prod
+          terraform validate
+
+  hubzone_api:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+      - name: 'Build'
+        run: |
+          docker image build --pull -f Dockerfile -t hubzone_api:test .
+

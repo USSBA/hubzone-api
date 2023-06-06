@@ -1,3 +1,6 @@
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
 # vpc
 data "aws_vpc" "selected" {
   tags = {

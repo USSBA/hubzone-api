@@ -10,7 +10,7 @@ This application houses the custom HUBZone Geo API for the Small Business Admini
 - [API Specification](#api-specification)
 - [Testing](#testing)
 - [External Services](#external-services)
-- [CircleCI Deployment](#circleci-deployment)
+- [GitHub Actions Deployment](#github-actions-deployment)
 - [Directories](#directories)
 - [Changelog](#changelog)
 - [License](#license)
@@ -150,23 +150,17 @@ rubocop -D
 ## External services
 - Connect to [Google Map API](https://developers.google.com/maps/) by putting your key in the .env file
 
-## CircleCI Deployment
+## GitHub Actions Deployment
 
-Code deployment is handled by CircleCI. The project can be viewed on [USSBA's CircleCI dashboard](https://circleci.com/gh/USSBA/hubzone-api).
+Code deployment is handled by GitHub Actions. The project can be viewed on [USSBA's GitHub Actions dashboard](https://github.com/USSBA/hubzone-api/actions).
 
-The CircleCI config file is located at .circleci/config.yml. For more on CircleCI configuration see their configuration reference.
-
-### Pre-requisites
-
-CircleCI utilizes GitHub permissions per repo. In order to trigger a CircleCI build your GitHub user will need the correct permissions.
-
-Knowledge of CircleCI is supremely helpful. See the [CircleCI documentation](https://circleci.com/docs/) for help.
+The workflow configuration files are located at .github/workflows/{environment}.yml. For more on GitHub Actions configuration see their configuration reference.
 
 ### Deployment workflows
 
-Builds for this project are triggered by commits to branches or by creating git tags. This will trigger a CircleCI workflow that runs a series of jobs which are defined in the project's CircleCI config file. To see the different workflows and jobs look at the respective codeblocks in `.circleci/config.yml`.
+Builds for this project are triggered by commits to branches, pull requests, or by pushing git tags
 
-For more on workflows and jobs, see the [CircleCI workflow documentation](https://circleci.com/docs/2.0/workflows/).
+For more on workflows and jobs, see the [GitHub Action workflow documentation](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions).
 
 ![workflow](./attachments/certify-deployment.png)
 
@@ -231,7 +225,7 @@ terraform: Infrastructure code to deploy HUBZone API.
   - main.tf: Contains Terraform backend provider resources.
   - security-group-rules.tf: Contains a security group rule that creates a rule on the HUBZone rds database.
 
-.circleci: Contains CircleCI pipeline yml.
+.github: Contains GitHub composite actions and environmental workflows.
 
 ## Changelog
 Refer to the changelog for details on changes to API. [CHANGELOG](CHANGELOG.md)
