@@ -1,23 +1,18 @@
-FROM ruby:2.5-slim-stretch
+FROM ruby:2.7.4-slim-bullseye
 
 # Install general packages
-ENV PACKAGES build-essential libpq-dev netcat git python3 python-pip python-dev apt-utils wget unzip lftp ssh jq gnupg
+ENV PACKAGES build-essential libpq-dev netcat git apt-utils wget unzip lftp ssh jq gnupg lsb-release
 RUN echo "Updating repos..." && apt-get update > /dev/null && \
+    echo "Upgrading base packages..." && apt-get upgrade -y > /dev/null && \
     echo "Installing packages: ${PACKAGES}..." && apt-get install -y $PACKAGES --fix-missing --no-install-recommends > /dev/null && \
     echo "Done" && rm -rf /var/lib/apt/lists/*
 
-# Install aws-cli
-RUN echo "Fetching awscli installer..." && wget -qO "awscli-bundle.zip" "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" && \
-    echo "Unpacking..." && unzip awscli-bundle.zip > /dev/null && \
-    echo "Installing awscli..." && ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws > /dev/null && \
-    echo "Done" && rm -rf awscli-bundle awscli-bundle.zip
-
 # Configure/Install Postgres Repos/Deps
-ENV PG_PACKAGES postgresql-9.6 postgresql-9.6-postgis-2.4
-RUN echo deb http://apt.postgresql.org/pub/repos/apt stretch-pgdg main > /etc/apt/sources.list.d/stretch-pgdg.list && \
+ENV PG_PACKAGES postgresql-client-12 postgresql-12-postgis-3
+RUN echo deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main > /etc/apt/sources.list.d/pgdg.list && \
     wget --quiet -O - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
 RUN echo "Updating repos..." && apt-get update > /dev/null && \
-    echo "Installing posgres packages: ${PG_PACKAGES}..." && apt-get -t stretch-pgdg install -y $PG_PACKAGES --fix-missing --no-install-recommends > /dev/null && \
+    echo "Installing posgres packages: ${PG_PACKAGES}..." && apt-get install -y $PG_PACKAGES --fix-missing --no-install-recommends > /dev/null && \
     echo "Done." && rm -rf /var/lib/apt/lists/*
 
 ENV INSTALL_PATH /app
