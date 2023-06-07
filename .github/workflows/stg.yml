@@ -1,0 +1,56 @@
+name: 'Staging'
+on:
+  push:
+    branches-ignore:
+      - '**'
+    tags:
+      - 'rc-v**'
+
+defaults:
+  run:
+    shell: 'bash'
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: 'us-east-1'
+  AWS_DEFAULT_REGION: 'us-east-1'
+  AWS_ECR_REGISTRY_ID: '222484291001'
+  WORKSPACE: 'stg'
+
+jobs:
+  hubzone_api:
+    runs-on: 'ubuntu-latest'
+    environment: 'stg'
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+      - name: 'Connecting to AWS using OIDC'
+        uses: 'aws-actions/configure-aws-credentials@v2'
+        with:
+          role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: 'Connecting to ECR'
+        uses: 'aws-actions/amazon-ecr-login@v1'
+        id: 'ecr-login'
+        with:
+          registries: ${{ env.AWS_ECR_REGISTRY_ID }}
+
+      - name: 'Building Container'
+        uses: './.github/actions/ecr'
+        with:
+          image: '${{ steps.ecr-login.outputs.registry }}/hubzone-api'
+
+      - name: 'Install Terraform 1.0.9'
+        uses: 'hashicorp/setup-terraform@v2'
+        with:
+          terraform_version: '1.0.9'
+
+      - name: 'Deploying Service'
+        uses: './.github/actions/terraform'
+        with:
+          workspace: ${{ env.WORKSPACE }}
