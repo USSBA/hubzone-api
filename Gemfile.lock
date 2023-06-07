@@ -186,7 +186,11 @@ GEM
       rspec-mocks (~> 3.9.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.4)
+<<<<<<< HEAD
     rubocop (1.19.1)
+=======
+    rubocop (0.52.1)
+>>>>>>> prod-latest
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
