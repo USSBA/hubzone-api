@@ -19,7 +19,7 @@ locals {
 
 module "api" {
   source  = "USSBA/easy-fargate-service/aws"
-  version = "~> 7.0"
+  version = "~> 9.0"
 
   # cloudwatch logging
   log_group_name              = "/ecs/${terraform.workspace}/${local.env.service_name}"
