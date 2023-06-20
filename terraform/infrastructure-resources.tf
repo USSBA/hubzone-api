@@ -66,3 +66,9 @@ data "aws_db_instance" "rds" {
 #data "aws_rds_cluster" "rds" {
 #  cluster_identifier = "${terraform.workspace}-hubzone-aurora"
 #}
+
+# sns notification topics
+data "aws_sns_topic" "alerts" {
+  for_each = toset(["green", "yellow", "red", "security"])
+  name     = "${local.account_name}-teams-${each.value}-notifications"
+}

@@ -8,10 +8,14 @@ locals {
     prod = "222484291001"
   }
   sns_alarms = {
-    green    = "arn:aws:sns:us-east-1:502235151991:alarm-green"
-    yellow   = "arn:aws:sns:us-east-1:502235151991:alarm-yellow"
-    red      = "arn:aws:sns:us-east-1:502235151991:alarm-red"
-    security = "arn:aws:sns:us-east-1:502235151991:alarm-security"
+    #green    = "arn:aws:sns:us-east-1:502235151991:alarm-green"
+    #yellow   = "arn:aws:sns:us-east-1:502235151991:alarm-yellow"
+    #red      = "arn:aws:sns:us-east-1:502235151991:alarm-red"
+    #security = "arn:aws:sns:us-east-1:502235151991:alarm-security"
+    green    = data.aws_sns_topic.alerts["green"].arn
+    yellow   = data.aws_sns_topic.alerts["yellow"].arn
+    red      = data.aws_sns_topic.alerts["red"].arn
+    security = data.aws_sns_topic.alerts["security"].arn
   }
   all = {
     default = {
