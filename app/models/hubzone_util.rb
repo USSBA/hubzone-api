@@ -89,7 +89,7 @@ class HubzoneUtil
 
       # maybe we need another word other than assertion
     
-      %w[UsTaract UsCounty].each do |assertion_type|
+      %w[UsTract UsCounty].each do |assertion_type|
         hz_assertion = "#{assertion_type}Assertion".constantize
         puts "\n== Query Print=="
         puts hz_assertion
@@ -127,7 +127,7 @@ class HubzoneUtil
       #results[:other_information][:congressional_district] = congressional_district_assertion location || nil
 
         congressional_district = {}
-        %w[CensusCounty CensusTaract CongressionalDistrict].each do |assertion_type|
+        %w[CensusCounty CensusTract CongressionalDistrict].each do |assertion_type|
           puts "\n==congressional_district=0"
           hz_assertion = "#{assertion_type}Assertion".constantize
           hz_v = hz_assertion.assertion location 
