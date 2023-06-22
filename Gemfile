@@ -8,8 +8,8 @@ gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.
 gem 'newrelic_rpm', '~> 4.5' # NewRelic Application Performance Monitoring
 gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
 gem 'puma', '~> 4.3' # Use Puma as the app server
-gem 'rails', '~> 5.2' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'strong_migrations', '~> 0.3' # Catch unsafe migrations at dev time
+gem 'rails', '~> 6.1', '>= 6.1.7.3' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'strong_migrations', '~> 0.8', '>= 0.8.0' # Catch unsafe migrations at dev time
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
@@ -24,9 +24,9 @@ gem 'strong_migrations', '~> 0.3' # Catch unsafe migrations at dev time
 group :development, :test do
   gem 'byebug', platform: :mri # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rb-readline'
-  gem 'rspec-rails', '~> 3.5'
+  gem 'rspec-rails', '~> 4.0', '>= 4.0.0'
   gem 'rubocop', '~> 1.19.0' # Enforce ruby code style
-  gem 'rubocop-rails', '~> 2.12'
+  gem 'rubocop-rails', '~> 2.15', '>= 2.15.0'
   gem 'rubocop-rspec', '~> 2.5'
   gem 'simplecov', require: false # determine code coverage of tests
 end
