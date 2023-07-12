@@ -30,6 +30,6 @@ terraform {
     dynamodb_table       = "terraform-state-locktable"
     acl                  = "bucket-owner-full-control"
     key                  = "archive-hubzone-api.terraform.tfstate"
-    workspace_key_prefix = "arcjhive-hubzone-api"
+    workspace_key_prefix = "archive-hubzone-api"
   }
 }
