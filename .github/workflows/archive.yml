@@ -32,7 +32,10 @@ jobs:
         uses: 'actions/checkout@v3'
 
       - name: "Set Workspace"
-        run: echo "WORKSPACE=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        run: |
+            if [[ ${github.event.ref} =~ ^refs/tags/deploy-archive-demo ]]; then
+              echo "WORKSPACE=demo" >> $GITHUB_ENV
+            fi
 
       - name: 'Connecting to AWS using OIDC'
         uses: 'aws-actions/configure-aws-credentials@v2'
