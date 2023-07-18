@@ -1,4 +1,4 @@
-name: 'Archive'
+name: 'Archive-demo'
 
 on:
   push:

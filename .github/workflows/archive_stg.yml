@@ -1,4 +1,4 @@
-name: 'Archive'
+name: 'Archive-stg'
 
 on:
   push:
@@ -57,4 +57,4 @@ jobs:
             terraform init
             terraform workspace select ${{ env.WORKSPACE }}
             terraform plan -input=false -out=${{ env.WORKSPACE }}.tfplan
-            : # terraform apply -input=false ${{ env.WORKSPACE }}.tfplan
+            terraform apply -input=false ${{ env.WORKSPACE }}.tfplan
