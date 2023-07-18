@@ -228,12 +228,12 @@ git tag deploy-archive-demo --force && git push origin deploy-archive-demo --for
 
 Stg Example:
 ```sh
-git tag deploy-archive-stg && git push origin deploy-archive-stg
+git tag deploy-archive-stg --force && git push origin deploy-archive-stg --force
 ```
 
 Prod Example:
 ```sh
-git tag deploy-archive-prod && git push origin deploy-archive-prod
+git tag deploy-archive-prod --force && git push origin deploy-archive-prod --force
 ```
 
 ## Directories
