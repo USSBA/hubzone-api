@@ -55,6 +55,7 @@ jobs:
         run: |
             cd terraform/archive
             terraform init
+            echo "image_tag = \"${{ github.sha }}\"" >> ./build.auto.tfvars
             terraform workspace select ${{ env.WORKSPACE }}
             terraform plan -input=false -out=${{ env.WORKSPACE }}.tfplan
             terraform apply -input=false ${{ env.WORKSPACE }}.tfplan
