@@ -47,10 +47,10 @@ jobs:
         with:
           image: '${{ steps.ecr-login.outputs.registry }}/hubzone-api'
 
-      - name: 'Install Terraform 1.0.9'
+      - name: 'Install Terraform 1.5.2'
         uses: 'hashicorp/setup-terraform@v2'
         with:
-          terraform_version: '1.0.9'
+          terraform_version: '1.5.2'
 
       - name: 'Deploying Service'
         uses: './.github/actions/terraform'

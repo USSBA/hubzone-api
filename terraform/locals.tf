@@ -26,7 +26,6 @@ locals {
       rails_port        = 3001
       task_cpu_rails    = "256"
       task_memory_rails = "512"
-      log_bucket        = "${local.account_id}-logs"
 
       health_check_path             = "/api/aws-hc"
       desired_container_count_rails = 1 # the starting number of containers
