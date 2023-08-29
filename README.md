@@ -211,6 +211,31 @@ Prod Example:
 git tag v1.0.0 && git push origin v1.0.0
 ```
 
+### Archive deployment
+
+To implement changes to the Archive Map, you will need to work off the `archive-map` branch (as opposed to `develop` or `master`).
+
+To trigger a build/deploy workflow for a specific environment to the archive map, use the following git tags for their respective environment:
+
+* Demo -> `deploy-archive-demo`
+* Stg -> `deploy-archive-stg`
+* Prod -> `deploy-archive-prod`
+
+Demo Example:
+```sh
+git tag deploy-archive-demo --force && git push origin deploy-archive-demo --force
+```
+
+Stg Example:
+```sh
+git tag deploy-archive-stg --force && git push origin deploy-archive-stg --force
+```
+
+Prod Example:
+```sh
+git tag deploy-archive-prod --force && git push origin deploy-archive-prod --force
+```
+
 ## Directories
 
 Information regarding directories and files.
