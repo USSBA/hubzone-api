@@ -128,7 +128,7 @@ class HubzoneUtil
       #results[:other_information][:congressional_district] = congressional_district_assertion location || nil
 
         congressional_district = {}
-        %w[CensusCounty CensusTract CongressionalDistrict].each do |assertion_type|
+        %w[CensusCounty CensusTract CongressionalDistrict DistrictOffice].each do |assertion_type|
           puts "\n==congressional_district=0"
           hz_assertion = "#{assertion_type}Assertion".constantize
           hz_v = hz_assertion.assertion location 
