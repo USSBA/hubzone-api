@@ -18,7 +18,7 @@ locals {
 
 module "api" {
   source  = "USSBA/easy-fargate-service/aws"
-  version = "~> 7.0"
+  version = "~> 10.0"
 
   # cloudwatch logging
   log_group_name              = "/ecs/${terraform.workspace}/${local.env.service_name}"
@@ -27,7 +27,7 @@ module "api" {
   # access logs
   # note: bucket permission may need to be adjusted
   # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html#access-logging-bucket-permissions
-  alb_log_bucket_name = local.env.log_bucket
+  alb_log_bucket_name = "${local.account_id}-${local.region}-logs"
   alb_log_prefix      = "alb/${local.env.service_name}/${terraform.workspace}"
 
   family                 = "${terraform.workspace}-${local.env.service_name}-fg"
