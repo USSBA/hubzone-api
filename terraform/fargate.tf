@@ -39,7 +39,7 @@ module "api" {
 
   ## If the ecs task needs to access AWS API for any reason, grant
   ## it permissions with this parameter and the policy resource below
-  #task_policy_json       = data.aws_iam_policy_document.fargate.json
+  task_policy_json = data.aws_iam_policy_document.fargate.json
 
   # Deployment
   enable_deployment_rollbacks        = true
@@ -82,14 +82,19 @@ module "api" {
 }
 
 ## If the ecs task needs to access AWS API for any reason, grant it permissions with this
-#
-#data "aws_iam_policy_document" "fargate" {
-#  statement {
-#    sid = "AllResources"
-#    actions = [
-#      "s3:ListAllMyBuckets",
-#      "s3:GetBucketLocation",
-#    ]
-#    resources = ["*"]
-#  }
-#}
+
+data "aws_iam_policy_document" "fargate" {
+  statement {
+    sid = "AllResources"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:List*",
+      "s3:GetBucketLocation",
+    ]
+    resources = [
+      "${data.aws_s3_bucket.logs.arn}",
+      "${data.aws_s3_bucket.logs.arn}/*"
+    ]
+  }
+}
