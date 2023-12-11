@@ -72,3 +72,7 @@ data "aws_sns_topic" "alerts" {
   for_each = toset(["green", "yellow", "red", "security"])
   name     = "${local.account_name}-teams-${each.value}-notifications"
 }
+
+data "aws_s3_bucket" "logs" {
+  bucket = "${local.account_ids[terraform.workspace]}-${local.region}-logs"
+}
