@@ -7,7 +7,7 @@ gem 'ffi', '~> 1.9.24' # CVS-2018-1000201
 gem 'jbuilder', '~> 2.5' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'newrelic_rpm', '~> 4.5' # NewRelic Application Performance Monitoring
 gem 'pg', '~> 0.18' # Use postgresql as the database for Active Record
-gem 'puma', '~> 4.3' # Use Puma as the app server
+gem 'puma', '~> 5.6', '>= 5.6.8' # Use Puma as the app server
 gem 'rails', '~> 5.2' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'strong_migrations', '~> 0.3' # Catch unsafe migrations at dev time
 # Use Redis adapter to run Action Cable in production
