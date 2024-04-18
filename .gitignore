@@ -30,3 +30,5 @@ REVISION
 
 # Terraform
 **/.terraform*
+
+!**/.terraform.lock.hcl
