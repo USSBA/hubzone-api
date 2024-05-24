@@ -28,16 +28,16 @@ jobs:
     environment: 'demo'
     steps:
       - name: 'Checkout'
-        uses: 'actions/checkout@v3'
+        uses: 'actions/checkout@v4'
 
       - name: 'Connecting to AWS using OIDC'
-        uses: 'aws-actions/configure-aws-credentials@v2'
+        uses: 'aws-actions/configure-aws-credentials@v4'
         with:
           role-to-assume: ${{ secrets.OIDC_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: 'Connecting to ECR'
-        uses: 'aws-actions/amazon-ecr-login@v1'
+        uses: 'aws-actions/amazon-ecr-login@v2'
         id: 'ecr-login'
         with:
           registries: ${{ env.AWS_ECR_REGISTRY_ID }}
@@ -47,10 +47,10 @@ jobs:
         with:
           image: '${{ steps.ecr-login.outputs.registry }}/hubzone-api'
 
-      - name: 'Install Terraform 1.0.9'
-        uses: 'hashicorp/setup-terraform@v2'
+      - name: 'Install Terraform 1.6.1'
+        uses: 'hashicorp/setup-terraform@v3'
         with:
-          terraform_version: '1.0.9'
+          terraform_version: '1.6.1'
 
       - name: 'Deploying Service'
         uses: './.github/actions/terraform'
