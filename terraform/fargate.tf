@@ -18,7 +18,7 @@ locals {
 
 module "api" {
   source  = "USSBA/easy-fargate-service/aws"
-  version = "~> 7.0"
+  version = "~> 11.0"
 
   # cloudwatch logging
   log_group_name              = "/ecs/${terraform.workspace}/${local.env.service_name}"
@@ -27,18 +27,19 @@ module "api" {
   # access logs
   # note: bucket permission may need to be adjusted
   # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html#access-logging-bucket-permissions
-  alb_log_bucket_name = local.env.log_bucket
-  alb_log_prefix      = "${terraform.workspace}/alb/${local.env.service_name}"
+  alb_log_bucket_name = "${local.account_id}-${local.region}-logs"
+  alb_log_prefix      = "alb/${local.env.service_name}/${terraform.workspace}"
 
   family                 = "${terraform.workspace}-${local.env.service_name}-fg"
   task_cpu               = local.env.task_cpu_rails
   task_memory            = local.env.task_memory_rails
   enable_execute_command = true
+  ipv6                   = false
   #alb_idle_timeout      = 60
 
   ## If the ecs task needs to access AWS API for any reason, grant
   ## it permissions with this parameter and the policy resource below
-  #task_policy_json       = data.aws_iam_policy_document.fargate.json
+  task_policy_json = data.aws_iam_policy_document.fargate.json
 
   # Deployment
   enable_deployment_rollbacks        = true
@@ -81,14 +82,19 @@ module "api" {
 }
 
 ## If the ecs task needs to access AWS API for any reason, grant it permissions with this
-#
-#data "aws_iam_policy_document" "fargate" {
-#  statement {
-#    sid = "AllResources"
-#    actions = [
-#      "s3:ListAllMyBuckets",
-#      "s3:GetBucketLocation",
-#    ]
-#    resources = ["*"]
-#  }
-#}
+
+data "aws_iam_policy_document" "fargate" {
+  statement {
+    sid = "AllResources"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:List*",
+      "s3:GetBucketLocation",
+    ]
+    resources = [
+      "${data.aws_s3_bucket.logs.arn}",
+      "${data.aws_s3_bucket.logs.arn}/*"
+    ]
+  }
+}
