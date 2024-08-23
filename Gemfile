@@ -25,9 +25,9 @@ group :development, :test do
   gem 'byebug', platform: :mri # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'rb-readline'
   gem 'rspec-rails', '~> 3.5'
-  gem 'rubocop', '~> 1.19.0' # Enforce ruby code style
-  gem 'rubocop-rails', '~> 2.12'
-  gem 'rubocop-rspec', '~> 2.5'
+  gem 'rubocop', '~> 1.20.0' # Enforce ruby code style
+  gem 'rubocop-rails', '~> 2.15', '>= 2.15.0'
+  gem 'rubocop-rspec', '~> 2.11', '>= 2.11.0'
   gem 'simplecov', require: false # determine code coverage of tests
 end
 
@@ -39,5 +39,5 @@ group :development do
 end
 
 group :test do
-  gem 'webmock' # used by vcr gem
+  gem 'webmock' , '>= 3.19.0' # used by vcr gem
 end
