@@ -93,10 +93,10 @@ jobs:
       - name: 'Checkout'
         uses: 'actions/checkout@v4'
 
-      - name: 'Install Terraform 1.6.1'
+      - name: 'Install Terraform 1.9.5'
         uses: 'hashicorp/setup-terraform@v3'
         with:
-          terraform_version: '1.6.1'
+          terraform_version: '1.9.5'
 
       - name: 'Terraform Format'
         run: |
